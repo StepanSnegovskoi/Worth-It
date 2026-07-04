@@ -50,7 +50,8 @@ dependencies {
     implementation(libs.androidx.compose.material3)
 
     ksp(libs.hilt.compiler)
-    implementation(libs.hilt)
+    implementation(libs.hilt.android)
+    implementation(libs.hilt.navigation.compose)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
