@@ -53,7 +53,8 @@ dependencies {
     implementation(libs.hilt.android)
     implementation(libs.hilt.navigation.compose)
 
-    ksp(libs.room.runtime)
+    ksp(libs.room.compiler)
+    implementation(libs.room.runtime)
     implementation(libs.room.ktx)
 
     implementation(libs.coroutines.android)
