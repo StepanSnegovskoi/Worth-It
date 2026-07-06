@@ -23,8 +23,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ItemsViewModel @Inject constructor(
-    private val observeItemsUseCase: ObserveItemsUseCase,
-    private val savedStateHandle: SavedStateHandle
+    private val observeItemsUseCase: ObserveItemsUseCase
 ) : ViewModel() {
 
     val uiState = observeItemsUseCase().map { items ->
