@@ -1,6 +1,7 @@
 package com.metes.worthit.ui
 
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -21,16 +22,13 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             WorthItTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    val navController = rememberNavController()
+                val navController = rememberNavController()
 
-                    AppNavigation(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .padding(innerPadding),
-                        navHostController = navController
-                    )
-                }
+                AppNavigation(
+                    modifier = Modifier
+                        .fillMaxSize(),
+                    navHostController = navController
+                )
             }
         }
     }
