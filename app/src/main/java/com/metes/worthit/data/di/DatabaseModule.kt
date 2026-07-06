@@ -24,7 +24,7 @@ object DatabaseModule {
             context = context,
             klass = WorthItDatabase::class.java,
             name = WorthItDatabase.DATABASE_NAME
-        ).build()
+        ).fallbackToDestructiveMigration().build()
     }
 
     @Singleton
