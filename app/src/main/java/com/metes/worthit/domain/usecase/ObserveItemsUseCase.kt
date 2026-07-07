@@ -4,7 +4,9 @@ import com.metes.worthit.domain.entity.Item
 import com.metes.worthit.domain.repository.ItemsRepository
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
 class ObserveItemsUseCase @Inject constructor(
     private val repository: ItemsRepository
 ) {
