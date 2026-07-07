@@ -1,24 +1,39 @@
 package com.metes.worthit.ui.screen.add_item
 
 import android.net.Uri
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.metes.worthit.app.DispatcherProvider
+import com.metes.worthit.app.StandardDispatchers
 import com.metes.worthit.domain.usecase.InsertItemUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class AddItemViewModel @Inject constructor(
-    private val insertItemUseCase: InsertItemUseCase
+    private val insertItemUseCase: InsertItemUseCase,
+    private val savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
-    private val _uiState = MutableStateFlow<AddItemState>(AddItemState())
-    val uiState = _uiState.asStateFlow()
+    private val nameQuery = savedStateHandle.getStateFlow(KEY_NAME, INITIAL_NAME)
+    private val imageUri = savedStateHandle.getStateFlow(KEY_IMAGE_URI, INITIAL_IMAGE_URI)
+
+    val uiState = combine(
+        nameQuery, imageUri
+    ) { name: String, imageUri: Uri? ->
+        AddItemState(name = name, imageUri = imageUri)
+    }.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(5_000),
+        initialValue = AddItemState(name = INITIAL_NAME, imageUri = INITIAL_IMAGE_URI)
+    )
 
     private val _events = Channel<AddItemEvent>()
     val events = _events.receiveAsFlow()
@@ -27,22 +42,27 @@ class AddItemViewModel @Inject constructor(
         when(command) {
             is AddItemCommand.AddItem -> {
                 viewModelScope.launch {
-                    val name = _uiState.value.name
-                    insertItemUseCase(name = name)
+                    val name = uiState.value.name
+                    insertItemUseCase(name)
                     _events.send(AddItemEvent.NavigateToItems)
                 }
             }
 
             is AddItemCommand.ChangeName -> {
-                val previousState = _uiState.value
-                _uiState.value = previousState.copy(name = command.name)
+                savedStateHandle[KEY_NAME] = command.name
             }
 
             is AddItemCommand.SelectImage -> {
-                val previousState = _uiState.value
-                _uiState.value = previousState.copy(imageUri = command.uri)
+                savedStateHandle[KEY_IMAGE_URI] = command.uri
             }
         }
+    }
+
+    companion object {
+        private const val KEY_NAME = "name"
+        private const val INITIAL_NAME = ""
+        private const val KEY_IMAGE_URI = "image"
+        private val INITIAL_IMAGE_URI: Uri? = null
     }
 }
 
@@ -57,11 +77,6 @@ sealed interface AddItemEvent {
 }
 
 data class AddItemState(
-    val name: String = INITIAL_NAME,
-    val imageUri: Uri? = INITIAL_IMAGE_URI
-) {
-    companion object {
-        private const val INITIAL_NAME = ""
-        private val INITIAL_IMAGE_URI = null
-    }
-}
+    val name: String,
+    val imageUri: Uri?
+)
