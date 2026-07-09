@@ -1,5 +1,6 @@
 package com.metes.worthit.ui
 
+import android.hardware.SensorManager
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity

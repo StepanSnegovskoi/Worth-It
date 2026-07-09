@@ -33,6 +33,7 @@ import com.metes.worthit.ui.screen.add_item.component.ItemImage
 
 @Composable
 fun AddItemRoute(
+    imageUri: Uri?,
     modifier: Modifier = Modifier,
     viewModel: AddItemViewModel = hiltViewModel(),
     onNavigateToItems: () -> Unit,
@@ -45,6 +46,12 @@ fun AddItemRoute(
             when (event) {
                 AddItemEvent.NavigateToItems -> onNavigateToItems()
             }
+        }
+    }
+
+    LaunchedEffect(imageUri) {
+        if (imageUri != null) {
+            viewModel.processCommand(AddItemCommand.SelectImage(imageUri))
         }
     }
 

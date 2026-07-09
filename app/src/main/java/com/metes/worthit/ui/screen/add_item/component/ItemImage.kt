@@ -16,19 +16,11 @@ fun ItemImage(
     @DrawableRes defaultImage: Int,
     contentDescription: String?
 ) {
-    if (imageUri != null) {
-        AsyncImage(
-            modifier = modifier,
-            model = imageUri,
-            contentDescription = contentDescription,
-            contentScale = ContentScale.Crop
-        )
-    } else {
-        Image(
-            modifier = modifier,
-            painter = painterResource(defaultImage),
-            contentDescription = contentDescription,
-            contentScale = ContentScale.Crop
-        )
-    }
+    AsyncImage(
+        modifier = modifier,
+        model = imageUri ?: defaultImage,
+        contentDescription = contentDescription,
+        contentScale = ContentScale.Crop,
+        placeholder = painterResource(defaultImage),
+    )
 }
