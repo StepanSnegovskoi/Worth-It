@@ -1,6 +1,9 @@
 package com.metes.worthit.ui.screen.add_item
 
 import android.net.Uri
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.PickVisualMediaRequest
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -30,6 +33,7 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.metes.worthit.R
 import com.metes.worthit.ui.screen.add_item.component.ItemImage
+import com.metes.worthit.ui.utils.Const.MIME_TYPE_IMAGE
 
 @Composable
 fun AddItemRoute(
@@ -40,6 +44,13 @@ fun AddItemRoute(
     onBackClick: () -> Unit
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+
+    val photoPicker =
+        rememberLauncherForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
+            if (uri != null) {
+                viewModel.processCommand(AddItemCommand.SelectImage(uri))
+            }
+        }
 
     LaunchedEffect(Unit) {
         viewModel.events.collect { event ->
@@ -63,7 +74,7 @@ fun AddItemRoute(
         onNameChange = { viewModel.processCommand(AddItemCommand.ChangeName(it)) },
         onBackClick = onBackClick,
         onImageClick = {
-            TODO("SELECT IMAGE FROM")
+            photoPicker.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
         }
     )
 }

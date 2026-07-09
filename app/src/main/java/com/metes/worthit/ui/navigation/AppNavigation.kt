@@ -19,6 +19,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navDeepLink
 import com.metes.worthit.ui.screen.add_item.AddItemRoute
 import com.metes.worthit.ui.screen.main.ItemsRoute
+import com.metes.worthit.ui.utils.Const.MIME_TYPE_IMAGE
 
 @Composable
 fun AppNavigation(
@@ -47,7 +48,7 @@ fun AppNavigation(
             deepLinks = listOf(
                 navDeepLink {
                     action = Intent.ACTION_SEND
-                    mimeType = "image/*"
+                    mimeType = MIME_TYPE_IMAGE
                 }
             )
         ) { backStackEntry ->
