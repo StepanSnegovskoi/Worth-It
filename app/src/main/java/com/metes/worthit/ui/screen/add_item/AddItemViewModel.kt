@@ -4,9 +4,13 @@ import android.net.Uri
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.metes.worthit.R
 import com.metes.worthit.app.DispatcherProvider
 import com.metes.worthit.app.StandardDispatchers
 import com.metes.worthit.domain.usecase.InsertItemUseCase
+import com.metes.worthit.domain.utils.Result
+import com.metes.worthit.ui.entity.UiText
+import com.metes.worthit.ui.utils.toUiText
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.SharingStarted
@@ -39,12 +43,24 @@ class AddItemViewModel @Inject constructor(
     val events = _events.receiveAsFlow()
 
     fun processCommand(command: AddItemCommand) {
-        when(command) {
+        when (command) {
             is AddItemCommand.AddItem -> {
                 viewModelScope.launch {
                     val name = uiState.value.name
-                    insertItemUseCase(name)
-                    _events.send(AddItemEvent.NavigateToItems)
+                    val imageUri = uiState.value.imageUri
+
+                    val result =
+                        insertItemUseCase(name = name, imageUriString = imageUri?.toString())
+                    when (result) {
+                        is Result.Error<Exception> -> {
+                            _events.send(AddItemEvent.ShowToast(result.error.toUiText()))
+                        }
+
+                        is Result.Success<*> -> {
+                            _events.send(AddItemEvent.ShowToast(UiText.StringResource(R.string.item_created)))
+                            _events.send(AddItemEvent.NavigateToItems)
+                        }
+                    }
                 }
             }
 
@@ -67,13 +83,14 @@ class AddItemViewModel @Inject constructor(
 }
 
 sealed interface AddItemCommand {
-    data object AddItem: AddItemCommand
-    data class ChangeName(val name: String): AddItemCommand
-    data class SelectImage(val uri: Uri): AddItemCommand
+    data object AddItem : AddItemCommand
+    data class ChangeName(val name: String) : AddItemCommand
+    data class SelectImage(val uri: Uri) : AddItemCommand
 }
 
 sealed interface AddItemEvent {
-    data object NavigateToItems: AddItemEvent
+    data object NavigateToItems : AddItemEvent
+    data class ShowToast(val message: UiText) : AddItemEvent
 }
 
 data class AddItemState(

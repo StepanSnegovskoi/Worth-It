@@ -17,9 +17,10 @@ class ItemsRepositoryImpl @Inject constructor(
     private val dispatcherProvider: DispatcherProvider
 ) : ItemsRepository {
 
-    override suspend fun insertItem(item: Item) = withContext(dispatcherProvider.io) {
+    override suspend fun insertItem(item: Item): Boolean = withContext(dispatcherProvider.io) {
         val dbModel = item.toDbModel()
-        dao.insertItem(dbModel)
+        val id = dao.insertItem(dbModel)
+        return@withContext id > 0
     }
 
     override fun observeItems(): Flow<List<Item>> {

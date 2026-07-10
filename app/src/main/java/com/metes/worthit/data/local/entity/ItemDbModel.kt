@@ -9,16 +9,19 @@ data class ItemDbModel(
     @PrimaryKey(autoGenerate = true)
     val id: Int,
     val name: String,
+    val localPath: String?
 )
 
 fun Item.toDbModel() = ItemDbModel(
     id = id,
-    name = name
+    name = name,
+    localPath = localPath
 )
 
 fun ItemDbModel.toEntity() = Item(
     id = id,
-    name = name
+    name = name,
+    localPath = localPath
 )
 
 fun List<ItemDbModel>.toEntities() = map { it.toEntity() }

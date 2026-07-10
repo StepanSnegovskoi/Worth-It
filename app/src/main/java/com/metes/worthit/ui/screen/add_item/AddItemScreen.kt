@@ -1,6 +1,7 @@
 package com.metes.worthit.ui.screen.add_item
 
 import android.net.Uri
+import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
@@ -9,6 +10,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -26,6 +28,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -43,6 +46,7 @@ fun AddItemRoute(
     onNavigateToItems: () -> Unit,
     onBackClick: () -> Unit
 ) {
+    val context = LocalContext.current
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     val photoPicker =
@@ -56,6 +60,11 @@ fun AddItemRoute(
         viewModel.events.collect { event ->
             when (event) {
                 AddItemEvent.NavigateToItems -> onNavigateToItems()
+                is AddItemEvent.ShowToast -> Toast.makeText(
+                    context,
+                    event.message.asString(context),
+                    Toast.LENGTH_SHORT
+                ).show()
             }
         }
     }
@@ -91,7 +100,8 @@ fun AddItemScreen(
     onImageClick: () -> Unit
 ) {
     Scaffold(
-        modifier = modifier,
+        modifier = modifier
+            .imePadding(),
         topBar = {
             TopAppBar(
                 title = {
@@ -132,7 +142,7 @@ fun AddItemScreen(
                     .clickable(onClick = onImageClick)
                     .size(240.dp)
                     .align(Alignment.CenterHorizontally),
-                imageUri = imageUri,
+                model = imageUri,
                 defaultImage = R.drawable.image_search_24dp,
                 contentDescription = stringResource(R.string.select_image_desc)
             )

@@ -10,7 +10,7 @@ import kotlinx.coroutines.flow.Flow
 interface ItemsDao {
 
     @Insert
-    suspend fun insertItem(item: ItemDbModel)
+    suspend fun insertItem(item: ItemDbModel): Long
 
     @Query("SELECT * FROM items")
     fun observeItems(): Flow<List<ItemDbModel>>
