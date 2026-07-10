@@ -1,5 +1,6 @@
 package com.metes.worthit.ui.screen.main.component
 
+import androidx.annotation.DrawableRes
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
@@ -20,7 +21,9 @@ import kotlinx.coroutines.sync.Mutex
 @Composable
 fun Item(
     item: Item,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    @DrawableRes defaultImage: Int = R.drawable.image_24dp,
+    contentDescription: String? = null
 ) {
     Card(
         modifier = modifier
@@ -33,8 +36,8 @@ fun Item(
             ItemImage(
                 modifier = Modifier.size(128.dp),
                 model = item.localPath,
-                contentDescription = null,
-                defaultImage = R.drawable.image_search_24dp
+                contentDescription = contentDescription,
+                defaultImage = defaultImage
             )
             Text(text = item.name)
         }
