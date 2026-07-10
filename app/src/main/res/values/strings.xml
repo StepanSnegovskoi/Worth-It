@@ -9,4 +9,5 @@
     <string name="file_not_found">File not found</string>
     <string name="permission_denied">Permission denied</string>
     <string name="item_created">Item created</string>
+    <string name="description_hint">Description</string>
 </resources>

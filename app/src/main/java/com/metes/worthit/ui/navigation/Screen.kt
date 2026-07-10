@@ -1,22 +1,24 @@
 package com.metes.worthit.ui.navigation
 
 import androidx.navigation.NavHostController
+import androidx.navigation.NavOptionsBuilder
 import kotlinx.serialization.Serializable
 
-private const val ITEMS_SCREEN_NAME = "Items"
-private const val ADD_ITEM_SCREEN_NAME = "AddItem"
+const val SCREEN_ITEMS_NAME = "Items"
+const val SCREEN_ADD_ITEM_NAME = "AddItem"
 
 @Serializable
 sealed class Screen(val name: String) {
 
     @Serializable
-    data object Items: Screen(ITEMS_SCREEN_NAME)
+    data object Items : Screen(SCREEN_ITEMS_NAME) {}
+
     @Serializable
-    data object AddItem: Screen(ADD_ITEM_SCREEN_NAME)
+    data class AddItem(val imageUriString: String? = null) : Screen(SCREEN_ADD_ITEM_NAME)
 }
 
-fun NavHostController.navigateToAddItem() {
-    navigate(Screen.AddItem)
+fun NavHostController.navigateToAddItem(imageUri: String? = null, builder: NavOptionsBuilder.() -> Unit = {}) {
+    navigate(Screen.AddItem(imageUri), builder)
 }
 
 fun NavHostController.navigateBack() {

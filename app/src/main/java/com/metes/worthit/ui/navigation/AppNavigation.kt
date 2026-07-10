@@ -1,31 +1,29 @@
 package com.metes.worthit.ui.navigation
 
-import android.content.Intent
-import android.net.Uri
-import android.os.Build
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.core.content.IntentCompat
-import androidx.core.net.UriCompat
-import androidx.core.os.BundleCompat
-import androidx.navigation.NavBackStackEntry
-import androidx.navigation.NavController
+import androidx.core.net.toUri
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import androidx.navigation.navDeepLink
+import androidx.navigation.toRoute
 import com.metes.worthit.ui.screen.add_item.AddItemRoute
 import com.metes.worthit.ui.screen.main.ItemsRoute
-import com.metes.worthit.ui.utils.Const.MIME_TYPE_IMAGE
 
 @Composable
 fun AppNavigation(
     modifier: Modifier = Modifier,
     navHostController: NavHostController
 ) {
+    HandleImageIntent { uri ->
+        navHostController.navigateToAddItem(uri.toString()) {
+            launchSingleTop = true
+        }
+    }
+
     NavHost(
         navController = navHostController,
         startDestination = Screen.Items,
@@ -44,16 +42,10 @@ fun AppNavigation(
             )
         }
 
-        composable<Screen.AddItem>(
-            deepLinks = listOf(
-                navDeepLink {
-                    action = Intent.ACTION_SEND
-                    mimeType = MIME_TYPE_IMAGE
-                }
-            )
-        ) { backStackEntry ->
-            val intent = backStackEntry.getDeepLinkIntentOrNull()
-            val uri = intent?.getImageUriOrNull()
+        composable<Screen.AddItem> { backStackEntry ->
+            val route = backStackEntry.toRoute<Screen.AddItem>()
+            val uriString = route.imageUriString
+            val uri = uriString?.toUri()
 
             AddItemRoute(
                 imageUri = uri,
@@ -63,21 +55,4 @@ fun AppNavigation(
             )
         }
     }
-}
-
-private fun NavBackStackEntry.getDeepLinkIntentOrNull(): Intent? {
-    val bundle = arguments ?: return null
-    return BundleCompat.getParcelable(
-        bundle,
-        NavController.KEY_DEEP_LINK_INTENT,
-        Intent::class.java
-    )
-}
-
-private fun Intent.getImageUriOrNull(): Uri? {
-    return IntentCompat.getParcelableExtra(
-        this,
-        Intent.EXTRA_STREAM,
-        Uri::class.java
-    )
 }
