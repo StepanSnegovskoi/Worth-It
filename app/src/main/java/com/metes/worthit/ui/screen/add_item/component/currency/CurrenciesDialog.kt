@@ -1,7 +1,10 @@
 package com.metes.worthit.ui.screen.add_item.component.currency
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.BasicAlertDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -29,7 +32,13 @@ fun CurrenciesDialog(
                 .background(Color.White),
             onDismissRequest = onDismissRequest,
             content = {
-                Currencies(modifier = Modifier.padding(16.dp), onClick = onCurrencyClick)
+                Currencies(
+                    modifier = Modifier
+                        .padding(16.dp)
+                        .heightIn(max = 320.dp)
+                        .wrapContentHeight(),
+                    onClick = onCurrencyClick
+                )
             }
         )
     }
