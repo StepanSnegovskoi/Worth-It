@@ -123,6 +123,7 @@ fun AddItemScreen(
 
     Scaffold(
         modifier = modifier
+            .fillMaxSize()
             .imePadding()
             .nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
@@ -230,9 +231,8 @@ fun AddItemScreen(
                             currency = uiState.currency,
                             price = uiState.price,
                             onIconClick = { showCurrencies.value = true },
-                        ) {
-                            onPriceChange(it)
-                        }
+                            onPriceChange = onPriceChange
+                        )
                     }
                 }
             }

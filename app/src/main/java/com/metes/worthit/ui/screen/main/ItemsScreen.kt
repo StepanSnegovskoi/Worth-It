@@ -47,7 +47,8 @@ fun ItemsScreen(
     onAddItemClick: () -> Unit
 ) {
     Scaffold(
-        modifier = modifier,
+        modifier = modifier
+            .fillMaxSize(),
         floatingActionButton = {
             if (uiState is ItemsUiState.Success) {
                 FloatingActionButton(

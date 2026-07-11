@@ -37,7 +37,6 @@ fun AppNavigation(
     ) {
         composable<Screen.Items> {
             ItemsRoute(
-                modifier = Modifier.fillMaxSize(),
                 onNavigateToAddItem = navHostController::navigateToAddItem
             )
         }
@@ -49,7 +48,6 @@ fun AppNavigation(
 
             AddItemRoute(
                 imageUri = uri,
-                modifier = Modifier.fillMaxSize(),
                 onNavigateToItems = navHostController::navigateBack,
                 onBackClick = navHostController::navigateBack
             )
