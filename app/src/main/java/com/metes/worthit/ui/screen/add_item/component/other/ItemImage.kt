@@ -1,4 +1,4 @@
-package com.metes.worthit.ui.screen.add_item.component
+package com.metes.worthit.ui.screen.add_item.component.other
 
 import androidx.annotation.DrawableRes
 import androidx.compose.runtime.Composable

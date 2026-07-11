@@ -1,21 +1,14 @@
 package com.metes.worthit.ui.screen.add_item
 
 import android.net.Uri
-import android.util.Log
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.expandIn
-import androidx.compose.animation.expandVertically
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
-import androidx.compose.animation.shrinkOut
-import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.imePadding
@@ -23,6 +16,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
@@ -30,28 +24,35 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.getSelectedDate
+import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.metes.worthit.R
-import com.metes.worthit.ui.screen.add_item.component.ItemImage
+import com.metes.worthit.ui.component.LoadingScreen
+import com.metes.worthit.ui.component.WorthItTextField
+import com.metes.worthit.ui.entity.Currency
+import com.metes.worthit.ui.screen.add_item.component.currency.CurrenciesDialog
+import com.metes.worthit.ui.screen.add_item.component.date.DateField
+import com.metes.worthit.ui.screen.add_item.component.date.DatePickerDialog
+import com.metes.worthit.ui.screen.add_item.component.other.ItemImage
+import com.metes.worthit.ui.screen.add_item.component.other.PriceField
 
 @Composable
 fun AddItemRoute(
@@ -91,32 +92,32 @@ fun AddItemRoute(
     }
 
     AddItemScreen(
-        name = uiState.name,
-        description = uiState.description,
+        uiState = uiState,
         modifier = modifier,
-        imageUri = uiState.imageUri,
         onAddItemClick = { viewModel.processCommand(AddItemCommand.AddItem) },
         onNameChange = { viewModel.processCommand(AddItemCommand.ChangeName(it)) },
+        onPriceChange = { viewModel.processCommand(AddItemCommand.ChangePrice(it)) },
         onDescriptionChange = { viewModel.processCommand(AddItemCommand.ChangeDescription(it)) },
         onBackClick = onBackClick,
         onImageClick = {
             photoPicker.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
-        }
+        },
+        onCurrencyChange = { viewModel.processCommand(AddItemCommand.ChangeCurrency(it)) }
     )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AddItemScreen(
-    name: String,
-    description: String,
+    uiState: AddItemUiState,
     modifier: Modifier = Modifier,
-    imageUri: Uri?,
     onAddItemClick: () -> Unit,
     onNameChange: (String) -> Unit,
+    onPriceChange: (String) -> Unit,
     onDescriptionChange: (String) -> Unit,
     onBackClick: () -> Unit,
-    onImageClick: () -> Unit
+    onImageClick: () -> Unit,
+    onCurrencyChange: (Currency) -> Unit,
 ) {
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
 
@@ -126,9 +127,7 @@ fun AddItemScreen(
             .nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
             TopAppBar(
-                title = {
-                    Text(text = stringResource(R.string.new_item_title))
-                },
+                title = { Text(text = stringResource(R.string.new_item_title)) },
                 navigationIcon = {
                     IconButton(onClick = onBackClick) {
                         Icon(
@@ -141,53 +140,102 @@ fun AddItemScreen(
             )
         },
         floatingActionButton = {
-            FloatingActionButton(
-                onClick = onAddItemClick
-
-            ) {
-                Icon(
-                    painter = painterResource(R.drawable.add_24dp),
-                    contentDescription = stringResource(R.string.add_item_desc)
-                )
+            if (uiState is AddItemUiState.Success) {
+                FloatingActionButton(onClick = onAddItemClick) {
+                    Icon(
+                        painter = painterResource(R.drawable.add_24dp),
+                        contentDescription = stringResource(R.string.add_item_desc)
+                    )
+                }
             }
         }
     ) { innerPadding ->
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(innerPadding)
-                .verticalScroll(rememberScrollState())
-                .padding(horizontal = 16.dp),
-            verticalArrangement = Arrangement.spacedBy(8.dp)
-        ) {
-            ItemImage(
-                modifier = Modifier
-                    .clip(RoundedCornerShape(16.dp))
-                    .clickable(onClick = onImageClick)
-                    .size(240.dp)
-                    .align(Alignment.CenterHorizontally),
-                model = imageUri,
-                defaultImage = R.drawable.image_search_24dp,
-                contentDescription = stringResource(R.string.select_image_desc)
-            )
+        when (uiState) {
+            AddItemUiState.Loading -> {
+                LoadingScreen(modifier = Modifier.padding(innerPadding))
+            }
 
-            TextField(
-                modifier = Modifier.fillMaxWidth(),
-                value = name,
-                onValueChange = onNameChange,
-                label = {
-                    Text(text = stringResource(R.string.name_hint))
-                }
-            )
+            is AddItemUiState.Success -> {
+                val datePickerState =
+                    rememberDatePickerState(initialSelectedDateMillis = System.currentTimeMillis())
+                val showDatePicker = remember { mutableStateOf(false) }
+                val showCurrencies = remember { mutableStateOf(false) }
 
-            TextField(
-                modifier = Modifier.fillMaxWidth(),
-                value = description,
-                onValueChange = onDescriptionChange,
-                label = {
-                    Text(text = stringResource(R.string.description_hint))
+                CurrenciesDialog(
+                    show = showCurrencies.value,
+                    onDismissRequest = { showCurrencies.value = false },
+                    onCurrencyClick = {
+                        showCurrencies.value = false
+                        onCurrencyChange(it)
+                    }
+                )
+
+                DatePickerDialog(
+                    show = showDatePicker.value,
+                    state = datePickerState,
+                    onDismissRequest = { showDatePicker.value = false },
+                    onButtonClick = { showDatePicker.value = false }
+                )
+
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(innerPadding)
+                        .verticalScroll(rememberScrollState())
+                        .padding(horizontal = 16.dp),
+                    verticalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    ItemImage(
+                        modifier = Modifier
+                            .clip(RoundedCornerShape(16.dp))
+                            .clickable(onClick = onImageClick)
+                            .size(240.dp)
+                            .align(Alignment.CenterHorizontally),
+                        model = uiState.imageUri,
+                        defaultImage = R.drawable.image_search_24dp,
+                        contentDescription = stringResource(R.string.select_image_desc)
+                    )
+
+                    WorthItTextField(
+                        modifier = Modifier.fillMaxWidth(),
+                        value = uiState.name,
+                        keyboardOptions = KeyboardOptions.Default.copy(capitalization = KeyboardCapitalization.Sentences),
+                        onValueChange = onNameChange,
+                        label = { Text(text = stringResource(R.string.name_hint)) }
+                    )
+
+                    WorthItTextField(
+                        modifier = Modifier.fillMaxWidth(),
+                        value = uiState.description,
+                        keyboardOptions = KeyboardOptions.Default.copy(capitalization = KeyboardCapitalization.Sentences),
+                        maxLines = Int.MAX_VALUE,
+                        singleLine = false,
+                        onValueChange = onDescriptionChange,
+                        label = { Text(text = stringResource(R.string.description_hint)) }
+                    )
+
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(16.dp)
+                    ) {
+                        DateField(
+                            modifier = Modifier.weight(1f),
+                            date = datePickerState.getSelectedDate().toString(),
+                            onIconClick = { showDatePicker.value = true },
+                        )
+
+                        PriceField(
+                            modifier = Modifier.weight(1f),
+                            currency = uiState.currency,
+                            price = uiState.price,
+                            onIconClick = { showCurrencies.value = true },
+                        ) {
+                            onPriceChange(it)
+                        }
+                    }
                 }
-            )
+            }
         }
     }
 }
