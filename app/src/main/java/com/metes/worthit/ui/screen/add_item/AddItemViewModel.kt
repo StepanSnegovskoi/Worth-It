@@ -41,7 +41,7 @@ class AddItemViewModel @Inject constructor(
     private val imageUriFlow = savedStateHandle.getStateFlow<Uri?>(KEY_IMAGE_URI, null)
     private val descriptionFlow = savedStateHandle.getStateFlow(KEY_DESCRIPTION, "")
     private val currencyNameFlow = userSettings.getCurrencyName().map { currencyName ->
-        Currency.valueOf(currencyName)
+        runCatching { Currency.valueOf(currencyName) }.getOrElse { Currency.entries.first() }
     }
 
     val uiState = combine(
