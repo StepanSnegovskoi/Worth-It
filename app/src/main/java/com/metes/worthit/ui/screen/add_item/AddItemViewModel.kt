@@ -22,9 +22,9 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-const val KEY_NAME = "item_name"
-const val KEY_DESCRIPTION = "item_description"
-const val KEY_IMAGE_URI = "item_image"
+private const val KEY_NAME = "item_name"
+private const val KEY_DESCRIPTION = "item_description"
+private const val KEY_IMAGE_URI = "item_image"
 
 @HiltViewModel
 class AddItemViewModel @Inject constructor(
