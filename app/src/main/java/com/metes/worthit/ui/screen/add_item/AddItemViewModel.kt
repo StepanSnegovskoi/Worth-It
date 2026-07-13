@@ -74,7 +74,7 @@ class AddItemViewModel @Inject constructor(
             }
 
             is AddItemCommand.ChangePrice -> {
-                savedStateHandle[KEY_PRICE] = command.name
+                savedStateHandle[KEY_PRICE] = command.price
             }
 
             is AddItemCommand.SelectImage -> {
@@ -89,6 +89,18 @@ class AddItemViewModel @Inject constructor(
                 viewModelScope.launch {
                     userSettings.saveCurrency(command.currency)
                 }
+            }
+
+            AddItemCommand.RemoveImage -> {
+                savedStateHandle[KEY_IMAGE_URI] = null
+            }
+
+            AddItemCommand.RemoveName -> {
+                savedStateHandle[KEY_NAME] = ""
+            }
+
+            AddItemCommand.RemoveDescription -> {
+                savedStateHandle[KEY_DESCRIPTION] = ""
             }
         }
     }
@@ -125,9 +137,12 @@ class AddItemViewModel @Inject constructor(
 sealed interface AddItemCommand {
     data object AddItem : AddItemCommand
     data class ChangeName(val name: String) : AddItemCommand
-    data class ChangePrice(val name: String) : AddItemCommand
+    data object RemoveName : AddItemCommand
+    data class ChangePrice(val price: String) : AddItemCommand
+    data object RemoveDescription : AddItemCommand
     data class ChangeDescription(val description: String) : AddItemCommand
     data class SelectImage(val uri: Uri) : AddItemCommand
+    data object RemoveImage : AddItemCommand
     data class ChangeCurrency(val currency: Currency) : AddItemCommand
 }
 

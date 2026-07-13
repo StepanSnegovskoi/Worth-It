@@ -102,7 +102,10 @@ fun AddItemRoute(
         onImageClick = {
             photoPicker.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
         },
-        onCurrencyChange = { viewModel.processCommand(AddItemCommand.ChangeCurrency(it)) }
+        onCurrencyChange = { viewModel.processCommand(AddItemCommand.ChangeCurrency(it)) },
+        onRemoveImageClick = { viewModel.processCommand(AddItemCommand.RemoveImage) },
+        onRemoveNameClick = { viewModel.processCommand(AddItemCommand.RemoveName) },
+        onRemoveDescriptionClick = { viewModel.processCommand(AddItemCommand.RemoveDescription) },
     )
 }
 
@@ -117,6 +120,9 @@ fun AddItemScreen(
     onDescriptionChange: (String) -> Unit,
     onBackClick: () -> Unit,
     onImageClick: () -> Unit,
+    onRemoveImageClick: () -> Unit,
+    onRemoveNameClick: () -> Unit,
+    onRemoveDescriptionClick: () -> Unit,
     onCurrencyChange: (Currency) -> Unit,
 ) {
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
@@ -194,7 +200,8 @@ fun AddItemScreen(
                             .align(Alignment.CenterHorizontally),
                         model = uiState.imageUri,
                         defaultImage = R.drawable.image_search_24dp,
-                        contentDescription = stringResource(R.string.select_image_desc)
+                        contentDescription = stringResource(R.string.select_image_desc),
+                        onRemoveClick = onRemoveImageClick
                     )
 
                     WorthItTextField(
@@ -202,7 +209,17 @@ fun AddItemScreen(
                         value = uiState.name,
                         keyboardOptions = KeyboardOptions.Default.copy(capitalization = KeyboardCapitalization.Sentences),
                         onValueChange = onNameChange,
-                        label = { Text(text = stringResource(R.string.name_hint)) }
+                        label = { Text(text = stringResource(R.string.name_hint)) },
+                        trailingIcon = {
+                            IconButton(
+                                onClick = onRemoveNameClick
+                            ) {
+                                Icon(
+                                    painter = painterResource(R.drawable.close_24dp),
+                                    contentDescription = null
+                                )
+                            }
+                        }
                     )
 
                     WorthItTextField(
@@ -212,7 +229,17 @@ fun AddItemScreen(
                         maxLines = Int.MAX_VALUE,
                         singleLine = false,
                         onValueChange = onDescriptionChange,
-                        label = { Text(text = stringResource(R.string.description_hint)) }
+                        label = { Text(text = stringResource(R.string.description_hint)) },
+                        trailingIcon = {
+                            IconButton(
+                                onClick = onRemoveDescriptionClick
+                            ) {
+                                Icon(
+                                    painter = painterResource(R.drawable.close_24dp),
+                                    contentDescription = null
+                                )
+                            }
+                        }
                     )
 
                     Row(
