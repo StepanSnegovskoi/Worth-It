@@ -29,7 +29,7 @@ fun ItemImage(
             contentScale = ContentScale.Crop
         )
 
-        if (onRemoveClick != null) {
+        if (onRemoveClick != null && model != null) {
             IconButton(
                 modifier = Modifier.align(Alignment.TopEnd),
                 onClick = onRemoveClick

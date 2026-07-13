@@ -18,5 +18,8 @@
     <string name="currency_gbp">British Pound</string>
     <string name="currency_jpy">Japanese Yen</string>
     <string name="currency_inr">Indian Rupee</string>
+
     <string name="confirm">Confirm</string>
+    <string name="enter_name">Enter name</string>
+    <string name="form_is_incorrect">Form is incorrect</string>
 </resources>

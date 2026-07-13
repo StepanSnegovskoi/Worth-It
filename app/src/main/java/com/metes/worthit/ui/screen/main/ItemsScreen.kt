@@ -71,8 +71,8 @@ fun ItemsScreen(
                 Items(
                     items = uiState.items,
                     modifier = Modifier
-                        .fillMaxSize()
-                        .padding(innerPadding)
+                        .fillMaxSize(),
+                    contentPadding = innerPadding
                 )
             }
         }

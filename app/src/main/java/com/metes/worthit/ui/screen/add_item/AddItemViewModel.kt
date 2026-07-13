@@ -12,47 +12,73 @@ import com.metes.worthit.ui.entity.Currency
 import com.metes.worthit.ui.entity.UiText
 import com.metes.worthit.ui.entity.UiText.StringResource
 import com.metes.worthit.ui.screen.add_item.AddItemEvent.NavigateToItems
-import com.metes.worthit.ui.screen.add_item.AddItemEvent.ShowToast
+import com.metes.worthit.ui.screen.add_item.AddItemEvent.ShowSnackbar
+import com.metes.worthit.ui.utils.combine
 import com.metes.worthit.ui.utils.toUiText
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import java.time.Instant
 import javax.inject.Inject
+import java.time.Clock
 
 private const val KEY_NAME = "item_name"
 private const val KEY_PRICE = "item_price"
 private const val KEY_DESCRIPTION = "item_description"
 private const val KEY_IMAGE_URI = "item_image"
+private const val KEY_BOUGHT_DATE_MILLIS = "item_bought_date"
+private const val KEY_HAS_ATTEMPTED_SAVE = "has_attempted_save"
 
 @HiltViewModel
 class AddItemViewModel @Inject constructor(
     private val insertItemUseCase: InsertItemUseCase,
     private val savedStateHandle: SavedStateHandle,
     private val userSettings: UserSettings,
+    private val clock: Clock
 ) : ViewModel() {
 
+    private val hasAttemptedSaveFlow = savedStateHandle.getStateFlow(KEY_HAS_ATTEMPTED_SAVE, false)
     private val nameFlow = savedStateHandle.getStateFlow(KEY_NAME, "")
     private val priceFlow = savedStateHandle.getStateFlow(KEY_PRICE, "")
     private val imageUriFlow = savedStateHandle.getStateFlow<Uri?>(KEY_IMAGE_URI, null)
     private val descriptionFlow = savedStateHandle.getStateFlow(KEY_DESCRIPTION, "")
-    private val currencyNameFlow = userSettings.getCurrencyName().map { currencyName ->
+    private val boughtDateMillisFlow = savedStateHandle.getStateFlow<Long?>(
+        KEY_BOUGHT_DATE_MILLIS, System.currentTimeMillis()
+    )
+    private val currencyFlow = userSettings.getCurrencyName().map { currencyName ->
         runCatching { Currency.valueOf(currencyName) }.getOrElse { Currency.entries.first() }
     }
 
     val uiState = combine(
-        nameFlow, imageUriFlow, descriptionFlow, currencyNameFlow, priceFlow
-    ) { name: String, imageUri: Uri?, description: String, currency: Currency, price: String ->
+        nameFlow,
+        imageUriFlow,
+        descriptionFlow,
+        currencyFlow,
+        priceFlow,
+        boughtDateMillisFlow,
+        hasAttemptedSaveFlow
+    ) { name: String, imageUri: Uri?, description: String, currency: Currency, price: String, boughtDateMillis: Long?, hasAttemptedSave: Boolean ->
+        val isNameValid = name.isNotBlank()
+
+        val nameError = if (!isNameValid && hasAttemptedSave) {
+            StringResource(R.string.enter_name)
+        } else {
+            null
+        }
+
         AddItemUiState.Success(
             name = name,
             price = price,
             description = description,
             imageUri = imageUri,
-            currency = currency
+            currency = currency,
+            boughtDateMillis = boughtDateMillis,
+            nameError = nameError,
+            isValidForm = isNameValid
         )
     }.stateIn(
         scope = viewModelScope,
@@ -91,6 +117,10 @@ class AddItemViewModel @Inject constructor(
                 }
             }
 
+            is AddItemCommand.SelectBoughtDate -> {
+                savedStateHandle[KEY_BOUGHT_DATE_MILLIS] = command.boughtDateMillis
+            }
+
             AddItemCommand.RemoveImage -> {
                 savedStateHandle[KEY_IMAGE_URI] = null
             }
@@ -106,26 +136,47 @@ class AddItemViewModel @Inject constructor(
     }
 
     private fun addItem() {
-        viewModelScope.launch {
-            val currentState = uiState.value
-            if (currentState is AddItemUiState.Success) {
-                val name = currentState.name
-                val imageUri = currentState.imageUri
-                val description = currentState.description
+        val currentState = uiState.value
+        if (currentState is AddItemUiState.Success) {
+            if (!currentState.isValidForm) {
+                savedStateHandle[KEY_HAS_ATTEMPTED_SAVE] = true
+                viewModelScope.launch {
+                    _events.send(
+                        ShowSnackbar(
+                            message = StringResource(R.string.form_is_incorrect),
+                            isError = true
+                        )
+                    )
+                }
+                return
+            }
+
+            viewModelScope.launch {
+                val priceInt = currentState.price.toLongOrNull()
+                val createdAtInstant = Instant.now(clock)
+                val boughtAtInstant =
+                    currentState.boughtDateMillis?.let { Instant.ofEpochMilli(it) }
 
                 val result = insertItemUseCase(
-                    name = name,
-                    description = description,
-                    imageUriString = imageUri?.toString()
+                    name = currentState.name,
+                    description = currentState.description,
+                    price = priceInt,
+                    createdAt = createdAtInstant,
+                    boughtAt = boughtAtInstant,
+                    imageUriString = currentState.imageUri?.toString()
                 )
 
                 when (result) {
                     is Result.Error<Exception> -> {
-                        _events.send(ShowToast(result.error.toUiText()))
+                        _events.send(
+                            ShowSnackbar(
+                                message = result.error.toUiText(),
+                                isError = true
+                            )
+                        )
                     }
 
                     is Result.Success<*> -> {
-                        _events.send(ShowToast(StringResource(R.string.item_created)))
                         _events.send(NavigateToItems)
                     }
                 }
@@ -142,13 +193,14 @@ sealed interface AddItemCommand {
     data object RemoveDescription : AddItemCommand
     data class ChangeDescription(val description: String) : AddItemCommand
     data class SelectImage(val uri: Uri) : AddItemCommand
+    data class SelectBoughtDate(val boughtDateMillis: Long) : AddItemCommand
     data object RemoveImage : AddItemCommand
     data class ChangeCurrency(val currency: Currency) : AddItemCommand
 }
 
 sealed interface AddItemEvent {
     data object NavigateToItems : AddItemEvent
-    data class ShowToast(val message: UiText) : AddItemEvent
+    data class ShowSnackbar(val message: UiText, val isError: Boolean) : AddItemEvent
 }
 
 sealed interface AddItemUiState {
@@ -159,6 +211,9 @@ sealed interface AddItemUiState {
         val price: String,
         val description: String,
         val imageUri: Uri?,
-        val currency: Currency
+        val currency: Currency,
+        val boughtDateMillis: Long?,
+        val nameError: UiText?,
+        val isValidForm: Boolean,
     ) : AddItemUiState
 }

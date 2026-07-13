@@ -23,16 +23,18 @@ import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.material3.getSelectedDate
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -48,11 +50,18 @@ import com.metes.worthit.R
 import com.metes.worthit.ui.component.LoadingScreen
 import com.metes.worthit.ui.component.WorthItTextField
 import com.metes.worthit.ui.entity.Currency
+import com.metes.worthit.ui.entity.CustomSnackbarVisuals
 import com.metes.worthit.ui.screen.add_item.component.currency.CurrenciesDialog
 import com.metes.worthit.ui.screen.add_item.component.date.DateField
 import com.metes.worthit.ui.screen.add_item.component.date.DatePickerDialog
 import com.metes.worthit.ui.screen.add_item.component.other.ItemImage
 import com.metes.worthit.ui.screen.add_item.component.other.PriceField
+import com.metes.worthit.ui.screen.add_item.component.other.WorthItSnackbar
+import kotlinx.coroutines.launch
+import java.time.Instant
+import java.time.ZoneId
+import java.time.format.DateTimeFormatter
+import java.time.format.FormatStyle
 
 @Composable
 fun AddItemRoute(
@@ -72,15 +81,24 @@ fun AddItemRoute(
             }
         }
 
+    val snackbarHostState = remember { SnackbarHostState() }
+
     LaunchedEffect(Unit) {
         viewModel.events.collect { event ->
             when (event) {
                 AddItemEvent.NavigateToItems -> onNavigateToItems()
-                is AddItemEvent.ShowToast -> Toast.makeText(
-                    context,
-                    event.message.asString(context),
-                    Toast.LENGTH_SHORT
-                ).show()
+
+                is AddItemEvent.ShowSnackbar -> {
+                    launch {
+                        snackbarHostState
+                            .showSnackbar(
+                                CustomSnackbarVisuals(
+                                    message = event.message.asString(context),
+                                    isError = event.isError,
+                                )
+                            )
+                    }
+                }
             }
         }
     }
@@ -93,6 +111,7 @@ fun AddItemRoute(
 
     AddItemScreen(
         uiState = uiState,
+        snackbarHostState = snackbarHostState,
         modifier = modifier,
         onAddItemClick = { viewModel.processCommand(AddItemCommand.AddItem) },
         onNameChange = { viewModel.processCommand(AddItemCommand.ChangeName(it)) },
@@ -106,6 +125,7 @@ fun AddItemRoute(
         onRemoveImageClick = { viewModel.processCommand(AddItemCommand.RemoveImage) },
         onRemoveNameClick = { viewModel.processCommand(AddItemCommand.RemoveName) },
         onRemoveDescriptionClick = { viewModel.processCommand(AddItemCommand.RemoveDescription) },
+        onSelectBoughtDate = { viewModel.processCommand(AddItemCommand.SelectBoughtDate(it)) }
     )
 }
 
@@ -113,6 +133,7 @@ fun AddItemRoute(
 @Composable
 fun AddItemScreen(
     uiState: AddItemUiState,
+    snackbarHostState: SnackbarHostState,
     modifier: Modifier = Modifier,
     onAddItemClick: () -> Unit,
     onNameChange: (String) -> Unit,
@@ -124,6 +145,7 @@ fun AddItemScreen(
     onRemoveNameClick: () -> Unit,
     onRemoveDescriptionClick: () -> Unit,
     onCurrencyChange: (Currency) -> Unit,
+    onSelectBoughtDate: (Long) -> Unit,
 ) {
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
 
@@ -155,6 +177,17 @@ fun AddItemScreen(
                     )
                 }
             }
+        },
+        snackbarHost = {
+            SnackbarHost(hostState = snackbarHostState) { snackbarData ->
+                val visuals = snackbarData.visuals as? CustomSnackbarVisuals
+                val isError = visuals?.isError ?: return@SnackbarHost
+
+                WorthItSnackbar(
+                    snackbarData = snackbarData,
+                    isError = isError
+                )
+            }
         }
     ) { innerPadding ->
         when (uiState) {
@@ -164,9 +197,22 @@ fun AddItemScreen(
 
             is AddItemUiState.Success -> {
                 val datePickerState =
-                    rememberDatePickerState(initialSelectedDateMillis = System.currentTimeMillis())
-                val showDatePicker = remember { mutableStateOf(false) }
-                val showCurrencies = remember { mutableStateOf(false) }
+                    rememberDatePickerState(
+                        initialSelectedDateMillis = uiState.boughtDateMillis
+                    )
+
+                val showDatePicker = rememberSaveable { mutableStateOf(false) }
+                val showCurrencies = rememberSaveable { mutableStateOf(false) }
+
+                val formattedDate = remember(uiState.boughtDateMillis) {
+                    if (uiState.boughtDateMillis != null) {
+                        val formatter = DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM)
+                            .withZone(ZoneId.systemDefault())
+                        formatter.format(Instant.ofEpochMilli(uiState.boughtDateMillis))
+                    } else {
+                        ""
+                    }
+                }
 
                 CurrenciesDialog(
                     show = showCurrencies.value,
@@ -181,7 +227,12 @@ fun AddItemScreen(
                     show = showDatePicker.value,
                     state = datePickerState,
                     onDismissRequest = { showDatePicker.value = false },
-                    onButtonClick = { showDatePicker.value = false }
+                    onButtonClick = {
+                        datePickerState.selectedDateMillis?.let { millis ->
+                            onSelectBoughtDate(millis)
+                        }
+                        showDatePicker.value = false
+                    }
                 )
 
                 Column(
@@ -209,15 +260,19 @@ fun AddItemScreen(
                         value = uiState.name,
                         keyboardOptions = KeyboardOptions.Default.copy(capitalization = KeyboardCapitalization.Sentences),
                         onValueChange = onNameChange,
+                        isError = uiState.nameError != null,
+                        errorMessage = uiState.nameError?.asString(),
                         label = { Text(text = stringResource(R.string.name_hint)) },
                         trailingIcon = {
-                            IconButton(
-                                onClick = onRemoveNameClick
-                            ) {
-                                Icon(
-                                    painter = painterResource(R.drawable.close_24dp),
-                                    contentDescription = null
-                                )
+                            if (uiState.name.isNotEmpty()) {
+                                IconButton(
+                                    onClick = onRemoveNameClick
+                                ) {
+                                    Icon(
+                                        painter = painterResource(R.drawable.close_24dp),
+                                        contentDescription = null
+                                    )
+                                }
                             }
                         }
                     )
@@ -231,13 +286,15 @@ fun AddItemScreen(
                         onValueChange = onDescriptionChange,
                         label = { Text(text = stringResource(R.string.description_hint)) },
                         trailingIcon = {
-                            IconButton(
-                                onClick = onRemoveDescriptionClick
-                            ) {
-                                Icon(
-                                    painter = painterResource(R.drawable.close_24dp),
-                                    contentDescription = null
-                                )
+                            if (uiState.description.isNotEmpty()) {
+                                IconButton(
+                                    onClick = onRemoveDescriptionClick
+                                ) {
+                                    Icon(
+                                        painter = painterResource(R.drawable.close_24dp),
+                                        contentDescription = null
+                                    )
+                                }
                             }
                         }
                     )
@@ -249,7 +306,7 @@ fun AddItemScreen(
                     ) {
                         DateField(
                             modifier = Modifier.weight(1f),
-                            date = datePickerState.getSelectedDate().toString(),
+                            date = formattedDate,
                             onIconClick = { showDatePicker.value = true },
                         )
 

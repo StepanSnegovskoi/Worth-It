@@ -30,7 +30,7 @@ fun Item(
         ) {
             ItemImage(
                 modifier = Modifier.size(128.dp),
-                model = item.localPath,
+                model = item.imageLocalPath,
                 contentDescription = contentDescription,
                 defaultImage = defaultImage
             )

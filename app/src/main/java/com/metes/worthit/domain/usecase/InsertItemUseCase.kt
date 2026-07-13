@@ -4,6 +4,7 @@ import com.metes.worthit.domain.entity.Item
 import com.metes.worthit.domain.repository.ItemsRepository
 import com.metes.worthit.domain.repository.LocalMediaRepository
 import com.metes.worthit.domain.utils.Result
+import java.time.Instant
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -14,11 +15,24 @@ class InsertItemUseCase @Inject constructor(
 ) {
     suspend operator fun invoke(
         name: String,
+        price: Long?,
+        createdAt: Instant,
+        boughtAt: Instant?,
         description: String,
-        imageUriString: String?
+        imageUriString: String?,
     ): Result<Unit, Exception> {
+        if (name.isBlank()) return Result.Error(IllegalArgumentException("Name can't be blank"))
+
+        val item = Item(
+            name = name,
+            price = price,
+            createdAt = createdAt,
+            boughtAt = boughtAt,
+            description = description,
+            imageLocalPath = imageUriString
+        )
+
         if (imageUriString == null) {
-            val item = Item(name = name, description = description, localPath = null)
             return try {
                 if (itemsRepository.insertItem(item)) {
                     Result.Success(Unit)
@@ -37,11 +51,6 @@ class InsertItemUseCase @Inject constructor(
 
             is Result.Success -> {
                 val localImagePath = imageResult.item
-                val item = Item(
-                    name = name,
-                    description = description,
-                    localPath = localImagePath
-                )
 
                 try {
                     if (itemsRepository.insertItem(item)) {
