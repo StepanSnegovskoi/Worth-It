@@ -5,6 +5,7 @@ import com.metes.worthit.domain.repository.ItemsRepository
 import com.metes.worthit.domain.repository.LocalMediaRepository
 import com.metes.worthit.domain.utils.Result
 import java.time.Instant
+import java.time.LocalDate
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -17,7 +18,7 @@ class InsertItemUseCase @Inject constructor(
         name: String,
         price: Long?,
         createdAt: Instant,
-        boughtAt: Instant?,
+        boughtAt: LocalDate?,
         description: String,
         imageUriString: String?,
     ): Result<Unit, Exception> {

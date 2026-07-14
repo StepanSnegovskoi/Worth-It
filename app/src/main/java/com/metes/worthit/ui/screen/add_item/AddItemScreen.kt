@@ -1,7 +1,6 @@
 package com.metes.worthit.ui.screen.add_item
 
 import android.net.Uri
-import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
@@ -28,7 +27,6 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -53,13 +51,14 @@ import com.metes.worthit.ui.entity.Currency
 import com.metes.worthit.ui.entity.CustomSnackbarVisuals
 import com.metes.worthit.ui.screen.add_item.component.currency.CurrenciesDialog
 import com.metes.worthit.ui.screen.add_item.component.date.DateField
-import com.metes.worthit.ui.screen.add_item.component.date.DatePickerDialog
+import com.metes.worthit.ui.screen.add_item.component.date.PastOrPresentDatePickerDialog
 import com.metes.worthit.ui.screen.add_item.component.other.ItemImage
 import com.metes.worthit.ui.screen.add_item.component.other.PriceField
 import com.metes.worthit.ui.screen.add_item.component.other.WorthItSnackbar
 import kotlinx.coroutines.launch
+import java.time.Clock
 import java.time.Instant
-import java.time.ZoneId
+import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
 
@@ -112,6 +111,7 @@ fun AddItemRoute(
     AddItemScreen(
         uiState = uiState,
         snackbarHostState = snackbarHostState,
+        clock = viewModel.clock,
         modifier = modifier,
         onAddItemClick = { viewModel.processCommand(AddItemCommand.AddItem) },
         onNameChange = { viewModel.processCommand(AddItemCommand.ChangeName(it)) },
@@ -134,6 +134,7 @@ fun AddItemRoute(
 fun AddItemScreen(
     uiState: AddItemUiState,
     snackbarHostState: SnackbarHostState,
+    clock: Clock,
     modifier: Modifier = Modifier,
     onAddItemClick: () -> Unit,
     onNameChange: (String) -> Unit,
@@ -196,18 +197,13 @@ fun AddItemScreen(
             }
 
             is AddItemUiState.Success -> {
-                val datePickerState =
-                    rememberDatePickerState(
-                        initialSelectedDateMillis = uiState.boughtDateMillis
-                    )
-
                 val showDatePicker = rememberSaveable { mutableStateOf(false) }
                 val showCurrencies = rememberSaveable { mutableStateOf(false) }
 
                 val formattedDate = remember(uiState.boughtDateMillis) {
                     if (uiState.boughtDateMillis != null) {
                         val formatter = DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM)
-                            .withZone(ZoneId.systemDefault())
+                            .withZone(ZoneOffset.UTC)
                         formatter.format(Instant.ofEpochMilli(uiState.boughtDateMillis))
                     } else {
                         ""
@@ -223,13 +219,14 @@ fun AddItemScreen(
                     }
                 )
 
-                DatePickerDialog(
+                PastOrPresentDatePickerDialog(
                     show = showDatePicker.value,
-                    state = datePickerState,
+                    clock = clock,
+                    selectedDateMillis = uiState.boughtDateMillis,
                     onDismissRequest = { showDatePicker.value = false },
-                    onButtonClick = {
-                        datePickerState.selectedDateMillis?.let { millis ->
-                            onSelectBoughtDate(millis)
+                    onButtonClick = { selectedDateMillis ->
+                        selectedDateMillis?.let {
+                            onSelectBoughtDate(selectedDateMillis)
                         }
                         showDatePicker.value = false
                     }

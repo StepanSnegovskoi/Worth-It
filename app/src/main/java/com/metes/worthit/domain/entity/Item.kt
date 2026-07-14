@@ -1,6 +1,7 @@
 package com.metes.worthit.domain.entity
 
 import java.time.Instant
+import java.time.LocalDate
 
 
 data class Item(
@@ -8,7 +9,7 @@ data class Item(
     val name: String,
     val price: Long?,
     val createdAt: Instant,
-    val boughtAt: Instant?,
+    val boughtAt: LocalDate?,
     val description: String?,
     val imageLocalPath: String?
 ) {

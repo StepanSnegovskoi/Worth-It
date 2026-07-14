@@ -25,6 +25,9 @@ import kotlinx.coroutines.launch
 import java.time.Instant
 import javax.inject.Inject
 import java.time.Clock
+import java.time.LocalDate
+import java.time.ZoneId
+import java.time.ZoneOffset
 
 private const val KEY_NAME = "item_name"
 private const val KEY_PRICE = "item_price"
@@ -38,7 +41,7 @@ class AddItemViewModel @Inject constructor(
     private val insertItemUseCase: InsertItemUseCase,
     private val savedStateHandle: SavedStateHandle,
     private val userSettings: UserSettings,
-    private val clock: Clock
+    val clock: Clock
 ) : ViewModel() {
 
     private val hasAttemptedSaveFlow = savedStateHandle.getStateFlow(KEY_HAS_ATTEMPTED_SAVE, false)
@@ -46,8 +49,13 @@ class AddItemViewModel @Inject constructor(
     private val priceFlow = savedStateHandle.getStateFlow(KEY_PRICE, "")
     private val imageUriFlow = savedStateHandle.getStateFlow<Uri?>(KEY_IMAGE_URI, null)
     private val descriptionFlow = savedStateHandle.getStateFlow(KEY_DESCRIPTION, "")
+
+    private val initialSelectedDateMillis = LocalDate.now(clock)
+        .atStartOfDay(ZoneOffset.UTC)
+        .toInstant()
+        .toEpochMilli()
     private val boughtDateMillisFlow = savedStateHandle.getStateFlow<Long?>(
-        KEY_BOUGHT_DATE_MILLIS, System.currentTimeMillis()
+        KEY_BOUGHT_DATE_MILLIS, initialSelectedDateMillis
     )
     private val currencyFlow = userSettings.getCurrencyName().map { currencyName ->
         runCatching { Currency.valueOf(currencyName) }.getOrElse { Currency.entries.first() }
@@ -154,15 +162,18 @@ class AddItemViewModel @Inject constructor(
             viewModelScope.launch {
                 val priceInt = currentState.price.toLongOrNull()
                 val createdAtInstant = Instant.now(clock)
-                val boughtAtInstant =
-                    currentState.boughtDateMillis?.let { Instant.ofEpochMilli(it) }
+                val boughtAtDate = currentState.boughtDateMillis?.let { utcMillis ->
+                    Instant.ofEpochMilli(utcMillis)
+                        .atZone(ZoneOffset.UTC)
+                        .toLocalDate()
+                }
 
                 val result = insertItemUseCase(
                     name = currentState.name,
                     description = currentState.description,
                     price = priceInt,
                     createdAt = createdAtInstant,
-                    boughtAt = boughtAtInstant,
+                    boughtAt = boughtAtDate,
                     imageUriString = currentState.imageUri?.toString()
                 )
 

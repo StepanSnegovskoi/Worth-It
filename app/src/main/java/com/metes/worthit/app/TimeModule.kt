@@ -12,6 +12,6 @@ object TimeModule {
 
     @Provides
     fun provideClock(): Clock {
-        return Clock.systemUTC()
+        return Clock.systemDefaultZone()
     }
 }
