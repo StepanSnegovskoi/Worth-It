@@ -1,5 +1,6 @@
 package com.metes.worthit.ui.navigation
 
+import androidx.lifecycle.Lifecycle
 import androidx.navigation.NavHostController
 import androidx.navigation.NavOptionsBuilder
 import kotlinx.serialization.Serializable
@@ -18,9 +19,21 @@ sealed class Screen(val name: String) {
 }
 
 fun NavHostController.navigateToAddItem(imageUri: String? = null, builder: NavOptionsBuilder.() -> Unit = {}) {
-    navigate(Screen.AddItem(imageUri), builder)
+    safeNavigateTo(Screen.AddItem(imageUri), builder)
 }
 
 fun NavHostController.navigateBack() {
-    popBackStack()
+    safePopBackStack()
+}
+
+fun NavHostController.safePopBackStack() {
+    if (currentBackStackEntry?.lifecycle?.currentState == Lifecycle.State.RESUMED) {
+        popBackStack()
+    }
+}
+
+fun NavHostController.safeNavigateTo(screen: Screen, builder: NavOptionsBuilder.() -> Unit = {}) {
+    if (currentBackStackEntry?.lifecycle?.currentState == Lifecycle.State.RESUMED) {
+        navigate(screen, builder)
+    }
 }
