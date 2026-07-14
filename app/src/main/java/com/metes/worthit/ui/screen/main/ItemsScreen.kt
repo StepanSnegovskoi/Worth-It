@@ -74,7 +74,10 @@ fun ItemsScreen(
                     modifier = Modifier
                         .fillMaxSize()
                         .padding(horizontal = 8.dp),
-                    contentPadding = innerPadding
+                    contentPadding = innerPadding,
+                    onClick = {
+                        TODO("to do ItemsScreen Items(onClick)")
+                    }
                 )
             }
         }

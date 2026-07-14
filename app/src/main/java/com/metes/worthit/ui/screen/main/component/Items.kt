@@ -13,7 +13,8 @@ import com.metes.worthit.domain.entity.Item
 fun Items(
     items: List<Item>,
     modifier: Modifier = Modifier,
-    contentPadding: PaddingValues = PaddingValues(0.dp)
+    contentPadding: PaddingValues = PaddingValues(0.dp),
+    onClick: (Item) -> Unit
 ) {
     LazyColumn(
         modifier = modifier,
@@ -21,7 +22,7 @@ fun Items(
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         items(items = items, key = { it.id }) { item ->
-            Item(item = item)
+            ItemCard(item = item, onClick = onClick)
         }
     }
 }

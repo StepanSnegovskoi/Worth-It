@@ -10,6 +10,7 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.withContext
 import java.io.File
 import java.io.FileNotFoundException
+import java.time.Clock
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -18,7 +19,7 @@ import javax.inject.Singleton
 class InternalStorageImpl @Inject constructor(
     @param:ApplicationContext private val context: Context,
     private val dispatchers: StandardDispatchers,
-    private val currentTimeProvider: () -> Long
+    private val clock: Clock
 ) : LocalMediaRepository, StorageRepository<String, Result<String, Exception>> {
 
     override suspend fun saveImage(resourceIdentifier: String): Result<String, Exception> {
@@ -32,7 +33,7 @@ class InternalStorageImpl @Inject constructor(
     override suspend fun save(t: String): Result<String, Exception> = withContext(dispatchers.io) {
         try {
             val uri = t.toUri()
-            val fileName = "IMG_${currentTimeProvider()}.jpg"
+            val fileName = "IMG_${clock.millis()}.jpg"
             val imageFile = File(internalStorageImagesDir, fileName)
 
             with(context) {

@@ -20,7 +20,7 @@ class InsertItemUseCase @Inject constructor(
     suspend operator fun invoke(
         name: String,
         price: Long?,
-        currency: Currency,
+        currency: Currency?,
         createdAt: Instant,
         boughtAt: LocalDate?,
         description: String,
@@ -42,6 +42,8 @@ class InsertItemUseCase @Inject constructor(
         } else {
             null
         }
+
+        val currency = if (price == null) null else currency
 
         val item = Item(
             name = name,

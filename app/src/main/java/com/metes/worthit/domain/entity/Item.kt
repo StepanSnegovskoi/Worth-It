@@ -9,7 +9,7 @@ data class Item(
     val id: Int = DEFAULT_ID,
     val name: String,
     val price: Long?,
-    val currency: Currency,
+    val currency: Currency?,
     val createdAt: Instant,
     val boughtAt: LocalDate?,
     val description: String?,

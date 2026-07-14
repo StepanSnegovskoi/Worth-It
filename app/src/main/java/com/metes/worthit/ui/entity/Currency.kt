@@ -1,5 +1,6 @@
 package com.metes.worthit.ui.entity
 
+import android.util.Log
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import com.metes.worthit.R
@@ -15,9 +16,9 @@ enum class Currency(
     INR(R.drawable.inr_24dp, R.string.currency_inr);
 
     companion object {
-        fun fromNameOrFirst(name: String): Currency {
+        fun fromNameOrNull(name: String?): Currency? {
             val currencies = Currency.entries
-            val currency = currencies.find { it.name === name } ?: currencies.first()
+            val currency = currencies.find { it.name == name }
             return currency
         }
     }

@@ -18,7 +18,7 @@ data class ItemDbModel(
     @ColumnInfo(name = "price")
     val price: Long?,
     @ColumnInfo(name = "currency_name")
-    val currencyName: String,
+    val currencyName: String?,
     @ColumnInfo(name = "created_at")
     val createdAt: Long,
     @ColumnInfo(name = "bought_at_day")
@@ -33,7 +33,7 @@ fun Item.toDbModel() = ItemDbModel(
     id = id,
     name = name,
     price = price,
-    currencyName = currency.name,
+    currencyName = currency?.name,
     createdAt = createdAt.toEpochMilli(),
     boughtAtDay = boughtAt?.toEpochDay(),
     description = description,
@@ -44,7 +44,7 @@ fun ItemDbModel.toEntity() = Item(
     id = id,
     name = name,
     price = price,
-    currency = Currency.fromNameOrFirst(currencyName),
+    currency = Currency.fromNameOrNull(currencyName),
     createdAt = Instant.ofEpochMilli(createdAt),
     boughtAt = boughtAtDay?.let { LocalDate.ofEpochDay(it) },
     description = description,
