@@ -70,9 +70,7 @@ fun ItemCard(
                 verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 WorthItText(
-                    text = item.name,
-                    style = MaterialTheme.typography.titleMedium,
-                    color = MaterialTheme.colorScheme.onSurface,
+                    text = item.name
                 )
 
                 Row(
@@ -101,8 +99,6 @@ fun ItemCard(
                                 }
                                 WorthItText(
                                     text = formattedPrice,
-                                    style = MaterialTheme.typography.labelLarge,
-                                    color = MaterialTheme.colorScheme.onPrimaryContainer
                                 )
                             }
                         }
@@ -116,8 +112,6 @@ fun ItemCard(
 
                         WorthItText(
                             text = formattedDate,
-                            style = MaterialTheme.typography.bodySmall,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
                     }
                 }
