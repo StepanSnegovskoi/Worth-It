@@ -17,6 +17,7 @@ import com.metes.worthit.ui.utils.combine
 import com.metes.worthit.ui.utils.toUiText
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.receiveAsFlow
@@ -49,6 +50,7 @@ class AddItemViewModel @Inject constructor(
     private val priceFlow = savedStateHandle.getStateFlow(KEY_PRICE, "")
     private val imageUriFlow = savedStateHandle.getStateFlow<Uri?>(KEY_IMAGE_URI, null)
     private val descriptionFlow = savedStateHandle.getStateFlow(KEY_DESCRIPTION, "")
+    private val isSavingFlow = MutableStateFlow(false)
 
     private val initialSelectedDateMillis = LocalDate.now(clock)
         .atStartOfDay(ZoneOffset.UTC)
@@ -144,6 +146,8 @@ class AddItemViewModel @Inject constructor(
     }
 
     private fun addItem() {
+        if (isSavingFlow.value) return
+
         val currentState = uiState.value
         if (currentState is AddItemUiState.Success) {
             if (!currentState.isValidForm) {
@@ -160,6 +164,8 @@ class AddItemViewModel @Inject constructor(
             }
 
             viewModelScope.launch {
+                isSavingFlow.value = true
+
                 val priceInt = currentState.price.toLongOrNull()
                 val createdAtInstant = Instant.now(clock)
                 val boughtAtDate = currentState.boughtDateMillis?.let { utcMillis ->
