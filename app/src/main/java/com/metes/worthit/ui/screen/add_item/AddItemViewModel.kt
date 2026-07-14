@@ -27,7 +27,6 @@ import java.time.Instant
 import javax.inject.Inject
 import java.time.Clock
 import java.time.LocalDate
-import java.time.ZoneId
 import java.time.ZoneOffset
 
 private const val KEY_NAME = "item_name"
@@ -166,7 +165,7 @@ class AddItemViewModel @Inject constructor(
             viewModelScope.launch {
                 isSavingFlow.value = true
 
-                val priceInt = currentState.price.toLongOrNull()
+                val priceLong = currentState.price.toLongOrNull()
                 val createdAtInstant = Instant.now(clock)
                 val boughtAtDate = currentState.boughtDateMillis?.let { utcMillis ->
                     Instant.ofEpochMilli(utcMillis)
@@ -177,7 +176,8 @@ class AddItemViewModel @Inject constructor(
                 val result = insertItemUseCase(
                     name = currentState.name,
                     description = currentState.description,
-                    price = priceInt,
+                    price = priceLong,
+                    currency = currentState.currency,
                     createdAt = createdAtInstant,
                     boughtAt = boughtAtDate,
                     imageUriString = currentState.imageUri?.toString()

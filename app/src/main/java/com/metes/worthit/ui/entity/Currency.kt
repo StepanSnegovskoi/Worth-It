@@ -12,5 +12,13 @@ enum class Currency(
     USD(R.drawable.usd_24dp, R.string.currency_usd),
     GBP(R.drawable.gbp_24dp, R.string.currency_gbp),
     JPY(R.drawable.jpy_24dp, R.string.currency_jpy),
-    INR(R.drawable.inr_24dp, R.string.currency_inr),
+    INR(R.drawable.inr_24dp, R.string.currency_inr);
+
+    companion object {
+        fun fromNameOrFirst(name: String): Currency {
+            val currencies = Currency.entries
+            val currency = currencies.find { it.name === name } ?: currencies.first()
+            return currency
+        }
+    }
 }

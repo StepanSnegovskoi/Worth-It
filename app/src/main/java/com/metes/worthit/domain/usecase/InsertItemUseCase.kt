@@ -4,6 +4,7 @@ import com.metes.worthit.domain.entity.Item
 import com.metes.worthit.domain.repository.ItemsRepository
 import com.metes.worthit.domain.repository.LocalMediaRepository
 import com.metes.worthit.domain.utils.Result
+import com.metes.worthit.ui.entity.Currency
 import java.time.Clock
 import java.time.Instant
 import java.time.LocalDate
@@ -19,6 +20,7 @@ class InsertItemUseCase @Inject constructor(
     suspend operator fun invoke(
         name: String,
         price: Long?,
+        currency: Currency,
         createdAt: Instant,
         boughtAt: LocalDate?,
         description: String,
@@ -44,6 +46,7 @@ class InsertItemUseCase @Inject constructor(
         val item = Item(
             name = name,
             price = price,
+            currency = currency,
             createdAt = createdAt,
             boughtAt = boughtAt,
             description = description,
