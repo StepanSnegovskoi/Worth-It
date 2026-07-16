@@ -6,7 +6,6 @@ import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 import javax.inject.Singleton
 
-@Singleton
 class ObserveItemsUseCase @Inject constructor(
     private val repository: ItemsRepository
 ) {

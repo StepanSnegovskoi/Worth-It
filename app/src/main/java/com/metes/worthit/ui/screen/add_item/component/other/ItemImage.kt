@@ -24,9 +24,10 @@ fun ItemImage(
         modifier = modifier,
     ) {
         AsyncImage(
+            modifier = Modifier.matchParentSize(),
             model = model ?: defaultImage,
             contentDescription = contentDescription,
-            contentScale = ContentScale.Crop
+            contentScale = ContentScale.FillBounds
         )
 
         if (onRemoveClick != null && model != null) {

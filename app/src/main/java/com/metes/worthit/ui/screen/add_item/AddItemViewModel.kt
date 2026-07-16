@@ -1,11 +1,13 @@
 package com.metes.worthit.ui.screen.add_item
 
 import android.net.Uri
+import androidx.compose.runtime.remember
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.metes.worthit.R
 import com.metes.worthit.app.UserSettings
+import com.metes.worthit.data.utils.CurrentDateProvider
 import com.metes.worthit.domain.usecase.InsertItemUseCase
 import com.metes.worthit.domain.utils.Result
 import com.metes.worthit.ui.entity.Currency
@@ -28,6 +30,8 @@ import javax.inject.Inject
 import java.time.Clock
 import java.time.LocalDate
 import java.time.ZoneOffset
+import java.time.format.DateTimeFormatter
+import java.time.format.FormatStyle
 
 private const val KEY_NAME = "item_name"
 private const val KEY_PRICE = "item_price"
@@ -41,7 +45,8 @@ class AddItemViewModel @Inject constructor(
     private val insertItemUseCase: InsertItemUseCase,
     private val savedStateHandle: SavedStateHandle,
     private val userSettings: UserSettings,
-    val clock: Clock
+    private val currentDateProvider: CurrentDateProvider,
+    private val clock: Clock
 ) : ViewModel() {
 
     private val hasAttemptedSaveFlow = savedStateHandle.getStateFlow(KEY_HAS_ATTEMPTED_SAVE, false)
@@ -69,15 +74,20 @@ class AddItemViewModel @Inject constructor(
         currencyFlow,
         priceFlow,
         boughtDateMillisFlow,
-        hasAttemptedSaveFlow
-    ) { name: String, imageUri: Uri?, description: String, currency: Currency, price: String, boughtDateMillis: Long?, hasAttemptedSave: Boolean ->
+        hasAttemptedSaveFlow,
+        currentDateProvider.currentDate
+    ) { name, imageUri, description, currency, price, boughtDateMillis, hasAttemptedSave, currentDate ->
         val isNameValid = name.isNotBlank()
 
         val nameError = if (!isNameValid && hasAttemptedSave) {
             StringResource(R.string.enter_name)
-        } else {
-            null
-        }
+        } else null
+
+        val formattedDate = if (boughtDateMillis != null) {
+            val formatter = DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM)
+                .withZone(ZoneOffset.UTC)
+            formatter.format(Instant.ofEpochMilli(boughtDateMillis))
+        } else ""
 
         AddItemUiState.Success(
             name = name,
@@ -87,7 +97,9 @@ class AddItemViewModel @Inject constructor(
             currency = currency,
             boughtDateMillis = boughtDateMillis,
             nameError = nameError,
-            isValidForm = isNameValid
+            isValidForm = isNameValid,
+            currentDate = currentDate,
+            formattedDate = formattedDate
         )
     }.stateIn(
         scope = viewModelScope,
@@ -232,5 +244,7 @@ sealed interface AddItemUiState {
         val boughtDateMillis: Long?,
         val nameError: UiText?,
         val isValidForm: Boolean,
+        val currentDate: LocalDate,
+        val formattedDate: String
     ) : AddItemUiState
 }

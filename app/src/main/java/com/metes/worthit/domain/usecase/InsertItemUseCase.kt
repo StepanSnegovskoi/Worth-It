@@ -5,13 +5,13 @@ import com.metes.worthit.domain.repository.ItemsRepository
 import com.metes.worthit.domain.repository.LocalMediaRepository
 import com.metes.worthit.domain.utils.Result
 import com.metes.worthit.ui.entity.Currency
+import kotlinx.coroutines.CancellationException
 import java.time.Clock
 import java.time.Instant
 import java.time.LocalDate
 import javax.inject.Inject
 import javax.inject.Singleton
 
-@Singleton
 class InsertItemUseCase @Inject constructor(
     private val itemsRepository: ItemsRepository,
     private val internalRepository: LocalMediaRepository,
@@ -62,6 +62,8 @@ class InsertItemUseCase @Inject constructor(
                 finalImagePath?.let { internalRepository.deleteImage(it) }
                 Result.Error(Exception("Failed to insert item into database. Dao returned false."))
             }
+        } catch (c: CancellationException) {
+            throw c
         } catch (e: Exception) {
             finalImagePath?.let { internalRepository.deleteImage(it) }
             Result.Error(e)

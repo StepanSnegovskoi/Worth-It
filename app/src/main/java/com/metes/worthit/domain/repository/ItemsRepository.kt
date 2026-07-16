@@ -7,4 +7,5 @@ interface ItemsRepository {
 
     suspend fun insertItem(item: Item): Boolean
     fun observeItems(): Flow<List<Item>>
+    suspend fun deleteItem(itemId: Int): Boolean
 }

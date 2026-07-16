@@ -16,4 +16,7 @@ interface ItemsDao {
 
     @Query("SELECT * FROM items")
     fun observeItems(): Flow<List<ItemDbModel>>
+
+    @Query("DELETE FROM items WHERE id = :itemId")
+    suspend fun deleteItem(itemId: Int): Int
 }

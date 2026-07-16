@@ -1,6 +1,5 @@
 package com.metes.worthit.ui.entity
 
-import android.util.Log
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import com.metes.worthit.R
@@ -13,7 +12,8 @@ enum class Currency(
     USD(R.drawable.usd_24dp, R.string.currency_usd),
     GBP(R.drawable.gbp_24dp, R.string.currency_gbp),
     JPY(R.drawable.jpy_24dp, R.string.currency_jpy),
-    INR(R.drawable.inr_24dp, R.string.currency_inr);
+    INR(R.drawable.inr_24dp, R.string.currency_inr),
+    CNY(R.drawable.cny_24dp, R.string.chinese_yuan);
 
     companion object {
         fun fromNameOrNull(name: String?): Currency? {

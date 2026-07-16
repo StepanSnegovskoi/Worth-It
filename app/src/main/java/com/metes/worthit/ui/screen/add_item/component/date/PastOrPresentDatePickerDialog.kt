@@ -16,24 +16,22 @@ import java.time.ZoneOffset
 @Composable
 fun PastOrPresentDatePickerDialog(
     show: Boolean,
-    clock: Clock,
+    currentDate: LocalDate,
     selectedDateMillis: Long?,
     modifier: Modifier = Modifier,
     onDismissRequest: () -> Unit,
     onButtonClick: (Long?) -> Unit
 ) {
-    val (todayUtcMidnightMillis, currentYear) = remember(clock) {
-        val localDate = LocalDate.now(clock)
-
-        val todayUtcMidnight = localDate
+    val (todayUtcMidnightMillis, currentYear) = remember(currentDate) {
+        val todayUtcMidnight = currentDate
             .atStartOfDay(ZoneOffset.UTC)
             .toInstant()
             .toEpochMilli()
 
-        todayUtcMidnight to localDate.year
+        todayUtcMidnight to currentDate.year
     }
 
-    val selectableDates = remember(todayUtcMidnightMillis, currentYear) {
+    val selectableDates = remember(currentDate) {
         object : SelectableDates {
             override fun isSelectableDate(utcTimeMillis: Long): Boolean {
                 return utcTimeMillis <= todayUtcMidnightMillis

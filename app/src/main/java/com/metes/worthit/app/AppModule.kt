@@ -5,12 +5,15 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.PreferenceDataStoreFactory
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStoreFile
+import com.metes.worthit.data.di.ApplicationScope
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.SupervisorJob
 import javax.inject.Singleton
 
 @Module
@@ -24,6 +27,7 @@ interface AppModule {
     ): DispatcherProvider
 
     companion object {
+
         @Singleton
         @Provides
         fun provideDatastore(
@@ -33,5 +37,12 @@ interface AppModule {
                 context.preferencesDataStoreFile("user_settings")
             }
         }
+
+        @Singleton
+        @Provides
+        @ApplicationScope
+        fun provideApplicationScope(
+            dispatchers: StandardDispatchers
+        ): CoroutineScope = CoroutineScope(SupervisorJob() + dispatchers.default)
     }
 }

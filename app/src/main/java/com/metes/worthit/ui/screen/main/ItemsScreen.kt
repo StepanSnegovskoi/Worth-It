@@ -17,6 +17,8 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.metes.worthit.R
 import com.metes.worthit.ui.component.LoadingScreen
 import com.metes.worthit.ui.screen.main.component.Items
+import kotlinx.coroutines.flow.StateFlow
+import java.time.Clock
 
 @Composable
 fun ItemsRoute(
@@ -38,6 +40,9 @@ fun ItemsRoute(
         uiState = uiState,
         modifier = modifier,
         onAddItemClick = { viewModel.processCommand(ItemsCommand.AddItem) },
+        onItemSwipe = { itemId: Int, itemLocalImagePath: String? ->
+            viewModel.processCommand(ItemsCommand.DeleteItem(itemId, itemLocalImagePath))
+        },
     )
 }
 
@@ -45,7 +50,8 @@ fun ItemsRoute(
 fun ItemsScreen(
     uiState: ItemsUiState,
     modifier: Modifier = Modifier,
-    onAddItemClick: () -> Unit
+    onAddItemClick: () -> Unit,
+    onItemSwipe: (Int, String?) -> Unit,
 ) {
     Scaffold(
         modifier = modifier
@@ -70,14 +76,15 @@ fun ItemsScreen(
 
             is ItemsUiState.Success -> {
                 Items(
-                    items = uiState.items,
+                    items = uiState.uiItems,
                     modifier = Modifier
                         .fillMaxSize()
                         .padding(horizontal = 8.dp),
                     contentPadding = innerPadding,
                     onClick = {
                         TODO("to do ItemsScreen Items(onClick)")
-                    }
+                    },
+                    onDismiss = onItemSwipe
                 )
             }
         }

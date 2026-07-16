@@ -111,7 +111,6 @@ fun AddItemRoute(
     AddItemScreen(
         uiState = uiState,
         snackbarHostState = snackbarHostState,
-        clock = viewModel.clock,
         modifier = modifier,
         onAddItemClick = { viewModel.processCommand(AddItemCommand.AddItem) },
         onNameChange = { viewModel.processCommand(AddItemCommand.ChangeName(it)) },
@@ -134,7 +133,6 @@ fun AddItemRoute(
 fun AddItemScreen(
     uiState: AddItemUiState,
     snackbarHostState: SnackbarHostState,
-    clock: Clock,
     modifier: Modifier = Modifier,
     onAddItemClick: () -> Unit,
     onNameChange: (String) -> Unit,
@@ -200,16 +198,6 @@ fun AddItemScreen(
                 val showDatePicker = rememberSaveable { mutableStateOf(false) }
                 val showCurrencies = rememberSaveable { mutableStateOf(false) }
 
-                val formattedDate = remember(uiState.boughtDateMillis) {
-                    if (uiState.boughtDateMillis != null) {
-                        val formatter = DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM)
-                            .withZone(ZoneOffset.UTC)
-                        formatter.format(Instant.ofEpochMilli(uiState.boughtDateMillis))
-                    } else {
-                        ""
-                    }
-                }
-
                 CurrenciesDialog(
                     show = showCurrencies.value,
                     onDismissRequest = { showCurrencies.value = false },
@@ -221,7 +209,7 @@ fun AddItemScreen(
 
                 PastOrPresentDatePickerDialog(
                     show = showDatePicker.value,
-                    clock = clock,
+                    currentDate = uiState.currentDate,
                     selectedDateMillis = uiState.boughtDateMillis,
                     onDismissRequest = { showDatePicker.value = false },
                     onButtonClick = { selectedDateMillis ->
@@ -303,7 +291,7 @@ fun AddItemScreen(
                     ) {
                         DateField(
                             modifier = Modifier.weight(1f),
-                            date = formattedDate,
+                            date = uiState.formattedDate,
                             onIconClick = { showDatePicker.value = true },
                         )
 

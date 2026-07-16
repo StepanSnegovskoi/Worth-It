@@ -7,14 +7,15 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.metes.worthit.domain.entity.Item
+import com.metes.worthit.ui.screen.main.ItemUiModel
 
 @Composable
 fun Items(
-    items: List<Item>,
+    items: List<ItemUiModel>,
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues(0.dp),
-    onClick: (Item) -> Unit
+    onClick: (ItemUiModel) -> Unit,
+    onDismiss: (Int, String?) -> Unit,
 ) {
     LazyColumn(
         modifier = modifier,
@@ -22,7 +23,12 @@ fun Items(
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         items(items = items, key = { it.id }) { item ->
-            ItemCard(item = item, onClick = onClick)
+            SwipeableItemCard(
+                modifier = Modifier.animateItem(),
+                item = item,
+                onClick = onClick,
+                onDismiss = onDismiss
+            )
         }
     }
 }
