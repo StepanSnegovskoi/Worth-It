@@ -82,7 +82,7 @@ class AddItemViewModel @Inject constructor(
             currency = currency,
             boughtDateMillis = boughtDateMillis,
             currentDate = currentDate,
-            isValidName = name.isNotBlank() || !hasAttemptedSave,
+            isValidName = name.isNotBlank() || (name.isBlank() && !hasAttemptedSave),
         )
     }.stateIn(
         scope = viewModelScope,
@@ -144,7 +144,7 @@ class AddItemViewModel @Inject constructor(
 
         val currentState = uiState.value
         if (currentState is AddItemUiState.Success) {
-            if (!currentState.isValidName) {
+            if (currentState.name.isBlank()) {
                 savedStateHandle[KEY_HAS_ATTEMPTED_SAVE] = true
                 viewModelScope.launch {
                     _events.send(
