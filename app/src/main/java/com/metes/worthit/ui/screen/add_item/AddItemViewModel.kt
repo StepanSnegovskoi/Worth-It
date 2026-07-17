@@ -1,7 +1,6 @@
 package com.metes.worthit.ui.screen.add_item
 
 import android.net.Uri
-import androidx.compose.runtime.remember
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -30,8 +29,6 @@ import javax.inject.Inject
 import java.time.Clock
 import java.time.LocalDate
 import java.time.ZoneOffset
-import java.time.format.DateTimeFormatter
-import java.time.format.FormatStyle
 
 private const val KEY_NAME = "item_name"
 private const val KEY_PRICE = "item_price"
@@ -77,18 +74,6 @@ class AddItemViewModel @Inject constructor(
         hasAttemptedSaveFlow,
         currentDateProvider.currentDate
     ) { name, imageUri, description, currency, price, boughtDateMillis, hasAttemptedSave, currentDate ->
-        val isNameValid = name.isNotBlank()
-
-        val nameError = if (!isNameValid && hasAttemptedSave) {
-            StringResource(R.string.enter_name)
-        } else null
-
-        val formattedDate = if (boughtDateMillis != null) {
-            val formatter = DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM)
-                .withZone(ZoneOffset.UTC)
-            formatter.format(Instant.ofEpochMilli(boughtDateMillis))
-        } else ""
-
         AddItemUiState.Success(
             name = name,
             price = price,
@@ -96,14 +81,12 @@ class AddItemViewModel @Inject constructor(
             imageUri = imageUri,
             currency = currency,
             boughtDateMillis = boughtDateMillis,
-            nameError = nameError,
-            isValidForm = isNameValid,
             currentDate = currentDate,
-            formattedDate = formattedDate
+            isValidName = name.isNotBlank() || !hasAttemptedSave,
         )
     }.stateIn(
         scope = viewModelScope,
-        started = SharingStarted.WhileSubscribed(stopTimeoutMillis = 5_000),
+        started = SharingStarted.WhileSubscribed(5_000),
         initialValue = AddItemUiState.Loading
     )
 
@@ -161,7 +144,7 @@ class AddItemViewModel @Inject constructor(
 
         val currentState = uiState.value
         if (currentState is AddItemUiState.Success) {
-            if (!currentState.isValidForm) {
+            if (!currentState.isValidName) {
                 savedStateHandle[KEY_HAS_ATTEMPTED_SAVE] = true
                 viewModelScope.launch {
                     _events.send(
@@ -234,7 +217,6 @@ sealed interface AddItemEvent {
 
 sealed interface AddItemUiState {
     data object Loading : AddItemUiState
-
     data class Success(
         val name: String,
         val price: String,
@@ -242,9 +224,7 @@ sealed interface AddItemUiState {
         val imageUri: Uri?,
         val currency: Currency,
         val boughtDateMillis: Long?,
-        val nameError: UiText?,
-        val isValidForm: Boolean,
         val currentDate: LocalDate,
-        val formattedDate: String
+        val isValidName: Boolean
     ) : AddItemUiState
 }

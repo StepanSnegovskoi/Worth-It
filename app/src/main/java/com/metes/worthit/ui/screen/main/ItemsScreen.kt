@@ -36,19 +36,22 @@ fun ItemsRoute(
         }
     }
 
-    ItemsScreen(
-        uiState = uiState,
-        modifier = modifier,
-        onAddItemClick = { viewModel.processCommand(ItemsCommand.AddItem) },
-        onItemSwipe = { itemId: Int, itemLocalImagePath: String? ->
-            viewModel.processCommand(ItemsCommand.DeleteItem(itemId, itemLocalImagePath))
-        },
-    )
+    when (val currentState = uiState) {
+        ItemsUiState.Loading -> LoadingScreen()
+        is ItemsUiState.Success -> ItemsScreen(
+            uiState = currentState,
+            modifier = modifier,
+            onAddItemClick = { viewModel.processCommand(ItemsCommand.AddItem) },
+            onItemSwipe = { itemId: Int, itemLocalImagePath: String? ->
+                viewModel.processCommand(ItemsCommand.DeleteItem(itemId, itemLocalImagePath))
+            },
+        )
+    }
 }
 
 @Composable
 fun ItemsScreen(
-    uiState: ItemsUiState,
+    uiState: ItemsUiState.Success,
     modifier: Modifier = Modifier,
     onAddItemClick: () -> Unit,
     onItemSwipe: (Int, String?) -> Unit,
@@ -57,36 +60,26 @@ fun ItemsScreen(
         modifier = modifier
             .fillMaxSize(),
         floatingActionButton = {
-            if (uiState is ItemsUiState.Success) {
-                FloatingActionButton(
-                    onClick = onAddItemClick
-                ) {
-                    Icon(
-                        painter = painterResource(R.drawable.add_24dp),
-                        contentDescription = stringResource(R.string.add_item_desc)
-                    )
-                }
-            }
-        }
-    ) { innerPadding ->
-        when (uiState) {
-            ItemsUiState.Loading -> {
-                LoadingScreen(Modifier.padding(innerPadding))
-            }
-
-            is ItemsUiState.Success -> {
-                Items(
-                    items = uiState.uiItems,
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(horizontal = 8.dp),
-                    contentPadding = innerPadding,
-                    onClick = {
-                        TODO("to do ItemsScreen Items(onClick)")
-                    },
-                    onDismiss = onItemSwipe
+            FloatingActionButton(
+                onClick = onAddItemClick
+            ) {
+                Icon(
+                    painter = painterResource(R.drawable.add_24dp),
+                    contentDescription = stringResource(R.string.add_item_desc)
                 )
             }
         }
+    ) { innerPadding ->
+        Items(
+            items = uiState.uiItems,
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(horizontal = 8.dp),
+            contentPadding = innerPadding,
+            onClick = {
+                TODO("to do ItemsScreen Items(onClick)")
+            },
+            onDismiss = onItemSwipe
+        )
     }
 }

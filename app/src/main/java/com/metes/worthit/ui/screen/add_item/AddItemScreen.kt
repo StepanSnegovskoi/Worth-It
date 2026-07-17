@@ -52,11 +52,12 @@ import com.metes.worthit.ui.entity.CustomSnackbarVisuals
 import com.metes.worthit.ui.screen.add_item.component.currency.CurrenciesDialog
 import com.metes.worthit.ui.screen.add_item.component.date.DateField
 import com.metes.worthit.ui.screen.add_item.component.date.PastOrPresentDatePickerDialog
+import com.metes.worthit.ui.screen.add_item.component.other.DescriptionTextField
 import com.metes.worthit.ui.screen.add_item.component.other.ItemImage
+import com.metes.worthit.ui.screen.add_item.component.other.NameTextField
 import com.metes.worthit.ui.screen.add_item.component.other.PriceField
 import com.metes.worthit.ui.screen.add_item.component.other.WorthItSnackbar
 import kotlinx.coroutines.launch
-import java.time.Clock
 import java.time.Instant
 import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter
@@ -108,30 +109,34 @@ fun AddItemRoute(
         }
     }
 
-    AddItemScreen(
-        uiState = uiState,
-        snackbarHostState = snackbarHostState,
-        modifier = modifier,
-        onAddItemClick = { viewModel.processCommand(AddItemCommand.AddItem) },
-        onNameChange = { viewModel.processCommand(AddItemCommand.ChangeName(it)) },
-        onPriceChange = { viewModel.processCommand(AddItemCommand.ChangePrice(it)) },
-        onDescriptionChange = { viewModel.processCommand(AddItemCommand.ChangeDescription(it)) },
-        onBackClick = onBackClick,
-        onImageClick = {
-            photoPicker.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
-        },
-        onCurrencyChange = { viewModel.processCommand(AddItemCommand.ChangeCurrency(it)) },
-        onRemoveImageClick = { viewModel.processCommand(AddItemCommand.RemoveImage) },
-        onRemoveNameClick = { viewModel.processCommand(AddItemCommand.RemoveName) },
-        onRemoveDescriptionClick = { viewModel.processCommand(AddItemCommand.RemoveDescription) },
-        onSelectBoughtDate = { viewModel.processCommand(AddItemCommand.SelectBoughtDate(it)) }
-    )
+    when (val currentState = uiState) {
+        AddItemUiState.Loading -> LoadingScreen()
+
+        is AddItemUiState.Success -> AddItemScreen(
+            uiState = currentState,
+            snackbarHostState = snackbarHostState,
+            modifier = modifier,
+            onAddItemClick = { viewModel.processCommand(AddItemCommand.AddItem) },
+            onNameChange = { viewModel.processCommand(AddItemCommand.ChangeName(it)) },
+            onPriceChange = { viewModel.processCommand(AddItemCommand.ChangePrice(it)) },
+            onDescriptionChange = { viewModel.processCommand(AddItemCommand.ChangeDescription(it)) },
+            onBackClick = onBackClick,
+            onImageClick = {
+                photoPicker.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
+            },
+            onCurrencyChange = { viewModel.processCommand(AddItemCommand.ChangeCurrency(it)) },
+            onRemoveImageClick = { viewModel.processCommand(AddItemCommand.RemoveImage) },
+            onRemoveNameClick = { viewModel.processCommand(AddItemCommand.RemoveName) },
+            onRemoveDescriptionClick = { viewModel.processCommand(AddItemCommand.RemoveDescription) },
+            onSelectBoughtDate = { viewModel.processCommand(AddItemCommand.SelectBoughtDate(it)) }
+        )
+    }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AddItemScreen(
-    uiState: AddItemUiState,
+    uiState: AddItemUiState.Success,
     snackbarHostState: SnackbarHostState,
     modifier: Modifier = Modifier,
     onAddItemClick: () -> Unit,
@@ -147,6 +152,12 @@ fun AddItemScreen(
     onSelectBoughtDate: (Long) -> Unit,
 ) {
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
+    val formattedDate = remember(uiState.boughtDateMillis) {
+        uiState.boughtDateMillis?.let {
+            val formatter = DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM).withZone(ZoneOffset.UTC)
+            formatter.format(Instant.ofEpochMilli(it))
+        } ?: ""
+    }
 
     Scaffold(
         modifier = modifier
@@ -168,14 +179,13 @@ fun AddItemScreen(
             )
         },
         floatingActionButton = {
-            if (uiState is AddItemUiState.Success) {
-                FloatingActionButton(onClick = onAddItemClick) {
-                    Icon(
-                        painter = painterResource(R.drawable.add_24dp),
-                        contentDescription = stringResource(R.string.add_item_desc)
-                    )
-                }
+            FloatingActionButton(onClick = onAddItemClick) {
+                Icon(
+                    painter = painterResource(R.drawable.add_24dp),
+                    contentDescription = stringResource(R.string.add_item_desc)
+                )
             }
+
         },
         snackbarHost = {
             SnackbarHost(hostState = snackbarHostState) { snackbarData ->
@@ -189,121 +199,82 @@ fun AddItemScreen(
             }
         }
     ) { innerPadding ->
-        when (uiState) {
-            AddItemUiState.Loading -> {
-                LoadingScreen(modifier = Modifier.padding(innerPadding))
+        val showDatePicker = rememberSaveable { mutableStateOf(false) }
+        val showCurrencies = rememberSaveable { mutableStateOf(false) }
+
+        CurrenciesDialog(
+            show = showCurrencies.value,
+            onDismissRequest = { showCurrencies.value = false },
+            onCurrencyClick = {
+                showCurrencies.value = false
+                onCurrencyChange(it)
             }
+        )
 
-            is AddItemUiState.Success -> {
-                val showDatePicker = rememberSaveable { mutableStateOf(false) }
-                val showCurrencies = rememberSaveable { mutableStateOf(false) }
-
-                CurrenciesDialog(
-                    show = showCurrencies.value,
-                    onDismissRequest = { showCurrencies.value = false },
-                    onCurrencyClick = {
-                        showCurrencies.value = false
-                        onCurrencyChange(it)
-                    }
-                )
-
-                PastOrPresentDatePickerDialog(
-                    show = showDatePicker.value,
-                    currentDate = uiState.currentDate,
-                    selectedDateMillis = uiState.boughtDateMillis,
-                    onDismissRequest = { showDatePicker.value = false },
-                    onButtonClick = { selectedDateMillis ->
-                        selectedDateMillis?.let {
-                            onSelectBoughtDate(selectedDateMillis)
-                        }
-                        showDatePicker.value = false
-                    }
-                )
-
-                Column(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(innerPadding)
-                        .verticalScroll(rememberScrollState())
-                        .padding(horizontal = 16.dp),
-                    verticalArrangement = Arrangement.spacedBy(8.dp)
-                ) {
-                    ItemImage(
-                        modifier = Modifier
-                            .clip(RoundedCornerShape(16.dp))
-                            .clickable(onClick = onImageClick)
-                            .size(240.dp)
-                            .align(Alignment.CenterHorizontally),
-                        model = uiState.imageUri,
-                        defaultImage = R.drawable.image_search_24dp,
-                        contentDescription = stringResource(R.string.select_image_desc),
-                        onRemoveClick = onRemoveImageClick
-                    )
-
-                    WorthItTextField(
-                        modifier = Modifier.fillMaxWidth(),
-                        value = uiState.name,
-                        keyboardOptions = KeyboardOptions.Default.copy(capitalization = KeyboardCapitalization.Sentences),
-                        onValueChange = onNameChange,
-                        isError = uiState.nameError != null,
-                        errorMessage = uiState.nameError?.asString(),
-                        label = { Text(text = stringResource(R.string.name_hint)) },
-                        trailingIcon = {
-                            if (uiState.name.isNotEmpty()) {
-                                IconButton(
-                                    onClick = onRemoveNameClick
-                                ) {
-                                    Icon(
-                                        painter = painterResource(R.drawable.close_24dp),
-                                        contentDescription = null
-                                    )
-                                }
-                            }
-                        }
-                    )
-
-                    WorthItTextField(
-                        modifier = Modifier.fillMaxWidth(),
-                        value = uiState.description,
-                        keyboardOptions = KeyboardOptions.Default.copy(capitalization = KeyboardCapitalization.Sentences),
-                        maxLines = Int.MAX_VALUE,
-                        singleLine = false,
-                        onValueChange = onDescriptionChange,
-                        label = { Text(text = stringResource(R.string.description_hint)) },
-                        trailingIcon = {
-                            if (uiState.description.isNotEmpty()) {
-                                IconButton(
-                                    onClick = onRemoveDescriptionClick
-                                ) {
-                                    Icon(
-                                        painter = painterResource(R.drawable.close_24dp),
-                                        contentDescription = null
-                                    )
-                                }
-                            }
-                        }
-                    )
-
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.spacedBy(16.dp)
-                    ) {
-                        DateField(
-                            modifier = Modifier.weight(1f),
-                            date = uiState.formattedDate,
-                            onIconClick = { showDatePicker.value = true },
-                        )
-
-                        PriceField(
-                            modifier = Modifier.weight(1f),
-                            currency = uiState.currency,
-                            price = uiState.price,
-                            onIconClick = { showCurrencies.value = true },
-                            onPriceChange = onPriceChange
-                        )
-                    }
+        PastOrPresentDatePickerDialog(
+            show = showDatePicker.value,
+            currentDate = uiState.currentDate,
+            selectedDateMillis = uiState.boughtDateMillis,
+            onDismissRequest = { showDatePicker.value = false },
+            onButtonClick = { selectedDateMillis ->
+                selectedDateMillis?.let {
+                    onSelectBoughtDate(selectedDateMillis)
                 }
+                showDatePicker.value = false
+            }
+        )
+
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(innerPadding)
+                .verticalScroll(rememberScrollState())
+                .padding(horizontal = 16.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            ItemImage(
+                modifier = Modifier
+                    .clip(RoundedCornerShape(16.dp))
+                    .clickable(onClick = onImageClick)
+                    .size(240.dp)
+                    .align(Alignment.CenterHorizontally),
+                model = uiState.imageUri,
+                defaultImage = R.drawable.image_search_24dp,
+                contentDescription = stringResource(R.string.select_image_desc),
+                onRemoveClick = onRemoveImageClick
+            )
+
+            NameTextField(
+                name = uiState.name,
+                isError = !uiState.isValidName,
+                onRemoveNameClick = onRemoveNameClick,
+                onNameChange = onNameChange
+            )
+
+            DescriptionTextField(
+                description = uiState.description,
+                onRemoveDescriptionClick = onRemoveDescriptionClick,
+                onDescriptionChange = onDescriptionChange
+            )
+
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(16.dp)
+            ) {
+                DateField(
+                    modifier = Modifier.weight(1f),
+                    date = formattedDate,
+                    onIconClick = { showDatePicker.value = true },
+                )
+
+                PriceField(
+                    modifier = Modifier.weight(1f),
+                    currency = uiState.currency,
+                    price = uiState.price,
+                    onIconClick = { showCurrencies.value = true },
+                    onPriceChange = onPriceChange
+                )
             }
         }
     }
