@@ -3,10 +3,12 @@ package com.metes.worthit.domain.usecase
 import com.metes.worthit.domain.repository.ItemsRepository
 import com.metes.worthit.domain.repository.LocalMediaRepository
 import com.metes.worthit.domain.utils.Result
+import dagger.Reusable
 import kotlinx.coroutines.CancellationException
 import javax.inject.Inject
 import javax.inject.Singleton
 
+@Reusable
 class DeleteItemUseCase @Inject constructor(
     private val itemsRepository: ItemsRepository,
     private val internalRepository: LocalMediaRepository,

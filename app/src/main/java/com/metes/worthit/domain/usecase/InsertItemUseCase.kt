@@ -5,6 +5,7 @@ import com.metes.worthit.domain.repository.ItemsRepository
 import com.metes.worthit.domain.repository.LocalMediaRepository
 import com.metes.worthit.domain.utils.Result
 import com.metes.worthit.ui.entity.Currency
+import dagger.Reusable
 import kotlinx.coroutines.CancellationException
 import java.time.Clock
 import java.time.Instant
@@ -12,6 +13,7 @@ import java.time.LocalDate
 import javax.inject.Inject
 import javax.inject.Singleton
 
+@Reusable
 class InsertItemUseCase @Inject constructor(
     private val itemsRepository: ItemsRepository,
     private val internalRepository: LocalMediaRepository,
