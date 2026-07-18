@@ -27,7 +27,7 @@ fun ItemImage(
             modifier = Modifier.matchParentSize(),
             model = model ?: defaultImage,
             contentDescription = contentDescription,
-            contentScale = ContentScale.FillBounds
+            contentScale = ContentScale.Crop
         )
 
         if (onRemoveClick != null && model != null) {
