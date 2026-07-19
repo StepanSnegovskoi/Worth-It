@@ -160,37 +160,41 @@ class AddItemViewModel @Inject constructor(
             viewModelScope.launch {
                 isSavingFlow.value = true
 
-                val priceLong = currentState.price.toLongOrNull()
-                val createdAtInstant = Instant.now(clock)
-                val boughtAtDate = currentState.boughtDateMillis?.let { utcMillis ->
-                    Instant.ofEpochMilli(utcMillis)
-                        .atZone(ZoneOffset.UTC)
-                        .toLocalDate()
-                }
+                try {
+                    val priceLong = currentState.price.toLongOrNull()
+                    val createdAtInstant = Instant.now(clock)
+                    val boughtAtDate = currentState.boughtDateMillis?.let { utcMillis ->
+                        Instant.ofEpochMilli(utcMillis)
+                            .atZone(ZoneOffset.UTC)
+                            .toLocalDate()
+                    }
 
-                val result = insertItemUseCase(
-                    name = currentState.name,
-                    description = currentState.description,
-                    price = priceLong,
-                    currency = currentState.currency,
-                    createdAt = createdAtInstant,
-                    boughtAt = boughtAtDate,
-                    imageUriString = currentState.imageUri?.toString()
-                )
+                    val result = insertItemUseCase(
+                        name = currentState.name,
+                        description = currentState.description,
+                        price = priceLong,
+                        currency = currentState.currency,
+                        createdAt = createdAtInstant,
+                        boughtAt = boughtAtDate,
+                        imageUriString = currentState.imageUri?.toString()
+                    )
 
-                when (result) {
-                    is Result.Error<Exception> -> {
-                        _events.send(
-                            ShowSnackbar(
-                                message = result.error.toUiText(),
-                                isError = true
+                    when (result) {
+                        is Result.Error<Exception> -> {
+                            _events.send(
+                                ShowSnackbar(
+                                    message = result.error.toUiText(),
+                                    isError = true
+                                )
                             )
-                        )
-                    }
+                        }
 
-                    is Result.Success<*> -> {
-                        _events.send(NavigateToItems)
+                        is Result.Success<*> -> {
+                            _events.send(NavigateToItems)
+                        }
                     }
+                } finally {
+                    isSavingFlow.value = false
                 }
             }
         }
