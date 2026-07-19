@@ -4,11 +4,11 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Matrix
-import androidx.exifinterface.media.ExifInterface
 import android.net.Uri
 import android.os.Build
-import android.util.Log
+import androidx.exifinterface.media.ExifInterface
 import com.metes.worthit.app.StandardDispatchers
+import com.metes.worthit.app.throwIfNull
 import com.metes.worthit.domain.utils.Result
 import dagger.Reusable
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -26,18 +26,21 @@ class ImageCompressor @Inject constructor(
     suspend fun compress(
         uri: Uri,
         output: OutputStream,
+        reqWidth: Int = 512,
+        reqHeight: Int = 512,
         quality: Int = DEFAULT_QUALITY,
         compressFormat: Bitmap.CompressFormat = defaultCompressFormat
-    ): Result<Unit, Exception> = withContext(dispatchers.default) {
+    ): Result<Unit, Exception> = withContext(dispatchers.io) {
         var sampleBitmap: Bitmap? = null
+        var finalBitmap: Bitmap? = null
 
         try {
-            sampleBitmap = decodeSampleBitmap(uri)
-
             val orientation = getOrientationFromUri(uri)
-            val rotatedBitmap = sampleBitmap.rotated(orientation)
 
-            val isSuccess = rotatedBitmap.compress(compressFormat, quality, output)
+            sampleBitmap = decodeSampleBitmap(uri, reqWidth, reqHeight)
+            finalBitmap = sampleBitmap.rotated(orientation)
+
+            val isSuccess = finalBitmap.compress(compressFormat, quality, output)
 
             if (isSuccess) {
                 return@withContext Result.Success(Unit)
@@ -49,35 +52,45 @@ class ImageCompressor @Inject constructor(
         } catch (e: Exception) {
             return@withContext Result.Error(e)
         } finally {
-            sampleBitmap?.recycle()
+            finalBitmap?.recycle()
+            if (sampleBitmap !== finalBitmap) {
+                sampleBitmap?.recycle()
+            }
         }
     }
 
-    private fun decodeSampleBitmap(uri: Uri): Bitmap {
+    private fun decodeSampleBitmap(
+        uri: Uri,
+        reqWidth: Int,
+        reqHeight: Int
+    ): Bitmap {
         val options = BitmapFactory.Options().apply {
             inJustDecodeBounds = true
         }
 
         with(context) {
-            contentResolver.openInputStream(uri).use { input ->
-                BitmapFactory.decodeStream(input, null, options)
-            }
+            contentResolver.openInputStream(uri)
+                .throwIfNull(IllegalStateException("Failed to open input stream"))
+                .use { input ->
+                    BitmapFactory.decodeStream(input, null, options)
+                }
 
-            options.inSampleSize = calculateInSampleSize(options)
+            options.inSampleSize =
+                calculateInSampleSize(options = options, reqWidth = reqWidth, reqHeight = reqHeight)
             options.inJustDecodeBounds = false
 
-            return contentResolver.openInputStream(uri).use { input ->
+            return contentResolver.openInputStream(uri)?.use { input ->
                 BitmapFactory.decodeStream(input, null, options)
-                    ?: throw IllegalStateException("Failed to decode image into sampleBitmap")
-            }
+                    .throwIfNull(IllegalStateException("Failed to decode stream"))
+            }.throwIfNull(IllegalStateException("Failed to decode image into sampleBitmap"))
         }
     }
 
 
     private fun calculateInSampleSize(
         options: BitmapFactory.Options,
-        reqWidth: Int = 512,
-        reqHeight: Int = 512
+        reqWidth: Int,
+        reqHeight: Int
     ): Int {
         val height = options.outHeight
         val width = options.outWidth
@@ -93,10 +106,12 @@ class ImageCompressor @Inject constructor(
         return inSampleSize
     }
 
-    private fun Bitmap.rotated(orientation: Int): Bitmap {
+    private fun Bitmap.rotated(
+        orientation: Int
+    ): Bitmap {
         val matrix = Matrix()
         when (orientation) {
-            ExifInterface.ORIENTATION_NORMAL -> return this
+            ExifInterface.ORIENTATION_UNDEFINED, ExifInterface.ORIENTATION_NORMAL -> return this
             ExifInterface.ORIENTATION_FLIP_HORIZONTAL -> matrix.setScale(-1f, 1f)
             ExifInterface.ORIENTATION_ROTATE_180 -> matrix.setRotate(180f)
             ExifInterface.ORIENTATION_FLIP_VERTICAL -> {
@@ -128,16 +143,13 @@ class ImageCompressor @Inject constructor(
             true
         )
 
-        if (rotatedBitmap != this) recycle()
-
         return rotatedBitmap
     }
 
-    // always returns 1, why ? TODO(fix it)
     private fun getOrientationFromUri(uri: Uri): Int {
-        return context.contentResolver.openInputStream(uri).use { input ->
-            val exifInterface = input?.let { ExifInterface(it) }
-            exifInterface?.getAttributeInt(
+        return context.contentResolver.openInputStream(uri)?.use { input ->
+            val exifInterface = ExifInterface(input)
+            exifInterface.getAttributeInt(
                 ExifInterface.TAG_ORIENTATION,
                 ExifInterface.ORIENTATION_NORMAL
             )
