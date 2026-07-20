@@ -27,7 +27,7 @@ fun DescriptionTextField(
         onValueChange = onDescriptionChange,
         maxLines = Int.MAX_VALUE,
         singleLine = false,
-        label = { Text(text = stringResource(R.string.name_hint)) },
+        label = { Text(text = stringResource(R.string.description_hint)) },
         trailingIcon = {
             if (description.isNotEmpty()) {
                 IconButton(
