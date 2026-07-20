@@ -8,10 +8,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.metes.worthit.ui.screen.main.ItemUiModel
+import java.time.LocalDate
 
 @Composable
 fun Items(
     items: List<ItemUiModel>,
+    currentDate: LocalDate,
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues(0.dp),
     onClick: (ItemUiModel) -> Unit,
@@ -27,7 +29,8 @@ fun Items(
                 modifier = Modifier.animateItem(),
                 item = item,
                 onClick = onClick,
-                onDismiss = onDismiss
+                onDismiss = onDismiss,
+                currentDate = currentDate
             )
         }
     }

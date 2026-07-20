@@ -8,6 +8,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.unit.dp
 import com.metes.worthit.domain.entity.Item
 import com.metes.worthit.ui.component.ContentWrapper
@@ -20,8 +21,22 @@ import java.time.format.FormatStyle
 @Composable
 fun ItemBaseDetails(
     item: ItemUiModel,
+    currentDate: LocalDate,
     modifier: Modifier = Modifier
 ) {
+    val configuration = LocalConfiguration.current
+    val dateFormatter = remember(configuration) {
+        DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM)
+    }
+
+    val formattedDates = remember(item.boughtAt, currentDate, configuration) {
+        if (item.boughtAt != null) {
+            "${item.boughtAt.format(dateFormatter)} - ${currentDate.format(dateFormatter)}"
+        } else {
+            null
+        }
+    }
+
     Column(
         modifier = modifier,
         verticalArrangement = Arrangement.spacedBy(4.dp)
@@ -33,12 +48,12 @@ fun ItemBaseDetails(
                 text = item.name
             )
         }
-        if (item.formattedDates != null) {
+        formattedDates?.let {
             ContentWrapper {
                 WorthItText(
                     modifier = Modifier
                         .padding(4.dp),
-                    text = item.formattedDates
+                    text = formattedDates
                 )
             }
         }

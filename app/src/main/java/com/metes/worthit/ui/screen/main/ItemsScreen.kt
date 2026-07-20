@@ -72,6 +72,7 @@ fun ItemsScreen(
     ) { innerPadding ->
         Items(
             items = uiState.uiItems,
+            currentDate = uiState.currentDate,
             modifier = Modifier
                 .fillMaxSize()
                 .padding(horizontal = 8.dp),

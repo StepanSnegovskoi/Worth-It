@@ -24,6 +24,7 @@ import java.time.LocalDate
 @Composable
 fun ItemCard(
     item: ItemUiModel,
+    currentDate: LocalDate,
     modifier: Modifier = Modifier,
     onClick: (ItemUiModel) -> Unit
 ) {
@@ -52,7 +53,8 @@ fun ItemCard(
                 contentDescription = item.name
             )
             ItemBaseDetails(
-                item = item
+                item = item,
+                currentDate = currentDate
             )
         }
     }
