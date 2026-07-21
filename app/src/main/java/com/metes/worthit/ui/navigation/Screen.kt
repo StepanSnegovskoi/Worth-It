@@ -5,21 +5,17 @@ import androidx.navigation.NavHostController
 import androidx.navigation.NavOptionsBuilder
 import kotlinx.serialization.Serializable
 
-const val SCREEN_ITEMS_NAME = "Items"
-const val SCREEN_ADD_ITEM_NAME = "AddItem"
-
 @Serializable
-sealed class Screen(val name: String) {
+sealed interface Screen {
 
     @Serializable
-    data object Items : Screen(SCREEN_ITEMS_NAME) {}
+    data object Items : Screen {}
 
     @Serializable
-    data class AddItem(val imageUriString: String? = null) : Screen(SCREEN_ADD_ITEM_NAME)
-}
+    data class AddItem(val imageUriString: String? = null) : Screen
 
-fun NavHostController.navigateToAddItem(imageUri: String? = null, builder: NavOptionsBuilder.() -> Unit = {}) {
-    safeNavigateTo(Screen.AddItem(imageUri), builder)
+    @Serializable
+    data object Settings : Screen
 }
 
 fun NavHostController.navigateBack() {
@@ -32,7 +28,7 @@ fun NavHostController.safePopBackStack() {
     }
 }
 
-fun NavHostController.safeNavigateTo(screen: Screen, builder: NavOptionsBuilder.() -> Unit = {}) {
+fun NavHostController.safeNavigateTo(screen: Any, builder: NavOptionsBuilder.() -> Unit = {}) {
     if (currentBackStackEntry?.lifecycle?.currentState == Lifecycle.State.RESUMED) {
         navigate(screen, builder)
     }

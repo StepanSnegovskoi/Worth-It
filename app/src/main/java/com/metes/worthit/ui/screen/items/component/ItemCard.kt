@@ -1,4 +1,4 @@
-package com.metes.worthit.ui.screen.main.component
+package com.metes.worthit.ui.screen.items.component
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
@@ -15,9 +15,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import com.metes.worthit.R
-import com.metes.worthit.domain.entity.Item
 import com.metes.worthit.ui.screen.add_item.component.other.ItemImage
-import com.metes.worthit.ui.screen.main.ItemUiModel
+import com.metes.worthit.ui.screen.items.ItemUiModel
 import java.time.LocalDate
 
 @OptIn(ExperimentalMaterial3Api::class)

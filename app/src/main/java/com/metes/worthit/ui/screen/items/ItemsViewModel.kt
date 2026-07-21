@@ -1,12 +1,11 @@
-package com.metes.worthit.ui.screen.main
+package com.metes.worthit.ui.screen.items
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.metes.worthit.data.utils.CurrentDateProvider
 import com.metes.worthit.domain.usecase.DeleteItemUseCase
 import com.metes.worthit.domain.usecase.ObserveItemsUseCase
-import com.metes.worthit.ui.screen.main.mapper.toUiModel
-import com.metes.worthit.ui.screen.main.mapper.toUiModels
+import com.metes.worthit.ui.screen.items.mapper.toUiModels
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.SharingStarted
@@ -39,12 +38,6 @@ class ItemsViewModel @Inject constructor(
 
     fun processCommand(command: ItemsCommand) {
         when (command) {
-            ItemsCommand.AddItem -> {
-                viewModelScope.launch {
-                    _events.send(ItemsEvent.NavigateToAddItem)
-                }
-            }
-
             is ItemsCommand.DeleteItem -> {
                 viewModelScope.launch {
                     deleteItemUseCase(command.itemId, command.itemLocalImagePath)
@@ -55,12 +48,10 @@ class ItemsViewModel @Inject constructor(
 }
 
 sealed interface ItemsCommand {
-    data object AddItem : ItemsCommand
     data class DeleteItem(val itemId: Int, val itemLocalImagePath: String?) : ItemsCommand
 }
 
 sealed interface ItemsEvent {
-    data object NavigateToAddItem : ItemsEvent
 }
 
 sealed interface ItemsUiState {

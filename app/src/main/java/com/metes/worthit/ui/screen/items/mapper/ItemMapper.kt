@@ -1,7 +1,7 @@
-package com.metes.worthit.ui.screen.main.mapper
+package com.metes.worthit.ui.screen.items.mapper
 
 import com.metes.worthit.domain.entity.Item
-import com.metes.worthit.ui.screen.main.ItemUiModel
+import com.metes.worthit.ui.screen.items.ItemUiModel
 import java.time.LocalDate
 
 fun Item.toUiModel(currentDate: LocalDate): ItemUiModel {

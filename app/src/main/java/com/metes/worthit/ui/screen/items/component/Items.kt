@@ -1,4 +1,4 @@
-package com.metes.worthit.ui.screen.main.component
+package com.metes.worthit.ui.screen.items.component
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
@@ -7,7 +7,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.metes.worthit.ui.screen.main.ItemUiModel
+import com.metes.worthit.ui.screen.items.ItemUiModel
 import java.time.LocalDate
 
 @Composable

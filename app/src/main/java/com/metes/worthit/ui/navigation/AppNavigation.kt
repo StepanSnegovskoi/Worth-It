@@ -1,23 +1,16 @@
 package com.metes.worthit.ui.navigation
 
 import android.net.Uri
-import androidx.compose.animation.EnterTransition
-import androidx.compose.animation.ExitTransition
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.core.net.toUri
-import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
-import androidx.navigation.toRoute
-import com.metes.worthit.ui.screen.add_item.AddItemRoute
-import com.metes.worthit.ui.screen.add_item.AddItemViewModel
-import com.metes.worthit.ui.screen.main.ItemsRoute
+import androidx.navigation.compose.currentBackStackEntryAsState
+import com.metes.worthit.ui.component.nav.WorthItBottomBar
 
 @Composable
 fun AppNavigation(
@@ -26,44 +19,33 @@ fun AppNavigation(
     modifier: Modifier = Modifier,
     navHostController: NavHostController
 ) {
-    val currentBackStack by navHostController.currentBackStackEntryFlow.collectAsStateWithLifecycle(null)
+    val navBackStackEntry by navHostController.currentBackStackEntryAsState()
+    val currentDestination = navBackStackEntry?.destination
 
-    LaunchedEffect(sharedUri, currentBackStack) {
-        if (sharedUri != null && currentBackStack != null) {
-            navHostController.navigateToAddItem(sharedUri.toString()) {
-                launchSingleTop = true
-            }
+    LaunchedEffect(sharedUri, navBackStackEntry) {
+        if (sharedUri != null && navBackStackEntry != null) {
+            navHostController.safeNavigateTo(Screen.AddItem(sharedUri.toString()))
             onSharedUriConsumed()
         }
     }
 
-    NavHost(
-        navController = navHostController,
-        startDestination = Screen.Items,
-        modifier = modifier,
-        enterTransition = {
-            EnterTransition.None
-        },
-        exitTransition = {
-            ExitTransition.None
-        }
-    ) {
-        composable<Screen.Items> {
-            ItemsRoute(
-                onNavigateToAddItem = navHostController::navigateToAddItem
+    Scaffold(
+        modifier = modifier.fillMaxSize(),
+        bottomBar = {
+            WorthItBottomBar(
+                currentDestination = currentDestination,
+                onNavigate = { route ->
+                    navHostController.safeNavigateTo(route) {
+                        popUpTo(navHostController.graph.startDestinationId)
+                        launchSingleTop = true
+                    }
+                }
             )
         }
-
-        composable<Screen.AddItem> { backStackEntry ->
-            val route = backStackEntry.toRoute<Screen.AddItem>()
-            val uriString = route.imageUriString
-            val uri = uriString?.toUri()
-
-            AddItemRoute(
-                imageUri = uri,
-                onNavigateToItems = navHostController::navigateBack,
-                onBackClick = navHostController::navigateBack
-            )
-        }
+    ) { contentPadding ->
+        AppNavHost(
+            navHostController = navHostController,
+            modifier = Modifier.padding(bottom = contentPadding.calculateBottomPadding()),
+        )
     }
 }

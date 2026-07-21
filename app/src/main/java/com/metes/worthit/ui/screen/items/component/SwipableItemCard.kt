@@ -1,12 +1,11 @@
-package com.metes.worthit.ui.screen.main.component
+package com.metes.worthit.ui.screen.items.component
 
 import androidx.compose.material3.SwipeToDismissBox
 import androidx.compose.material3.SwipeToDismissBoxState
 import androidx.compose.material3.rememberSwipeToDismissBoxState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import com.metes.worthit.domain.entity.Item
-import com.metes.worthit.ui.screen.main.ItemUiModel
+import com.metes.worthit.ui.screen.items.ItemUiModel
 import java.time.LocalDate
 
 @Composable

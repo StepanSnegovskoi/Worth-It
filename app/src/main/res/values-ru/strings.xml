@@ -22,4 +22,7 @@
     <string name="enter_name">Введите название</string>
     <string name="form_is_incorrect">Форма некорректна</string>
     <string name="chinese_yuan">Китайский Юань</string>
+    <string name="items_screen">Предметы</string>
+    <string name="settings_screen">Настройки</string>
+    <string name="add_item_screen">Добавить предмет</string>
 </resources>
