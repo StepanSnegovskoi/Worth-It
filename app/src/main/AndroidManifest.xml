@@ -14,7 +14,7 @@
         android:theme="@style/Theme.WorthIt">
         <!-- needs to be singleTask because when user launch app from gallery new activity creates -->
         <activity
-            android:name=".ui.MainActivity"
+            android:name=".app.MainActivity"
             android:exported="true"
             android:theme="@style/Theme.WorthIt"
             android:launchMode="singleTask"

@@ -24,4 +24,16 @@ dependencyResolutionManagement {
 
 rootProject.name = "Worth It"
 include(":app")
- 
+include(":core")
+include(":core:domain")
+include(":core:data")
+include(":core:database")
+include(":core:navigation")
+include(":core:designsystem")
+include(":core:core-ui")
+include(":core:datastore")
+include(":core:common")
+include(":feature")
+include(":feature:items")
+include(":feature:add_item")
+include(":feature:settings")

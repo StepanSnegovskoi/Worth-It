@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="currency_eur">Евро</string>
+    <string name="currency_usd">Доллар США</string>
+    <string name="currency_gbp">Британский Фунт</string>
+    <string name="currency_jpy">Японская Йена</string>
+    <string name="currency_inr">Индийский Рупи</string>
+    <string name="chinese_yuan">Китайский Юань</string>
+    <string name="unknown_error">Неизвестная ошибка</string>
+    <string name="file_not_found">Файл не найден</string>
+    <string name="permission_denied">Нет прав доступа</string>
+    <string name="form_is_incorrect">Форма некорректна</string>
+</resources>

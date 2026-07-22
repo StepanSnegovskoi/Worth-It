@@ -34,8 +34,8 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
     buildFeatures {
         compose = true
@@ -57,21 +57,17 @@ dependencies {
 
     ksp(libs.hilt.compiler)
     implementation(libs.hilt.android)
-    implementation(libs.hilt.navigation.compose)
-
-    ksp(libs.room.compiler)
-    implementation(libs.room.runtime)
-    implementation(libs.room.ktx)
-
-    implementation(libs.coroutines.android)
 
     implementation(libs.navigation.compose)
 
-    implementation(libs.coil.compose)
-
-    implementation(libs.datastore)
-
-    implementation(libs.androidx.exifinterface)
+    implementation(project(":core:domain"))
+    implementation(project(":core:data"))
+    implementation(project(":core:navigation"))
+    implementation(project(":core:designsystem"))
+    implementation(project(":core:common"))
+    implementation(project(":feature:items"))
+    implementation(project(":feature:add_item"))
+    implementation(project(":feature:settings"))
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

@@ -1,0 +1,14 @@
+<resources>
+    <string name="date_hint">Date</string>
+    <string name="confirm">Confirm</string>
+    <string name="add_item_desc">Add item</string>
+    <string name="name_hint">Name</string>
+    <string name="back_desc">Back</string>
+    <string name="new_item_title">New item</string>
+    <string name="select_image_desc">Select image</string>
+    <string name="item_created">Item created</string>
+    <string name="description_hint">Description</string>
+    <string name="price_hint">Price</string>
+    <string name="enter_name">Enter name</string>
+    <string name="form_is_incorrect">Form is incorrect</string>
+</resources>

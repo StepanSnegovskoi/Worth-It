@@ -1,0 +1,12 @@
+<resources>
+    <string name="currency_eur">Euro</string>
+    <string name="currency_usd">US Dollar</string>
+    <string name="currency_gbp">British Pound</string>
+    <string name="currency_jpy">Japanese Yen</string>
+    <string name="currency_inr">Indian Rupee</string>
+    <string name="chinese_yuan">Chinese Yuan</string>
+    <string name="unknown_error">Unknown error</string>
+    <string name="permission_denied">Permission denied</string>
+    <string name="file_not_found">File not found</string>
+    <string name="form_is_incorrect">Form is incorrect</string>
+</resources>
