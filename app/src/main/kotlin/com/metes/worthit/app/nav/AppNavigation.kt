@@ -1,6 +1,7 @@
 package com.metes.worthit.app.nav
 
 import android.net.Uri
+import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
@@ -46,7 +47,10 @@ fun AppNavigation(
     ) { contentPadding ->
         AppNavHost(
             navHostController = navHostController,
-            modifier = Modifier.padding(bottom = contentPadding.calculateBottomPadding()),
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(contentPadding)
+                .consumeWindowInsets(contentPadding),
         )
     }
 }
