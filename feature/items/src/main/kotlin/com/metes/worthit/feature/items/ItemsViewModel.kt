@@ -18,9 +18,9 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ItemsViewModel @Inject constructor(
-    private val observeItemsUseCase: ObserveItemsUseCase,
     private val deleteItemUseCase: DeleteItemUseCase,
-    private val currentDateProvider: CurrentDateProvider
+    observeItemsUseCase: ObserveItemsUseCase,
+    currentDateProvider: CurrentDateProvider
 ) : ViewModel() {
 
     val uiState =

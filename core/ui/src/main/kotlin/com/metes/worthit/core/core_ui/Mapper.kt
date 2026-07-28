@@ -1,5 +1,6 @@
 package com.metes.worthit.core.core_ui
 
+import com.metes.worthit.core.ui.R
 import java.io.FileNotFoundException
 
 fun Exception.toUiText(): UiText {

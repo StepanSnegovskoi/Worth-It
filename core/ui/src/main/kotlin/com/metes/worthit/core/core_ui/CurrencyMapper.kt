@@ -3,7 +3,7 @@ package com.metes.worthit.core.core_ui
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import com.metes.worthit.core.domain.entity.Currency
-import com.metes.worthit.core.core_ui.R as DesignCoreUi
+import com.metes.worthit.core.ui.R as DesignCoreUi
 import com.metes.worthit.core.designsystem.R as DesignR
 
 val Currency.iconResId: Int

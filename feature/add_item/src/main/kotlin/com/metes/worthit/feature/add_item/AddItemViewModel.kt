@@ -11,9 +11,10 @@ import com.metes.worthit.core.datastore.UserSettings
 import com.metes.worthit.core.domain.entity.Currency
 import com.metes.worthit.core.domain.entity.Currency.Companion.fromNameOrDefault
 import com.metes.worthit.core.domain.usecase.InsertItemUseCase
-import com.metes.worthit.feature.add_item.AddItemEvent.*
 import com.metes.worthit.core.domain.utils.Result
 import com.metes.worthit.data.common.combine
+import com.metes.worthit.feature.add_item.AddItemEvent.NavigateToItems
+import com.metes.worthit.feature.add_item.AddItemEvent.ShowSnackbar
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -22,11 +23,11 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-import java.time.Instant
-import javax.inject.Inject
 import java.time.Clock
+import java.time.Instant
 import java.time.LocalDate
 import java.time.ZoneOffset
+import javax.inject.Inject
 
 private const val KEY_NAME = "item_name"
 private const val KEY_PRICE = "item_price"
@@ -40,8 +41,8 @@ class AddItemViewModel @Inject constructor(
     private val insertItemUseCase: InsertItemUseCase,
     private val savedStateHandle: SavedStateHandle,
     private val userSettings: UserSettings,
-    private val currentDateProvider: CurrentDateProvider,
-    private val clock: Clock
+    private val clock: Clock,
+    currentDateProvider: CurrentDateProvider,
 ) : ViewModel() {
 
     private val hasAttemptedSaveFlow = savedStateHandle.getStateFlow(KEY_HAS_ATTEMPTED_SAVE, false)
@@ -186,6 +187,7 @@ class AddItemViewModel @Inject constructor(
                                 )
                             )
                         }
+
                         is Result.Success<Unit> -> {
                             _events.send(NavigateToItems)
                         }

@@ -1,12 +1,9 @@
 plugins {
-    alias(libs.plugins.jetbrains.kotlin.jvm)
+    alias(libs.plugins.worthit.jvm.library)
 }
 
 dependencies {
     api(libs.coroutines.core)
     api(libs.javax.inject)
-}
-
-kotlin {
-    jvmToolchain(17)
+    testImplementation(libs.junit)
 }

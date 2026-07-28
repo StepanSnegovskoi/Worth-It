@@ -1,21 +1,14 @@
 plugins {
-    alias(libs.plugins.android.application)
-    alias(libs.plugins.kotlin.compose)
-    alias(libs.plugins.ksp)
-    alias(libs.plugins.hilt)
-    alias(libs.plugins.serialization)
+    alias(libs.plugins.worthit.android.application)
+    alias(libs.plugins.worthit.android.application.compose)
+    alias(libs.plugins.worthit.hilt)
 }
 
 android {
     namespace = "com.metes.worthit"
-    compileSdk {
-        version = release(37)
-    }
 
     defaultConfig {
         applicationId = "com.metes.worthit"
-        minSdk = 26
-        targetSdk = 37
         versionCode = 1
         versionName = "1.0"
 
@@ -33,33 +26,12 @@ android {
             signingConfig = signingConfigs.getByName("debug")
         }
     }
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_17
-        targetCompatibility = JavaVersion.VERSION_17
-    }
-    buildFeatures {
-        compose = true
-    }
     androidResources {
         generateLocaleConfig = true
     }
 }
 
 dependencies {
-    implementation(libs.androidx.core.ktx)
-    implementation(libs.androidx.lifecycle.runtime.ktx)
-    implementation(libs.androidx.activity.compose)
-    implementation(platform(libs.androidx.compose.bom))
-    implementation(libs.androidx.compose.ui)
-    implementation(libs.androidx.compose.ui.graphics)
-    implementation(libs.androidx.compose.ui.tooling.preview)
-    implementation(libs.androidx.compose.material3)
-
-    ksp(libs.hilt.compiler)
-    implementation(libs.hilt.android)
-
-    implementation(libs.navigation.compose)
-
     implementation(project(":core:domain"))
     implementation(project(":core:data"))
     implementation(project(":core:navigation"))
@@ -69,11 +41,16 @@ dependencies {
     implementation(project(":feature:add_item"))
     implementation(project(":feature:settings"))
 
+    implementation(libs.androidx.lifecycle.runtime.ktx)
+    implementation(libs.androidx.activity.compose)
+
+    implementation(libs.navigation.compose)
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
-    androidTestImplementation(libs.androidx.espresso.core)
-    androidTestImplementation(platform(libs.androidx.compose.bom))
-    androidTestImplementation(libs.androidx.compose.ui.test.junit4)
-    debugImplementation(libs.androidx.compose.ui.tooling)
-    debugImplementation(libs.androidx.compose.ui.test.manifest)
+//    androidTestImplementation(libs.androidx.espresso.core)
+//    androidTestImplementation(platform(libs.androidx.compose.bom))
+//    androidTestImplementation(libs.androidx.compose.ui.test.junit4)
+//    debugImplementation(libs.androidx.compose.ui.tooling)
+//    debugImplementation(libs.androidx.compose.ui.test.manifest)
 }
