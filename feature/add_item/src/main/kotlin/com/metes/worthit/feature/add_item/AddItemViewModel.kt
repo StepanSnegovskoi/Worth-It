@@ -12,13 +12,13 @@ import com.metes.worthit.core.domain.entity.Currency
 import com.metes.worthit.core.domain.entity.Currency.Companion.fromNameOrDefault
 import com.metes.worthit.core.domain.usecase.InsertItemUseCase
 import com.metes.worthit.core.domain.utils.Result
-import com.metes.worthit.data.common.combine
 import com.metes.worthit.feature.add_item.AddItemEvent.NavigateToItems
 import com.metes.worthit.feature.add_item.AddItemEvent.ShowSnackbar
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
@@ -45,6 +45,11 @@ class AddItemViewModel @Inject constructor(
     currentDateProvider: CurrentDateProvider,
 ) : ViewModel() {
 
+    private val initialSelectedDateMillis = LocalDate.now(clock)
+        .atStartOfDay(ZoneOffset.UTC)
+        .toInstant()
+        .toEpochMilli()
+
     private val hasAttemptedSaveFlow = savedStateHandle.getStateFlow(KEY_HAS_ATTEMPTED_SAVE, false)
     private val nameFlow = savedStateHandle.getStateFlow(KEY_NAME, "")
     private val priceFlow = savedStateHandle.getStateFlow(KEY_PRICE, "")
@@ -52,10 +57,6 @@ class AddItemViewModel @Inject constructor(
     private val descriptionFlow = savedStateHandle.getStateFlow(KEY_DESCRIPTION, "")
     private val isSavingFlow = MutableStateFlow(false)
 
-    private val initialSelectedDateMillis = LocalDate.now(clock)
-        .atStartOfDay(ZoneOffset.UTC)
-        .toInstant()
-        .toEpochMilli()
     private val boughtDateMillisFlow = savedStateHandle.getStateFlow<Long?>(
         KEY_BOUGHT_DATE_MILLIS, initialSelectedDateMillis
     )
@@ -63,25 +64,34 @@ class AddItemViewModel @Inject constructor(
         fromNameOrDefault(currencyName)
     }
 
-    val uiState = combine(
+    private val userInputFlow = combine(
         nameFlow,
-        imageUriFlow,
-        descriptionFlow,
-        currencyFlow,
         priceFlow,
+        descriptionFlow,
+        imageUriFlow,
+    ) { name, price, description, imageUri ->
+        UserInputData(name, price, description, imageUri)
+    }
+
+    private val metaDataFlow = combine(
+        currencyFlow,
         boughtDateMillisFlow,
         hasAttemptedSaveFlow,
         currentDateProvider.currentDate
-    ) { name, imageUri, description, currency, price, boughtDateMillis, hasAttemptedSave, currentDate ->
+    ) { currency, boughtDateMillis, hasAttemptedSave, currentDate ->
+        MetaData(currency, boughtDateMillis, hasAttemptedSave, currentDate)
+    }
+
+    val uiState = combine(userInputFlow, metaDataFlow) { userInput, metadata ->
         AddItemUiState.Success(
-            name = name,
-            price = price,
-            description = description,
-            imageUri = imageUri,
-            currency = currency,
-            boughtDateMillis = boughtDateMillis,
-            currentDate = currentDate,
-            isValidName = name.isNotBlank() || (name.isBlank() && !hasAttemptedSave),
+            name = userInput.name,
+            price = userInput.price,
+            description = userInput.description,
+            imageUri = userInput.imageUri,
+            currency = metadata.currency,
+            boughtDateMillis = metadata.boughtDateMillis,
+            currentDate = metadata.currentDate,
+            isValidName = userInput.name.isNotBlank() || (userInput.name.isBlank() && !metadata.hasAttemptedSave),
         )
     }.stateIn(
         scope = viewModelScope,
@@ -231,3 +241,17 @@ sealed interface AddItemUiState {
         val isValidName: Boolean
     ) : AddItemUiState
 }
+
+private data class UserInputData(
+    val name: String,
+    val price: String,
+    val description: String,
+    val imageUri: Uri?,
+)
+
+private data class MetaData(
+    val currency: Currency,
+    val boughtDateMillis: Long?,
+    val hasAttemptedSave: Boolean,
+    val currentDate: LocalDate,
+)
