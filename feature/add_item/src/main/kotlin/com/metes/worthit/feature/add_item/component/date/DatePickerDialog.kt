@@ -16,7 +16,7 @@ fun DatePickerDialog(
     state: DatePickerState,
     modifier: Modifier = Modifier,
     onDismissRequest: () -> Unit,
-    onButtonClick: (Long?) -> Unit
+    onButtonClick: (Long?) -> Unit,
 ) {
     if (show) {
         DatePickerDialog(

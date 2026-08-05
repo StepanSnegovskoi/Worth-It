@@ -1,4 +1,4 @@
-package com.metes.worthit.data.common
+package com.metes.worthit.core.common
 
 import javax.inject.Qualifier
 

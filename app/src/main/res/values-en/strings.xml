@@ -3,5 +3,5 @@
     <string name="app_name">Worth It</string>
     <string name="items_screen">Items</string>
     <string name="settings_screen">Settings</string>
-    <string name="add_item_screen">Add Item</string>
+    <string name="save_item_screen">Process Item</string>
 </resources>

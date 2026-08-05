@@ -8,6 +8,5 @@ android {
 }
 
 dependencies {
-    implementation(project(":core:data"))
     androidTestImplementation(libs.androidx.junit)
 }

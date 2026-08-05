@@ -5,7 +5,8 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import androidx.core.content.ContextCompat
-import com.metes.worthit.data.common.ApplicationScope
+import com.metes.worthit.core.domain.utils.DateProvider
+import com.metes.worthit.core.common.ApplicationScope
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.channels.awaitClose
@@ -22,9 +23,9 @@ import javax.inject.Singleton
 class CurrentDateProvider @Inject constructor(
     @param:ApplicationContext private val context: Context,
     @param:ApplicationScope private val applicationScope: CoroutineScope,
-    private val clock: Clock
-) {
-    val currentDate: Flow<LocalDate> = callbackFlow {
+    private val clock: Clock,
+): DateProvider {
+    override val currentDateFlow: Flow<LocalDate> = callbackFlow {
         trySend(LocalDate.now(clock))
 
         val receiver = object : BroadcastReceiver() {

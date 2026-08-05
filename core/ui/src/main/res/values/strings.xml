@@ -9,4 +9,10 @@
     <string name="permission_denied">Permission denied</string>
     <string name="file_not_found">File not found</string>
     <string name="form_is_incorrect">Form is incorrect</string>
+    <string name="failed_to_save_item">Failed to save item</string>
+    <string name="item_name_is_blank">Item name is blank</string>
+    <string name="item_purchase_date_in_the_future">The date of purchase of the item in the future</string>
+    <string name="unexpected_error">Unexpected error</string>
+    <string name="item_not_found">Item not found</string>
+    <string name="failed_to_save_image">Failed to save image</string>
 </resources>

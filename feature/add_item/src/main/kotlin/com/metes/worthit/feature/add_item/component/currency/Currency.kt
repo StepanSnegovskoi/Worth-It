@@ -12,15 +12,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import com.metes.worthit.core.core_ui.iconResId
-import com.metes.worthit.core.core_ui.titleResId
+import com.metes.worthit.core.ui.iconResId
+import com.metes.worthit.core.ui.titleResId
 import com.metes.worthit.core.domain.entity.Currency
 
 @Composable
 fun Currency(
     currency: Currency,
     modifier: Modifier = Modifier,
-    onClick: (Currency) -> Unit
+    onClick: (Currency) -> Unit,
 ) {
     Card(
         modifier = modifier

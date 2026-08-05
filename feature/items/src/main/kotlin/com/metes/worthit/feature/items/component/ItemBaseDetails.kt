@@ -19,18 +19,16 @@ import java.time.format.FormatStyle
 fun ItemBaseDetails(
     item: ItemUiModel,
     currentDate: LocalDate,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     val configuration = LocalConfiguration.current
     val dateFormatter = remember(configuration) {
         DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM)
     }
 
-    val formattedDates = remember(item.boughtAt, currentDate, configuration) {
-        if (item.boughtAt != null) {
-            "${item.boughtAt.format(dateFormatter)} - ${currentDate.format(dateFormatter)}"
-        } else {
-            null
+    val formattedDates = remember(item.dateOfPurchase, currentDate, configuration) {
+        item.dateOfPurchase?.let {
+            "${item.dateOfPurchase.format(dateFormatter)} - ${currentDate.format(dateFormatter)}"
         }
     }
 
@@ -54,28 +52,5 @@ fun ItemBaseDetails(
                 )
             }
         }
-//        Row(
-//            verticalAlignment = Alignment.CenterVertically,
-//            horizontalArrangement = Arrangement.spacedBy(8.dp)
-//        ) {
-//            if (item.daysCountText != null) {
-//                ContentWrapper {
-//                    WorthItText(
-//                        modifier = Modifier
-//                            .padding(4.dp),
-//                        text = item.daysCountText
-//                    )
-//                }
-//            }
-//            if (item.pricePerDayText != null) {
-//                ContentWrapper {
-//                    WorthItText(
-//                        modifier = Modifier
-//                            .padding(4.dp),
-//                        text = item.pricePerDayText
-//                    )
-//                }
-//            }
-//        }
     }
 }

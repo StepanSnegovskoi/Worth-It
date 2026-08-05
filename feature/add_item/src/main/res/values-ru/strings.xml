@@ -5,11 +5,14 @@
     <string name="add_item_desc">Добавить предмет</string>
     <string name="name_hint">Название</string>
     <string name="back_desc">Назад</string>
-    <string name="new_item_title">Новый предмет</string>
     <string name="select_image_desc">Выбрать изображение</string>
     <string name="item_created">Предмет создан</string>
     <string name="description_hint">Описание</string>
     <string name="price_hint">Цена</string>
     <string name="enter_name">Введите название</string>
     <string name="form_is_incorrect">Форма некорректна</string>
+    <string name="failed_to_set_item">Не удалось установить предмет</string>
+    <string name="edit_item_desc">Редактировать предмет</string>
+    <string name="adding_item">Добавление предмета</string>
+    <string name="editing_item">Редактирование предмета</string>
 </resources>

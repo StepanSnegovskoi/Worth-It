@@ -9,14 +9,15 @@ import androidx.navigation.compose.composable
 import androidx.navigation.toRoute
 import com.metes.worthit.core.navigation.Screen
 import com.metes.worthit.core.navigation.navigateBack
-import com.metes.worthit.feature.add_item.AddItemRoute
+import com.metes.worthit.core.navigation.safeNavigateTo
+import com.metes.worthit.feature.add_item.SaveItemRoute
 import com.metes.worthit.feature.items.ItemsRoute
 import com.metes.worthit.feature.items.SettingsScreen
 
 @Composable
 fun AppNavHost(
     modifier: Modifier = Modifier,
-    navHostController: NavHostController
+    navHostController: NavHostController,
 ) {
     NavHost(
         navController = navHostController,
@@ -24,16 +25,15 @@ fun AppNavHost(
         modifier = modifier,
     ) {
         composable<Screen.Items> {
-            ItemsRoute()
+            ItemsRoute(
+                onNavigateToSaveItem = { itemId ->
+                    navHostController.safeNavigateTo(Screen.SaveItem(itemId = itemId))
+                }
+            )
         }
 
-        composable<Screen.AddItem> { backStackEntry ->
-            val route = backStackEntry.toRoute<Screen.AddItem>()
-            val uriString = route.imageUriString
-            val uri = uriString?.toUri()
-
-            AddItemRoute(
-                imageUri = uri,
+        composable<Screen.SaveItem> {
+            SaveItemRoute(
                 onNavigateToItems = navHostController::navigateBack,
                 onBackClick = navHostController::navigateBack
             )

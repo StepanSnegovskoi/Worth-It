@@ -5,7 +5,7 @@ import com.metes.worthit.feature.items.ItemUiModel
 import java.time.LocalDate
 
 fun Item.toUiModel(currentDate: LocalDate): ItemUiModel {
-    val daysCount = boughtAt?.let {
+    val daysCount = dateOfPurchase?.let {
         (currentDate.toEpochDay() - it.toEpochDay() + 1).coerceAtLeast(1L)
     }
 
@@ -19,14 +19,14 @@ fun Item.toUiModel(currentDate: LocalDate): ItemUiModel {
         id = id,
         name = name,
         localImagePath = imageLocalPath,
-        boughtAt = boughtAt,
+        dateOfPurchase = dateOfPurchase,
         daysCount = daysCount,
-        pricePerDay = pricePerDay
+        pricePerDay = pricePerDay,
     )
 }
 
 fun List<Item>.toUiModels(
-    currentDate: LocalDate
+    currentDate: LocalDate,
 ): List<ItemUiModel> {
     return map { it.toUiModel(currentDate) }
 }

@@ -1,10 +1,11 @@
 package com.metes.worthit.feature.items
 
+import androidx.compose.runtime.Immutable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.metes.worthit.core.data.utils.CurrentDateProvider
 import com.metes.worthit.core.domain.usecase.DeleteItemUseCase
 import com.metes.worthit.core.domain.usecase.ObserveItemsUseCase
+import com.metes.worthit.core.domain.utils.DateProvider
 import com.metes.worthit.feature.items.mapper.toUiModels
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
@@ -20,11 +21,11 @@ import javax.inject.Inject
 class ItemsViewModel @Inject constructor(
     private val deleteItemUseCase: DeleteItemUseCase,
     observeItemsUseCase: ObserveItemsUseCase,
-    currentDateProvider: CurrentDateProvider
+    currentDateProvider: DateProvider,
 ) : ViewModel() {
 
     val uiState =
-        combine(observeItemsUseCase(), currentDateProvider.currentDate) { items, currentDate ->
+        combine(observeItemsUseCase(), currentDateProvider.currentDateFlow) { items, currentDate ->
             val uiItems = items.toUiModels(currentDate)
             ItemsUiState.Success(uiItems = uiItems, currentDate = currentDate)
         }.stateIn(
@@ -43,31 +44,41 @@ class ItemsViewModel @Inject constructor(
                     deleteItemUseCase(command.itemId, command.itemLocalImagePath)
                 }
             }
+
+            is ItemsCommand.ClickItem -> {
+                viewModelScope.launch {
+                    _events.send(ItemsEvent.NavigateToSaveItem(command.itemId))
+                }
+            }
         }
     }
 }
 
 sealed interface ItemsCommand {
     data class DeleteItem(val itemId: Int, val itemLocalImagePath: String?) : ItemsCommand
+    data class ClickItem(val itemId: Int) : ItemsCommand
 }
 
 sealed interface ItemsEvent {
+    data class NavigateToSaveItem(val itemId: Int) : ItemsEvent
 }
 
+@Immutable
 sealed interface ItemsUiState {
     data object Loading : ItemsUiState
 
     data class Success(
         val uiItems: List<ItemUiModel>,
-        val currentDate: LocalDate
+        val currentDate: LocalDate,
     ) : ItemsUiState
 }
 
+@Immutable
 data class ItemUiModel(
     val id: Int,
     val name: String,
     val localImagePath: String?,
-    val boughtAt: LocalDate?,
+    val dateOfPurchase: LocalDate?,
     val daysCount: Long?,
-    val pricePerDay: Double?
+    val pricePerDay: Double?,
 )

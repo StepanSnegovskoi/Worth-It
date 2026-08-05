@@ -8,6 +8,6 @@ android {
 }
 
 dependencies {
-    implementation(libs.navigation.compose)
+    api(libs.navigation.compose)
     androidTestImplementation(libs.androidx.junit)
 }

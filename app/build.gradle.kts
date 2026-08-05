@@ -1,3 +1,5 @@
+@file:Suppress("UnstableApiUsage")
+
 plugins {
     alias(libs.plugins.worthit.android.application)
     alias(libs.plugins.worthit.android.application.compose)
@@ -26,6 +28,7 @@ android {
             signingConfig = signingConfigs.getByName("debug")
         }
     }
+
     androidResources {
         generateLocaleConfig = true
     }
@@ -36,6 +39,7 @@ dependencies {
     implementation(project(":core:data"))
     implementation(project(":core:navigation"))
     implementation(project(":core:designsystem"))
+    implementation(project(":core:datastore"))
     implementation(project(":core:common"))
     implementation(project(":feature:items"))
     implementation(project(":feature:add_item"))
@@ -48,9 +52,4 @@ dependencies {
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
-//    androidTestImplementation(libs.androidx.espresso.core)
-//    androidTestImplementation(platform(libs.androidx.compose.bom))
-//    androidTestImplementation(libs.androidx.compose.ui.test.junit4)
-//    debugImplementation(libs.androidx.compose.ui.tooling)
-//    debugImplementation(libs.androidx.compose.ui.test.manifest)
 }

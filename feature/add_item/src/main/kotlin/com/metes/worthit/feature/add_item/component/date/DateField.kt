@@ -15,7 +15,7 @@ import com.metes.worthit.core.designsystem.R as DesignR
 fun DateField(
     date: String,
     modifier: Modifier = Modifier,
-    onIconClick: () -> Unit
+    onIconClick: () -> Unit,
 ) {
     WorthItTextField(
         modifier = modifier,
@@ -29,7 +29,7 @@ fun DateField(
                 onClick = onIconClick
             ) {
                 Icon(
-                    painter = painterResource(DesignR.drawable.calendar_24dp),
+                    painter = painterResource(R.drawable.calendar_24dp),
                     contentDescription = null
                 )
             }

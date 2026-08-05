@@ -3,7 +3,10 @@ package com.metes.worthit.core.data.repository
 import android.content.Context
 import androidx.core.net.toUri
 import com.metes.worthit.core.data.utils.ImageCompressor
-import com.metes.worthit.core.domain.repository.LocalMediaRepository
+import com.metes.worthit.core.domain.error.BusinessError
+import com.metes.worthit.core.domain.error.Error
+import com.metes.worthit.core.domain.error.FileError
+import com.metes.worthit.core.domain.error.UnexpectedError
 import com.metes.worthit.core.domain.repository.StorageRepository
 import com.metes.worthit.core.domain.utils.DispatcherProvider
 import com.metes.worthit.core.domain.utils.Result
@@ -11,8 +14,6 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.withContext
 import java.io.File
-import java.io.IOException
-import java.time.Clock
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -20,65 +21,65 @@ import javax.inject.Singleton
 class InternalStorageImpl @Inject constructor(
     @param:ApplicationContext private val context: Context,
     private val dispatchers: DispatcherProvider,
-    private val clock: Clock,
-    private val imageCompressor: ImageCompressor
-) : LocalMediaRepository, StorageRepository<String, Result<String, Exception>> {
+    private val imageCompressor: ImageCompressor,
+) : StorageRepository {
 
-    override suspend fun saveImage(resourceIdentifier: String): Result<String, Exception> {
-        return save(resourceIdentifier)
-    }
-
-    override suspend fun deleteImage(path: String): Result<Unit, Exception> {
-        return delete(path)
-    }
-
-    override suspend fun save(t: String): Result<String, Exception> = withContext(dispatchers.io) {
-        val uri = t.toUri()
-        val fileName = "IMG_${clock.millis()}.webp"
-        val imageFile = File(internalStorageImagesDir, fileName)
+    override suspend fun save(
+        imagePath: String,
+        fileName: String
+    ): Result<String, Error> = withContext(dispatchers.io) {
+        val uri = imagePath.toUri()
+        var imageFile: File? = null
 
         try {
-            imageFile.outputStream().use { outputStream ->
-                val result = imageCompressor.compress(
-                    uri,
-                    outputStream
-                )
-
-                if (result is Result.Error) {
-                    imageFile.delete()
-                    return@withContext Result.Error(
-                        Exception(
-                            "Compression failed",
-                            result.error
-                        )
-                    )
+            when (uri.scheme) {
+                "file", null -> {
+                    val file = File(imagePath)
+                    if (file.exists()) {
+                        Result.Success(imagePath)
+                    } else {
+                        Result.Error(FileError.FileNotFound)
+                    }
                 }
-            }
 
-            Result.Success(imageFile.path)
+                "content" -> {
+                    val fullFileName = "$fileName.webp"
+                    imageFile = File(internalStorageImagesDir, fullFileName)
+
+                    val result = imageCompressor.compress(uri, imageFile)
+
+                    if (result is Result.Success) {
+                        return@withContext Result.Success(imageFile.path)
+                    }
+
+                    imageFile.delete()
+                    Result.Error(FileError.CompressionFailed)
+                }
+
+                else -> Result.Error(FileError.UnsupportedUriScheme)
+            }
         } catch (c: CancellationException) {
-            imageFile.delete()
+            imageFile?.delete()
             throw c
-        } catch (e: Exception) {
-            imageFile.delete()
-            Result.Error(e)
+        } catch (_: Exception) {
+            imageFile?.delete()
+            Result.Error(BusinessError.ItemImageFailedToSave)
         }
     }
 
-    override suspend fun delete(path: String): Result<Unit, Exception> =
-        withContext(dispatchers.io) {
-            try {
-                val file = File(path)
-                if (file.exists() && !file.delete()) {
-                    return@withContext Result.Error(IOException("System failed to delete file: $path"))
-                }
-                Result.Success(Unit)
-            } catch (c: CancellationException) {
-                throw c
-            } catch (e: Exception) {
-                Result.Error(e)
+    override suspend fun delete(path: String): Result<Unit, Error> = withContext(dispatchers.io) {
+        try {
+            val file = File(path)
+            if (file.exists() && !file.delete()) {
+                return@withContext Result.Error(FileError.FailedToDeleteFile)
             }
+            Result.Success(Unit)
+        } catch (c: CancellationException) {
+            throw c
+        } catch (e: Exception) {
+            Result.Error(UnexpectedError(e))
         }
+    }
 
     private val internalStorageImagesDir by lazy {
         File(context.filesDir, IMAGES_DIR_NAME).apply { mkdirs() }

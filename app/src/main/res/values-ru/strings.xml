@@ -3,5 +3,5 @@
     <string name="app_name">Стоит этого</string>
     <string name="items_screen">Предметы</string>
     <string name="settings_screen">Настройки</string>
-    <string name="add_item_screen">Добавить предмет</string>
+    <string name="save_item_screen">Обработать предмет</string>
 </resources>

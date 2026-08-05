@@ -10,4 +10,10 @@
     <string name="file_not_found">Файл не найден</string>
     <string name="permission_denied">Нет прав доступа</string>
     <string name="form_is_incorrect">Форма некорректна</string>
+    <string name="failed_to_save_item">Не удалось сохранить предмет</string>
+    <string name="item_name_is_blank">Название предмета не может быть пустым</string>
+    <string name="item_purchase_date_in_the_future">Дата покупки не может быть в будущее</string>
+    <string name="unexpected_error">Непредвиденная ошибка</string>
+    <string name="item_not_found">Предмет не найден</string>
+    <string name="failed_to_save_image">Не удалось сохранить изображение</string>
 </resources>

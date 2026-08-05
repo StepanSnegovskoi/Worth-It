@@ -16,6 +16,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import com.metes.worthit.core.designsystem.component.other.ItemImage
 import com.metes.worthit.feature.items.ItemUiModel
+import com.metes.worthit.feature.items.R
 import java.time.LocalDate
 import com.metes.worthit.core.designsystem.R as DesignR
 
@@ -25,11 +26,11 @@ fun ItemCard(
     item: ItemUiModel,
     currentDate: LocalDate,
     modifier: Modifier = Modifier,
-    onClick: (ItemUiModel) -> Unit
+    onClick: (Int) -> Unit,
 ) {
     Card(
         onClick = {
-            onClick(item)
+            onClick(item.id)
         },
         modifier = modifier.fillMaxWidth(),
         shape = RoundedCornerShape(16.dp),
@@ -48,7 +49,7 @@ fun ItemCard(
                     .size(96.dp)
                     .clip(RoundedCornerShape(12.dp)),
                 model = item.localImagePath,
-                defaultImage = DesignR.drawable.image_24dp,
+                defaultImage = R.drawable.image_24dp,
                 contentDescription = item.name
             )
             ItemBaseDetails(

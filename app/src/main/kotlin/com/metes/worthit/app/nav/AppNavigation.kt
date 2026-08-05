@@ -26,7 +26,9 @@ fun AppNavigation(
 
     LaunchedEffect(sharedUri, navBackStackEntry) {
         if (sharedUri != null && navBackStackEntry != null) {
-            navHostController.safeNavigateTo(Screen.AddItem(sharedUri.toString()))
+            navHostController.safeNavigateTo(Screen.SaveItem(imagePath = sharedUri.toString())) {
+                launchSingleTop = true
+            }
             onSharedUriConsumed()
         }
     }

@@ -6,6 +6,7 @@ import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import com.metes.worthit.core.domain.entity.Currency
 import com.metes.worthit.core.domain.utils.DispatcherProvider
+import com.metes.worthit.core.domain.utils.UserSettings
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
@@ -13,18 +14,18 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class UserSettings @Inject constructor(
+class DefaultUserSettings @Inject constructor(
     private val dataStore: DataStore<Preferences>,
-    private val dispatcherProvider: DispatcherProvider
-) {
+    private val dispatcherProvider: DispatcherProvider,
+): UserSettings {
 
-    suspend fun saveCurrency(currency: Currency) = withContext<Unit>(dispatcherProvider.io) {
+    override suspend fun saveCurrency(currency: Currency) = withContext<Unit>(dispatcherProvider.io) {
         dataStore.edit { preferences ->
             preferences[KEY_CURRENCY_PREF] = currency.name
         }
     }
 
-    fun getCurrencyName(): Flow<String> = dataStore.data.map { preferences ->
+    override fun getCurrencyName(): Flow<String> = dataStore.data.map { preferences ->
         val currencies = Currency.entries
         val currencyName = preferences[KEY_CURRENCY_PREF] ?: currencies.first().name
         currencyName

@@ -20,7 +20,7 @@ fun CurrenciesDialog(
     show: Boolean,
     modifier: Modifier = Modifier,
     onDismissRequest: () -> Unit,
-    onCurrencyClick: (Currency) -> Unit
+    onCurrencyClick: (Currency) -> Unit,
 ) {
     if (show) {
         BasicAlertDialog(

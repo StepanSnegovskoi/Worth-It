@@ -1,14 +1,14 @@
 package com.metes.worthit.core.domain.usecase
 
 import com.metes.worthit.core.domain.repository.ItemsRepository
-import com.metes.worthit.core.domain.repository.LocalMediaRepository
+import com.metes.worthit.core.domain.repository.StorageRepository
 import com.metes.worthit.core.domain.utils.Result
 import kotlinx.coroutines.CancellationException
 import javax.inject.Inject
 
 class DeleteItemUseCase @Inject constructor(
     private val itemsRepository: ItemsRepository,
-    private val internalRepository: LocalMediaRepository,
+    private val internalRepository: StorageRepository,
 ) {
     suspend operator fun invoke(itemId: Int, itemLocalImagePath: String?): Result<Unit, Exception> {
         return try {
@@ -20,7 +20,7 @@ class DeleteItemUseCase @Inject constructor(
 
             if (!itemLocalImagePath.isNullOrBlank()) {
                 runCatching {
-                    internalRepository.deleteImage(itemLocalImagePath)
+                    internalRepository.delete(itemLocalImagePath)
                 }.onFailure { e ->
                     e.printStackTrace()
                 }

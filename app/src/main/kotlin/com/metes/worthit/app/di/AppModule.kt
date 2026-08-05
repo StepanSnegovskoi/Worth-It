@@ -1,7 +1,7 @@
 package com.metes.worthit.app.di
 
 import com.metes.worthit.core.domain.utils.DispatcherProvider
-import com.metes.worthit.data.common.ApplicationScope
+import com.metes.worthit.core.common.ApplicationScope
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

@@ -2,9 +2,11 @@ package com.metes.worthit.core.data.di
 
 import com.metes.worthit.core.data.repository.InternalStorageImpl
 import com.metes.worthit.core.data.repository.ItemsRepositoryImpl
+import com.metes.worthit.core.data.utils.CurrentDateProvider
 import com.metes.worthit.core.data.utils.StandardDispatchers
 import com.metes.worthit.core.domain.repository.ItemsRepository
-import com.metes.worthit.core.domain.repository.LocalMediaRepository
+import com.metes.worthit.core.domain.repository.StorageRepository
+import com.metes.worthit.core.domain.utils.DateProvider
 import com.metes.worthit.core.domain.utils.DispatcherProvider
 import dagger.Binds
 import dagger.Module
@@ -32,5 +34,11 @@ abstract class DataModule {
     @Binds
     abstract fun bindInternalRepository(
         internalRepository: InternalStorageImpl
-    ): LocalMediaRepository
+    ): StorageRepository
+
+    @Singleton
+    @Binds
+    abstract fun bindDateProvider(
+        currentDateProvider: CurrentDateProvider
+    ): DateProvider
 }

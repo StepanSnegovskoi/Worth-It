@@ -9,10 +9,13 @@ import kotlinx.serialization.Serializable
 sealed interface Screen {
 
     @Serializable
-    data object Items : Screen {}
+    data object Items : Screen
 
     @Serializable
-    data class AddItem(val imageUriString: String? = null) : Screen
+    data class SaveItem(
+        val itemId: Int? = null,
+        val imagePath: String? = null
+    ) : Screen
 
     @Serializable
     data object Settings : Screen

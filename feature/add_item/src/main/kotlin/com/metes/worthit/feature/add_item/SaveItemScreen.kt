@@ -1,6 +1,5 @@
 package com.metes.worthit.feature.add_item
 
-import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
@@ -46,6 +45,7 @@ import com.metes.worthit.core.designsystem.component.other.ItemImage
 import com.metes.worthit.core.designsystem.component.other.LoadingScreen
 import com.metes.worthit.core.designsystem.component.snackbar.CustomSnackbarVisuals
 import com.metes.worthit.core.domain.entity.Currency
+import com.metes.worthit.core.ui.toUiText
 import com.metes.worthit.feature.add_item.component.currency.CurrenciesDialog
 import com.metes.worthit.feature.add_item.component.date.DateField
 import com.metes.worthit.feature.add_item.component.date.PastOrPresentDatePickerDialog
@@ -61,21 +61,19 @@ import java.time.format.FormatStyle
 import com.metes.worthit.core.designsystem.R as DesignR
 
 @Composable
-fun AddItemRoute(
-    imageUri: Uri?,
+fun SaveItemRoute(
     modifier: Modifier = Modifier,
-    viewModel: AddItemViewModel = hiltViewModel(),
+    viewModel: SaveItemViewModel = hiltViewModel(),
     onNavigateToItems: () -> Unit,
-    onBackClick: () -> Unit
+    onBackClick: () -> Unit,
 ) {
-    2
     val context = LocalContext.current
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     val photoPicker =
         rememberLauncherForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
             if (uri != null) {
-                viewModel.processCommand(AddItemCommand.SelectImage(uri))
+                viewModel.processCommand(SaveItemCommand.SelectImage(uri))
             }
         }
 
@@ -84,15 +82,17 @@ fun AddItemRoute(
     LaunchedEffect(Unit) {
         viewModel.events.collect { event ->
             when (event) {
-                AddItemEvent.NavigateToItems -> onNavigateToItems()
+                SaveItemEvent.NavigateToItems -> onNavigateToItems()
 
-                is AddItemEvent.ShowSnackbar -> {
+                is SaveItemEvent.ShowErrors -> {
                     launch {
                         snackbarHostState
                             .showSnackbar(
                                 CustomSnackbarVisuals(
-                                    message = event.message.asString(context),
-                                    isError = event.isError,
+                                    message = event.errors.joinToString(separator = "\n") { error ->
+                                        error.toUiText().asString(context)
+                                    },
+                                    isError = true
                                 )
                             )
                     }
@@ -101,40 +101,34 @@ fun AddItemRoute(
         }
     }
 
-    LaunchedEffect(imageUri) {
-        if (imageUri != null) {
-            viewModel.processCommand(AddItemCommand.SelectImage(imageUri))
-        }
-    }
-
     when (val currentState = uiState) {
-        AddItemUiState.Loading -> LoadingScreen()
+        SaveItemUiState.Loading -> LoadingScreen()
 
-        is AddItemUiState.Success -> AddItemScreen(
+        is SaveItemUiState.Success -> SaveItemScreen(
             uiState = currentState,
             snackbarHostState = snackbarHostState,
             modifier = modifier,
-            onAddItemClick = { viewModel.processCommand(AddItemCommand.AddItem) },
-            onNameChange = { viewModel.processCommand(AddItemCommand.ChangeName(it)) },
-            onPriceChange = { viewModel.processCommand(AddItemCommand.ChangePrice(it)) },
-            onDescriptionChange = { viewModel.processCommand(AddItemCommand.ChangeDescription(it)) },
+            onAddItemClick = { viewModel.processCommand(SaveItemCommand.SaveItem) },
+            onNameChange = { viewModel.processCommand(SaveItemCommand.ChangeName(it)) },
+            onPriceChange = { viewModel.processCommand(SaveItemCommand.ChangePrice(it)) },
+            onDescriptionChange = { viewModel.processCommand(SaveItemCommand.ChangeDescription(it)) },
             onBackClick = onBackClick,
             onImageClick = {
                 photoPicker.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
             },
-            onCurrencyChange = { viewModel.processCommand(AddItemCommand.ChangeCurrency(it)) },
-            onRemoveImageClick = { viewModel.processCommand(AddItemCommand.RemoveImage) },
-            onRemoveNameClick = { viewModel.processCommand(AddItemCommand.RemoveName) },
-            onRemoveDescriptionClick = { viewModel.processCommand(AddItemCommand.RemoveDescription) },
-            onSelectBoughtDate = { viewModel.processCommand(AddItemCommand.SelectBoughtDate(it)) }
+            onCurrencyChange = { viewModel.processCommand(SaveItemCommand.ChangeCurrency(it)) },
+            onRemoveImageClick = { viewModel.processCommand(SaveItemCommand.RemoveImage) },
+            onRemoveNameClick = { viewModel.processCommand(SaveItemCommand.RemoveName) },
+            onRemoveDescriptionClick = { viewModel.processCommand(SaveItemCommand.RemoveDescription) },
+            onSelectBoughtDate = { viewModel.processCommand(SaveItemCommand.SelectBoughtDate(it)) },
         )
     }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AddItemScreen(
-    uiState: AddItemUiState.Success,
+fun SaveItemScreen(
+    uiState: SaveItemUiState.Success,
     snackbarHostState: SnackbarHostState,
     modifier: Modifier = Modifier,
     onAddItemClick: () -> Unit,
@@ -150,8 +144,8 @@ fun AddItemScreen(
     onSelectBoughtDate: (Long) -> Unit,
 ) {
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
-    val formattedDate = remember(uiState.boughtDateMillis) {
-        uiState.boughtDateMillis?.let {
+    val formattedDate = remember(uiState.dateOfPurchaseMillis) {
+        uiState.dateOfPurchaseMillis?.let {
             val formatter =
                 DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM).withZone(ZoneOffset.UTC)
             formatter.format(Instant.ofEpochMilli(it))
@@ -165,7 +159,10 @@ fun AddItemScreen(
             .nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
             TopAppBar(
-                title = { Text(text = stringResource(R.string.new_item_title)) },
+                title = {
+                    val titleRes = if (uiState.isEditingMode) R.string.editing_item else R.string.adding_item
+                    Text(text = stringResource(titleRes))
+                },
                 navigationIcon = {
                     IconButton(onClick = onBackClick) {
                         Icon(
@@ -213,7 +210,7 @@ fun AddItemScreen(
         PastOrPresentDatePickerDialog(
             show = showDatePicker.value,
             currentDate = uiState.currentDate,
-            selectedDateMillis = uiState.boughtDateMillis,
+            selectedDateMillis = uiState.dateOfPurchaseMillis,
             onDismissRequest = { showDatePicker.value = false },
             onButtonClick = { selectedDateMillis ->
                 selectedDateMillis?.let {
@@ -238,7 +235,7 @@ fun AddItemScreen(
                     .size(240.dp)
                     .align(Alignment.CenterHorizontally),
                 model = uiState.imageUri,
-                defaultImage = DesignR.drawable.image_search_24dp,
+                defaultImage = R.drawable.image_search_24dp,
                 contentDescription = stringResource(R.string.select_image_desc),
                 onRemoveClick = onRemoveImageClick
             )

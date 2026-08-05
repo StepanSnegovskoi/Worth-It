@@ -21,10 +21,10 @@ val bottomNavItems = listOf(
         iconResIs = R.drawable.items_24dp
     ),
     BottomNavItem(
-        route = Screen.AddItem(),
-        routeClass = Screen.AddItem::class,
-        titleResIs = R.string.add_item_screen,
-        iconResIs = R.drawable.add_24dp
+        route = Screen.SaveItem(),
+        routeClass = Screen.SaveItem::class,
+        titleResIs = R.string.save_item_screen,
+        iconResIs = R.drawable.edit_24dp
     ),
     BottomNavItem(
         route = Screen.Settings,

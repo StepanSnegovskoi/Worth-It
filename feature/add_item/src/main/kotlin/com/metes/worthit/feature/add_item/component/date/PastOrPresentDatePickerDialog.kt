@@ -20,7 +20,7 @@ fun PastOrPresentDatePickerDialog(
     selectedDateMillis: Long?,
     modifier: Modifier = Modifier,
     onDismissRequest: () -> Unit,
-    onButtonClick: (Long?) -> Unit
+    onButtonClick: (Long?) -> Unit,
 ) {
     val (todayUtcMidnightMillis, currentYear) = remember(currentDate) {
         val todayUtcMidnight = currentDate

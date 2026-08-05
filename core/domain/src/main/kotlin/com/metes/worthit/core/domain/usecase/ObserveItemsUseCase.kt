@@ -6,7 +6,7 @@ import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class ObserveItemsUseCase @Inject constructor(
-    private val repository: ItemsRepository
+    private val repository: ItemsRepository,
 ) {
     operator fun invoke(): Flow<List<Item>> {
         return repository.observeItems()

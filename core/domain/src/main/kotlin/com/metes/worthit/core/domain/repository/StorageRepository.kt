@@ -1,8 +1,14 @@
 package com.metes.worthit.core.domain.repository
 
+import com.metes.worthit.core.domain.error.Error
 import com.metes.worthit.core.domain.utils.Result
+import java.util.UUID
 
-interface StorageRepository<in T, out R> {
-    suspend fun save(t: T): R
-    suspend fun delete(path: String): Result<Unit, Exception>
+interface StorageRepository {
+    suspend fun save(
+        imagePath: String,
+        fileName: String = "IMG_${UUID.randomUUID()}",
+    ): Result<String, Error>
+
+    suspend fun delete(path: String): Result<Unit, Error>
 }

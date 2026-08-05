@@ -12,7 +12,7 @@ import com.metes.worthit.core.domain.entity.Currency
 fun Currencies(
     modifier: Modifier = Modifier,
     currencies: List<Currency> = Currency.entries,
-    onClick: (Currency) -> Unit
+    onClick: (Currency) -> Unit,
 ) {
     LazyColumn(
         modifier = modifier,

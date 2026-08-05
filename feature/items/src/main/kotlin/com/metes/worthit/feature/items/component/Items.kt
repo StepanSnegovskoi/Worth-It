@@ -16,7 +16,7 @@ fun Items(
     currentDate: LocalDate,
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues(0.dp),
-    onClick: (ItemUiModel) -> Unit,
+    onClick: (Int) -> Unit,
     onDismiss: (Int, String?) -> Unit,
 ) {
     LazyColumn(

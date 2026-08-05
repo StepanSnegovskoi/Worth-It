@@ -3,6 +3,7 @@ package com.metes.worthit.core.data.repository
 import com.metes.worthit.core.database.db.ItemsDao
 import com.metes.worthit.core.database.entity.toDbModel
 import com.metes.worthit.core.database.entity.toEntities
+import com.metes.worthit.core.database.entity.toEntity
 import com.metes.worthit.core.domain.entity.Item
 import com.metes.worthit.core.domain.repository.ItemsRepository
 import com.metes.worthit.core.domain.utils.DispatcherProvider
@@ -15,13 +16,13 @@ import javax.inject.Singleton
 @Singleton
 class ItemsRepositoryImpl @Inject constructor(
     private val dao: ItemsDao,
-    private val dispatcherProvider: DispatcherProvider
+    private val dispatcherProvider: DispatcherProvider,
 ) : ItemsRepository {
 
-    override suspend fun insertItem(item: Item): Boolean = withContext(dispatcherProvider.io) {
+    override suspend fun saveItem(item: Item): Boolean = withContext(dispatcherProvider.io) {
         val dbModel = item.toDbModel()
-        val id = dao.insertItem(dbModel)
-        return@withContext id > 0
+        dao.saveItem(dbModel)
+        return@withContext true
     }
 
     override fun observeItems(): Flow<List<Item>> {
@@ -33,5 +34,10 @@ class ItemsRepositoryImpl @Inject constructor(
     override suspend fun deleteItem(itemId: Int): Boolean = withContext(dispatcherProvider.io) {
         val id = dao.deleteItem(itemId)
         return@withContext id > 0
+    }
+
+    override suspend fun getItemById(itemId: Int): Item = withContext(dispatcherProvider.io) {
+        val item = dao.getItemById(itemId)
+        return@withContext item.toEntity()
     }
 }

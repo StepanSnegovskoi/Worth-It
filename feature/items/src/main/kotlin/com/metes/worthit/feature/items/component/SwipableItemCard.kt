@@ -14,9 +14,9 @@ fun SwipeableItemCard(
     currentDate: LocalDate,
     modifier: Modifier = Modifier,
     state: SwipeToDismissBoxState = rememberSwipeToDismissBoxState(),
-    onClick: (ItemUiModel) -> Unit,
+    onClick: (Int) -> Unit,
     onDismiss: (Int, String?) -> Unit,
-    backgroundContent: @Composable (() -> Unit)? = null
+    backgroundContent: @Composable (() -> Unit)? = null,
 ) {
     SwipeToDismissBox(
         modifier = modifier,
