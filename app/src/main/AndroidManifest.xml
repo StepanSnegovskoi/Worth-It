@@ -16,7 +16,7 @@
         <activity
             android:name=".app.MainActivity"
             android:exported="true"
-            android:theme="@style/Theme.WorthIt"
+            android:theme="@style/Theme.MySplashScreen"
             android:launchMode="singleTask"
             android:windowSoftInputMode="adjustResize">
             <intent-filter>
