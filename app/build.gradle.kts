@@ -41,14 +41,15 @@ dependencies {
     implementation(project(":core:designsystem"))
     implementation(project(":core:datastore"))
     implementation(project(":core:common"))
+    implementation(project(":core:intent"))
     implementation(project(":feature:items"))
     implementation(project(":feature:add_item"))
     implementation(project(":feature:settings"))
+    implementation(project(":feature:share"))
 
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
     implementation(libs.androidx.core.splashscreen)
-    implementation(libs.navigation.compose)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

@@ -1,6 +1,5 @@
-package com.metes.worthit.core.data.utils
+package com.metes.worthit.core.common
 
-import com.metes.worthit.core.domain.utils.DispatcherProvider
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import javax.inject.Inject

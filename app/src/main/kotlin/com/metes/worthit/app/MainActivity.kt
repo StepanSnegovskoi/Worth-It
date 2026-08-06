@@ -1,49 +1,60 @@
 package com.metes.worthit.app
 
 import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.compose.LocalLifecycleOwner
+import androidx.lifecycle.repeatOnLifecycle
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.metes.worthit.core.designsystem.theme.WorthItTheme
-import com.metes.worthit.app.nav.AppNavigation
-import com.metes.worthit.app.utils.getImageUriOrNull
+import com.metes.worthit.app.ui.AppNavigation
+import com.metes.worthit.app.ui.GlobalNavigationEffect
+import com.metes.worthit.core.navigation.NavigationEvent
+import com.metes.worthit.core.navigation.NavigationManager
+import com.metes.worthit.core.navigation.safeNavigateTo
+import com.metes.worthit.core.navigation.safePopBackStack
+import com.metes.worthit.intent.IntentHandler
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
-    private val _sharedImageUri = MutableStateFlow<Uri?>(null)
-    val sharedImageUri = _sharedImageUri.asStateFlow()
+    @Inject
+    lateinit var navigationManager: NavigationManager
+
+    @Inject
+    lateinit var intentHandler: IntentHandler
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         installSplashScreen()
-        handleImageIntent(intent)
+
+        processCurrentIntent(intent)
+
         enableEdgeToEdge()
         setContent {
-            val pendingUri by sharedImageUri.collectAsStateWithLifecycle()
+            val navController = rememberNavController()
+
+            GlobalNavigationEffect(
+                navController = navController,
+                navigationManager = navigationManager
+            )
 
             WorthItTheme {
-                val navController = rememberNavController()
-
                 AppNavigation(
                     modifier = Modifier
                         .fillMaxSize(),
-                    sharedUri = pendingUri,
                     navHostController = navController,
-                    onSharedUriConsumed = {
-                        _sharedImageUri.value = null
-                    }
                 )
             }
         }
@@ -51,20 +62,13 @@ class MainActivity : ComponentActivity() {
 
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
-        setIntent(intent)
-        handleImageIntent(intent)
+        processCurrentIntent(intent)
     }
 
-    private fun handleImageIntent(intent: Intent) {
-        if (intent.action == Intent.ACTION_SEND && intent.type?.startsWith("image/") == true) {
-            val uri = intent.getImageUriOrNull()
+    private fun processCurrentIntent(currentIntent: Intent?) {
+        if (currentIntent == null || currentIntent.action == Intent.ACTION_MAIN) return
 
-            if (uri != null) {
-                _sharedImageUri.value = uri
-            }
-
-            intent.action = Intent.ACTION_MAIN
-            intent.removeExtra(Intent.EXTRA_STREAM)
-        }
+        intentHandler.handle(currentIntent)
+        intent = Intent()
     }
 }

@@ -1,37 +1,25 @@
-package com.metes.worthit.app.nav
+package com.metes.worthit.app.ui
 
-import android.net.Uri
 import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
-import com.metes.worthit.core.navigation.Screen
+import com.metes.worthit.core.navigation.NavigationManager
 import com.metes.worthit.core.navigation.safeNavigateTo
 
 @Composable
 fun AppNavigation(
-    sharedUri: Uri?,
-    onSharedUriConsumed: () -> Unit,
     modifier: Modifier = Modifier,
-    navHostController: NavHostController
+    navHostController: NavHostController,
 ) {
     val navBackStackEntry by navHostController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination
-
-    LaunchedEffect(sharedUri, navBackStackEntry) {
-        if (sharedUri != null && navBackStackEntry != null) {
-            navHostController.safeNavigateTo(Screen.SaveItem(imagePath = sharedUri.toString())) {
-                launchSingleTop = true
-            }
-            onSharedUriConsumed()
-        }
-    }
 
     Scaffold(
         modifier = modifier.fillMaxSize(),
@@ -40,10 +28,10 @@ fun AppNavigation(
                 currentDestination = currentDestination,
                 onNavigate = { route ->
                     navHostController.safeNavigateTo(route) {
-                        popUpTo(navHostController.graph.startDestinationId)
+                        popUpTo(navHostController.graph.findStartDestination().id)
                         launchSingleTop = true
                     }
-                }
+                },
             )
         }
     ) { contentPadding ->

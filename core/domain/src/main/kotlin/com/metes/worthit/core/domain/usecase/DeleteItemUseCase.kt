@@ -1,5 +1,7 @@
 package com.metes.worthit.core.domain.usecase
 
+import com.metes.worthit.core.domain.error.BusinessError
+import com.metes.worthit.core.domain.error.Error
 import com.metes.worthit.core.domain.repository.ItemsRepository
 import com.metes.worthit.core.domain.repository.StorageRepository
 import com.metes.worthit.core.domain.utils.Result
@@ -10,27 +12,23 @@ class DeleteItemUseCase @Inject constructor(
     private val itemsRepository: ItemsRepository,
     private val internalRepository: StorageRepository,
 ) {
-    suspend operator fun invoke(itemId: Int, itemLocalImagePath: String?): Result<Unit, Exception> {
+    suspend operator fun invoke(itemId: Int, itemLocalImagePath: String?): Result<Unit, Error> {
         return try {
             val isDeletedFromDb = itemsRepository.deleteItem(itemId)
 
             if (!isDeletedFromDb) {
-                return Result.Error(IllegalStateException("Item with id $itemId could not be deleted from DB"))
+                return Result.Error(BusinessError.ItemFailedToDelete)
             }
 
             if (!itemLocalImagePath.isNullOrBlank()) {
-                runCatching {
-                    internalRepository.delete(itemLocalImagePath)
-                }.onFailure { e ->
-                    e.printStackTrace()
-                }
+                internalRepository.deleteFile(itemLocalImagePath)
             }
 
             Result.Success(Unit)
         } catch (c: CancellationException) {
             throw c
-        } catch (e: Exception) {
-            Result.Error(e)
+        } catch (_: Exception) {
+            Result.Error(BusinessError.ItemFailedToDelete)
         }
     }
 }

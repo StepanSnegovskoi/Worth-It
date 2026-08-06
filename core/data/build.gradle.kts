@@ -14,5 +14,4 @@ dependencies {
 
     implementation(libs.androidx.exifinterface)
     androidTestImplementation(libs.androidx.junit)
-    androidTestImplementation(libs.androidx.espresso.core)
 }

@@ -1,4 +1,4 @@
-package com.metes.worthit.core.domain.utils
+package com.metes.worthit.core.common
 
 import kotlinx.coroutines.CoroutineDispatcher
 

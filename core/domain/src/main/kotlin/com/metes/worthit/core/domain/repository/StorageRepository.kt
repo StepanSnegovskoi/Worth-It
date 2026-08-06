@@ -5,10 +5,10 @@ import com.metes.worthit.core.domain.utils.Result
 import java.util.UUID
 
 interface StorageRepository {
-    suspend fun save(
+    suspend fun saveImage(
         imagePath: String,
         fileName: String = "IMG_${UUID.randomUUID()}",
     ): Result<String, Error>
 
-    suspend fun delete(path: String): Result<Unit, Error>
+    suspend fun deleteFile(path: String): Result<Unit, Error>
 }

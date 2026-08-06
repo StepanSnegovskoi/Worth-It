@@ -38,7 +38,7 @@ class SaveItemUseCase @Inject constructor(
         }
 
         val finalImagePath = imageUriString?.let {
-            when (val imageResult = internalRepository.save(imageUriString)) {
+            when (val imageResult = internalRepository.saveImage(imageUriString)) {
                 is Result.Error -> return Result.Error(listOf(imageResult.error))
                 is Result.Success -> imageResult.item
             }
@@ -53,12 +53,12 @@ class SaveItemUseCase @Inject constructor(
         try {
             if (itemsRepository.saveItem(item)) {
                 if (originalImageLocalPath != finalImagePath) {
-                    originalImageLocalPath?.let { internalRepository.delete(it) }
+                    originalImageLocalPath?.let { internalRepository.deleteFile(it) }
                 }
                 return Result.Success(Unit)
             } else {
                 if (originalImageLocalPath != finalImagePath) {
-                    finalImagePath?.let { internalRepository.delete(it) }
+                    finalImagePath?.let { internalRepository.deleteFile(it) }
                 }
                 return Result.Error(listOf(BusinessError.ItemFailedToSave))
             }
@@ -66,7 +66,7 @@ class SaveItemUseCase @Inject constructor(
             throw c
         } catch (e: Exception) {
             if (originalImageLocalPath != finalImagePath) {
-                finalImagePath?.let { internalRepository.delete(it) }
+                finalImagePath?.let { internalRepository.deleteFile(it) }
             }
             return Result.Error(listOf(UnexpectedError(e)))
         }

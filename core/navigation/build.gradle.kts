@@ -9,5 +9,9 @@ android {
 
 dependencies {
     api(libs.navigation.compose)
+    implementation(libs.javax.inject)
+
+    implementation(project(":core:common"))
+
     androidTestImplementation(libs.androidx.junit)
 }

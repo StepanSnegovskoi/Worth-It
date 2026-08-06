@@ -16,4 +16,5 @@
     <string name="unexpected_error">Непредвиденная ошибка</string>
     <string name="item_not_found">Предмет не найден</string>
     <string name="failed_to_save_image">Не удалось сохранить изображение</string>
+    <string name="item_failed_to_delete">Не удалось удалить предмет</string>
 </resources>

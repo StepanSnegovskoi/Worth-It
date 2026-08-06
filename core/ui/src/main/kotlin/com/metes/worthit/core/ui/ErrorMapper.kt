@@ -12,6 +12,7 @@ fun Error.toUiText(): UiText {
         BusinessError.ItemNotFound -> R.string.item_not_found
         BusinessError.ItemPurchaseDateInTheFuture -> R.string.item_purchase_date_in_the_future
         BusinessError.ItemImageFailedToSave -> R.string.failed_to_save_image
+        BusinessError.ItemFailedToDelete -> R.string.item_failed_to_delete
 
         FileError.CompressionFailed -> R.string.failed_to_save_item
         FileError.FailedToDeleteFile -> R.string.failed_to_save_item

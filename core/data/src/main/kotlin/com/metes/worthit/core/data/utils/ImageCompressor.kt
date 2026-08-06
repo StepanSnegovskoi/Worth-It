@@ -6,7 +6,9 @@ import android.graphics.BitmapFactory
 import android.graphics.Matrix
 import android.net.Uri
 import androidx.exifinterface.media.ExifInterface
-import com.metes.worthit.core.domain.utils.DispatcherProvider
+import com.metes.worthit.core.common.DispatcherProvider
+import com.metes.worthit.core.domain.error.Error
+import com.metes.worthit.core.domain.error.FileError
 import com.metes.worthit.core.domain.utils.Result
 import com.metes.worthit.core.domain.utils.throwIfNull
 import dagger.Reusable
@@ -29,7 +31,7 @@ class ImageCompressor @Inject constructor(
         reqHeight: Int = 512,
         quality: Int = DEFAULT_QUALITY,
         compressFormat: Bitmap.CompressFormat = ImageFormatCompat.webpLossy
-    ): Result<Unit, Exception> = withContext(dispatchers.io) {
+    ): Result<Unit, Error> = withContext(dispatchers.io) {
         var sampleBitmap: Bitmap? = null
         var finalBitmap: Bitmap? = null
 
@@ -46,12 +48,12 @@ class ImageCompressor @Inject constructor(
             if (isSuccess) {
                 return@withContext Result.Success(Unit)
             } else {
-                return@withContext Result.Error(Exception("Failed to compress simpleBitmap"))
+                return@withContext Result.Error(FileError.CompressionFailed)
             }
         } catch (c: CancellationException) {
             throw c
         } catch (e: Exception) {
-            return@withContext Result.Error(e)
+            return@withContext Result.Error(FileError.CompressionFailed)
         } finally {
             finalBitmap?.recycle()
             if (sampleBitmap !== finalBitmap) {

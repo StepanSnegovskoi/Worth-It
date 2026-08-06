@@ -1,9 +1,9 @@
 plugins {
     alias(libs.plugins.worthit.jvm.library)
+    alias(libs.plugins.worthit.hilt)
 }
 
 dependencies {
     api(libs.coroutines.core)
-    api(libs.javax.inject)
     testImplementation(libs.junit)
 }

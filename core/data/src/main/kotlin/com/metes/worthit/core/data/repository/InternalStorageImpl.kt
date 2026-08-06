@@ -2,13 +2,13 @@ package com.metes.worthit.core.data.repository
 
 import android.content.Context
 import androidx.core.net.toUri
+import com.metes.worthit.core.common.DispatcherProvider
 import com.metes.worthit.core.data.utils.ImageCompressor
 import com.metes.worthit.core.domain.error.BusinessError
 import com.metes.worthit.core.domain.error.Error
 import com.metes.worthit.core.domain.error.FileError
 import com.metes.worthit.core.domain.error.UnexpectedError
 import com.metes.worthit.core.domain.repository.StorageRepository
-import com.metes.worthit.core.domain.utils.DispatcherProvider
 import com.metes.worthit.core.domain.utils.Result
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CancellationException
@@ -24,7 +24,7 @@ class InternalStorageImpl @Inject constructor(
     private val imageCompressor: ImageCompressor,
 ) : StorageRepository {
 
-    override suspend fun save(
+    override suspend fun saveImage(
         imagePath: String,
         fileName: String
     ): Result<String, Error> = withContext(dispatchers.io) {
@@ -67,7 +67,7 @@ class InternalStorageImpl @Inject constructor(
         }
     }
 
-    override suspend fun delete(path: String): Result<Unit, Error> = withContext(dispatchers.io) {
+    override suspend fun deleteFile(path: String): Result<Unit, Error> = withContext(dispatchers.io) {
         try {
             val file = File(path)
             if (file.exists() && !file.delete()) {
