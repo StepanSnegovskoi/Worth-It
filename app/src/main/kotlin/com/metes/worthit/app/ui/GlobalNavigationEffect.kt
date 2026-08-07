@@ -23,7 +23,9 @@ fun GlobalNavigationEffect(
             navigationManager.navEvents.collect { event ->
                 when (event) {
                     is NavigationEvent.NavigateTo -> {
-                        navController.safeNavigateTo(event.screen)
+                        navController.safeNavigateTo(event.screen) {
+                            launchSingleTop = true
+                        }
                     }
 
                     NavigationEvent.NavigateBack -> navController.safePopBackStack()
