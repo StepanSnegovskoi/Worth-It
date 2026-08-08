@@ -1,5 +1,6 @@
 package com.metes.worthit.app.ui
 
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -10,9 +11,6 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
-import com.metes.worthit.app.MainState
-import com.metes.worthit.core.designsystem.component.other.LoadingScreen
-import com.metes.worthit.core.navigation.NavigationManager
 import com.metes.worthit.core.navigation.safeNavigateTo
 
 @Composable
@@ -41,8 +39,8 @@ fun AppNavigation(
             navHostController = navHostController,
             modifier = Modifier
                 .fillMaxSize()
-                .padding(contentPadding)
-                .consumeWindowInsets(contentPadding),
+                .padding(bottom = contentPadding.calculateBottomPadding())
+                .consumeWindowInsets(PaddingValues(bottom = contentPadding.calculateBottomPadding())),
         )
     }
 }
