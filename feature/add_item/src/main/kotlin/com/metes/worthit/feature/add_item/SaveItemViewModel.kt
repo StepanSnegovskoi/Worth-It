@@ -73,7 +73,7 @@ class SaveItemViewModel @Inject constructor(
     private val imageUriFlow =
         savedStateHandle.getStateFlow(KEY_IMAGE_PATH, initialImagePath?.toUri())
     private val descriptionFlow = savedStateHandle.getStateFlow(KEY_DESCRIPTION, "")
-    private val boughtDateMillisFlow = savedStateHandle.getStateFlow<Long?>(
+    private val boughtDateMillisFlow = savedStateHandle.getStateFlow(
         KEY_BOUGHT_DATE_MILLIS, initialSelectedDateMillis
     )
     private val currencyFlow = userSettings.getCurrencyName().map { currencyName ->
@@ -142,11 +142,11 @@ class SaveItemViewModel @Inject constructor(
 
                 when (val result = getItemByIdUseCase(itemId)) {
                     is Result.Error<List<Error>> -> {
-                        _events.send(ShowErrors(result.error))
+                        _events.send(ShowErrors(result.data))
                     }
 
                     is Result.Success<Item> -> {
-                        val item = result.item
+                        val item = result.data
 
                         savedStateHandle[KEY_NAME] = item.name
                         savedStateHandle[KEY_DESCRIPTION] = item.description
@@ -218,7 +218,6 @@ class SaveItemViewModel @Inject constructor(
 
         viewModelScope.launch {
             try {
-                val priceLong = currentState.price.toLongOrNull()
                 val createdAtInstant = Instant.now(clock)
                 val dateOfPurchase = currentState.dateOfPurchaseMillis?.let { utcMillis ->
                     Instant.ofEpochMilli(utcMillis)
@@ -230,7 +229,7 @@ class SaveItemViewModel @Inject constructor(
                     itemId = args.itemId,
                     name = currentState.name,
                     description = currentState.description,
-                    price = priceLong,
+                    price = currentState.price,
                     currency = currentState.currency,
                     createdAt = createdAtInstant,
                     dateOfPurchase = dateOfPurchase,
@@ -240,7 +239,7 @@ class SaveItemViewModel @Inject constructor(
 
                 when (result) {
                     is Result.Error<List<Error>> -> {
-                        _events.send(ShowErrors(result.error))
+                        _events.send(ShowErrors(result.data))
                         isSavingFlow.value = false
                     }
 

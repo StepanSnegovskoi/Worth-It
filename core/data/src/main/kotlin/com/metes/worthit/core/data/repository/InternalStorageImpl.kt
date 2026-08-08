@@ -76,8 +76,8 @@ class InternalStorageImpl @Inject constructor(
             Result.Success(Unit)
         } catch (c: CancellationException) {
             throw c
-        } catch (e: Exception) {
-            Result.Error(UnexpectedError(e))
+        } catch (_: Exception) {
+            Result.Error(FileError.FailedToDeleteFile)
         }
     }
 

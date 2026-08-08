@@ -10,12 +10,13 @@ enum class Currency {
 
     companion object {
         fun fromNameOrDefault(name: String?): Currency {
-            if (name.isNullOrBlank()) return EUR
+            val defaultCurrency = EUR
+            if (name.isNullOrBlank()) return defaultCurrency
 
             return runCatching {
                 valueOf(name.trim().uppercase())
             }.getOrElse {
-                EUR
+                defaultCurrency
             }
         }
     }

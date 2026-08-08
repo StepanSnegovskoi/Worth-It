@@ -22,7 +22,7 @@ class SaveItemUseCase @Inject constructor(
     suspend operator fun invoke(
         itemId: Int? = null,
         name: String,
-        price: Long?,
+        price: String?,
         currency: Currency,
         createdAt: Instant,
         dateOfPurchase: LocalDate?,
@@ -30,45 +30,58 @@ class SaveItemUseCase @Inject constructor(
         imageUriString: String?,
         originalImageLocalPath: String?,
     ): Result<Unit, List<Error>> {
-        val errors: MutableList<Error> =
-            itemValidator.validateAll(name, dateOfPurchase).toMutableList()
+        val validatorResult = itemValidator.validateAll(name, dateOfPurchase, price)
 
-        if (errors.isNotEmpty()) {
-            return Result.Error(errors)
+        if (validatorResult is Result.Error) {
+            return Result.Error(validatorResult.data)
         }
+
+        val validatedFields = (validatorResult as Result.Success).data
 
         val finalImagePath = imageUriString?.let {
             when (val imageResult = internalRepository.saveImage(imageUriString)) {
-                is Result.Error -> return Result.Error(listOf(imageResult.error))
-                is Result.Success -> imageResult.item
+                is Result.Error -> return Result.Error(listOf(imageResult.data))
+                is Result.Success -> imageResult.data
             }
         }
 
         val item = Item(
-            id = itemId ?: Item.DEFAULT_ID, name = name, price = price,
-            currency = currency, createdAt = createdAt, dateOfPurchase = dateOfPurchase,
-            description = description, imageLocalPath = finalImagePath
+            id = itemId ?: Item.DEFAULT_ID,
+            name = validatedFields.name,
+            price = validatedFields.price,
+            currency = currency,
+            createdAt = createdAt,
+            dateOfPurchase = validatedFields.dateOfPurchase,
+            description = description,
+            imageLocalPath = finalImagePath
         )
 
-        try {
+        val isImageChanged = finalImagePath != originalImageLocalPath
+
+        val saveResult = try {
             if (itemsRepository.saveItem(item)) {
-                if (originalImageLocalPath != finalImagePath) {
-                    originalImageLocalPath?.let { internalRepository.deleteFile(it) }
-                }
-                return Result.Success(Unit)
+                Result.Success(Unit)
             } else {
-                if (originalImageLocalPath != finalImagePath) {
-                    finalImagePath?.let { internalRepository.deleteFile(it) }
-                }
-                return Result.Error(listOf(BusinessError.ItemFailedToSave))
+                Result.Error(listOf(BusinessError.ItemFailedToSave))
             }
         } catch (c: CancellationException) {
             throw c
-        } catch (e: Exception) {
-            if (originalImageLocalPath != finalImagePath) {
-                finalImagePath?.let { internalRepository.deleteFile(it) }
-            }
-            return Result.Error(listOf(UnexpectedError(e)))
+        } catch (_: Exception) {
+            Result.Error(listOf(BusinessError.ItemFailedToSave))
         }
+
+        if (isImageChanged) {
+            when (saveResult) {
+                is Result.Error<*> -> {
+                    finalImagePath?.let { internalRepository.deleteFile(it) }
+                }
+
+                is Result.Success<*> -> {
+                    originalImageLocalPath?.let { internalRepository.deleteFile(it) }
+                }
+            }
+        }
+
+        return saveResult
     }
 }
