@@ -1,22 +1,28 @@
 package com.metes.worthit.feature.share
 
 import android.content.Intent
+import android.util.Log
 import com.metes.worthit.core.navigation.NavigationManager
 import com.metes.worthit.core.navigation.Screen
+import com.metes.worthit.intent.AppIntentEvent
 import com.metes.worthit.intent.IntentProcessor
 import com.metes.worthit.intent.getImageUriOrNull
 import javax.inject.Inject
 
-class SendImageIntentProcessor @Inject constructor(
-    private val navigationManager: NavigationManager
-) : IntentProcessor {
+class SendImageIntentProcessor @Inject constructor() : IntentProcessor {
 
-    override fun process(intent: Intent) {
-        if (intent.type?.startsWith("image/") == true) {
+    override fun extractEvent(intent: Intent): AppIntentEvent {
+        val type = intent.type ?: return AppIntentEvent.Ignored
+
+        return if (type.startsWith("image/")) {
             val uri = intent.getImageUriOrNull()
             if (uri != null) {
-                navigationManager.navigateTo(Screen.SaveItem(imagePath = uri.toString()))
+                AppIntentEvent.Image(imageUri = uri.toString())
+            } else {
+                AppIntentEvent.Ignored
             }
+        } else {
+            AppIntentEvent.Ignored
         }
     }
 }

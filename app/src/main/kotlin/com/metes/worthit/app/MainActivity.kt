@@ -5,24 +5,16 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.viewModels
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.compose.LocalLifecycleOwner
-import androidx.lifecycle.repeatOnLifecycle
-import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.metes.worthit.core.designsystem.theme.WorthItTheme
 import com.metes.worthit.app.ui.AppNavigation
 import com.metes.worthit.app.ui.GlobalNavigationEffect
-import com.metes.worthit.core.navigation.NavigationEvent
 import com.metes.worthit.core.navigation.NavigationManager
-import com.metes.worthit.core.navigation.safeNavigateTo
-import com.metes.worthit.core.navigation.safePopBackStack
-import com.metes.worthit.intent.IntentHandler
+import com.metes.worthit.intent.IntentParser
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -33,11 +25,15 @@ class MainActivity : ComponentActivity() {
     lateinit var navigationManager: NavigationManager
 
     @Inject
-    lateinit var intentHandler: IntentHandler
+    lateinit var intentParser: IntentParser
+
+    private val viewModel: MainActivityViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        val splashScreen = installSplashScreen()
         super.onCreate(savedInstanceState)
-        installSplashScreen()
+
+        splashScreen.setKeepOnScreenCondition { viewModel.state.value is MainState.Loading }
 
         processCurrentIntent(intent)
 
@@ -66,9 +62,19 @@ class MainActivity : ComponentActivity() {
     }
 
     private fun processCurrentIntent(currentIntent: Intent?) {
-        if (currentIntent == null || currentIntent.action == Intent.ACTION_MAIN) return
+        currentIntent?.let {
+            val isHandled = currentIntent.getBooleanExtra(EXTRA_INTENT_HANDLED, false)
+            if (isHandled) return
 
-        intentHandler.handle(currentIntent)
-        intent = Intent()
+            val event = intentParser.parse(currentIntent)
+            viewModel.processEvent(event)
+
+            currentIntent.putExtra(EXTRA_INTENT_HANDLED, true)
+            intent = currentIntent
+        }
+    }
+
+    companion object {
+        private const val EXTRA_INTENT_HANDLED = "com.metes.worthit.EXTRA_INTENT_HANDLED"
     }
 }

@@ -10,13 +10,15 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
+import com.metes.worthit.app.MainState
+import com.metes.worthit.core.designsystem.component.other.LoadingScreen
 import com.metes.worthit.core.navigation.NavigationManager
 import com.metes.worthit.core.navigation.safeNavigateTo
 
 @Composable
 fun AppNavigation(
-    modifier: Modifier = Modifier,
     navHostController: NavHostController,
+    modifier: Modifier = Modifier,
 ) {
     val navBackStackEntry by navHostController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination

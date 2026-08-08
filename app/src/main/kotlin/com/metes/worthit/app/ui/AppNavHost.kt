@@ -16,8 +16,8 @@ import com.metes.worthit.feature.items.SettingsScreen
 
 @Composable
 fun AppNavHost(
-    modifier: Modifier = Modifier,
     navHostController: NavHostController,
+    modifier: Modifier = Modifier,
 ) {
     NavHost(
         navController = navHostController,
