@@ -4,6 +4,7 @@ import androidx.annotation.DrawableRes
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -23,14 +24,17 @@ import com.metes.worthit.core.designsystem.R as DesignR
 fun WorthItSnackbar(
     snackbarData: SnackbarData,
     isError: Boolean,
+    modifier: Modifier = Modifier,
     @DrawableRes correctIconRes: Int = DesignR.drawable.correct_24dp,
     @DrawableRes errorIconRes: Int = DesignR.drawable.error_24dp,
 ) {
     Snackbar(
+        modifier = modifier,
         containerColor = if (isError) MaterialTheme.colorScheme.errorContainer else Color.Green,
         contentColor = if (isError) MaterialTheme.colorScheme.onErrorContainer else SnackbarDefaults.contentColor
     ) {
         Row(
+            modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.Start
         ) {

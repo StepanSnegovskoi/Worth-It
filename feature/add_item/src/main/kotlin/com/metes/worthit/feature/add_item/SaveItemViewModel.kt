@@ -22,7 +22,6 @@ import com.metes.worthit.core.navigation.Screen
 import com.metes.worthit.core.common.toEpochMilliOrNull
 import com.metes.worthit.core.domain.utils.UserSettings
 import com.metes.worthit.feature.add_item.SaveItemEvent.NavigateToItems
-import com.metes.worthit.feature.add_item.SaveItemEvent.ShowErrors
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.Channel
@@ -104,6 +103,9 @@ class SaveItemViewModel @Inject constructor(
         val isValidName =
             itemValidator.validateName(userInput.name) is Result.Success || !metadata.hasAttemptedSave
 
+        val isValidPrice =
+            itemValidator.validatePrice(userInput.price) is Result.Success || !metadata.hasAttemptedSave
+
         SaveItemUiState.Success(
             name = userInput.name,
             price = userInput.price,
@@ -113,6 +115,7 @@ class SaveItemViewModel @Inject constructor(
             dateOfPurchaseMillis = metadata.dateOfPurchaseMillis,
             currentDate = metadata.currentDate,
             isValidName = isValidName,
+            isValidPrice = isValidPrice,
             isEditingMode = isEditingMode
         )
     }
@@ -142,7 +145,7 @@ class SaveItemViewModel @Inject constructor(
 
                 when (val result = getItemByIdUseCase(itemId)) {
                     is Result.Error<List<Error>> -> {
-                        _events.send(ShowErrors(result.data))
+                        _events.send(SaveItemEvent.ShowErrors(result.data))
                     }
 
                     is Result.Success<Item> -> {
@@ -153,7 +156,7 @@ class SaveItemViewModel @Inject constructor(
                         savedStateHandle[KEY_PRICE] = item.price?.toString() ?: ""
                         savedStateHandle[KEY_IMAGE_PATH] = item.imageLocalPath?.toUri()
                         savedStateHandle[KEY_BOUGHT_DATE_MILLIS] =
-                            item.dateOfPurchase?.toEpochMilliOrNull() ?: initialSelectedDateMillis
+                            item.dateOfPurchase.toEpochMilliOrNull()
                     }
                 }
             } finally {
@@ -239,7 +242,7 @@ class SaveItemViewModel @Inject constructor(
 
                 when (result) {
                     is Result.Error<List<Error>> -> {
-                        _events.send(ShowErrors(result.data))
+                        _events.send(SaveItemEvent.ShowErrors(result.data))
                         isSavingFlow.value = false
                     }
 
@@ -284,6 +287,7 @@ sealed interface SaveItemUiState {
         val dateOfPurchaseMillis: Long,
         val currentDate: LocalDate,
         val isValidName: Boolean,
+        val isValidPrice: Boolean,
         val isEditingMode: Boolean,
     ) : SaveItemUiState
 }

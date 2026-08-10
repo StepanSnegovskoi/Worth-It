@@ -2,40 +2,31 @@
 
 package com.metes.worthit.feature.add_item
 
-import android.util.Log
+import android.content.res.Configuration
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.animation.expandIn
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.scaleIn
 import androidx.compose.animation.scaleOut
-import androidx.compose.animation.shrinkOut
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.asPaddingValues
-import androidx.compose.foundation.layout.calculateEndPadding
-import androidx.compose.foundation.layout.calculateStartPadding
-import androidx.compose.foundation.layout.consumeWindowInsets
+import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.isImeVisible
+import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.safeContent
-import androidx.compose.foundation.layout.safeDrawing
-import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.foundation.layout.safeGestures
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.statusBars
-import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -53,7 +44,6 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -61,10 +51,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.input.nestedscroll.nestedScroll
-import androidx.compose.ui.layout.onSizeChanged
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -85,12 +73,11 @@ import com.metes.worthit.feature.add_item.component.other.PriceField
 import com.metes.worthit.feature.add_item.component.other.WorthItSnackbar
 import kotlinx.coroutines.launch
 import java.time.Instant
-import java.time.ZoneOffset
-import java.time.format.DateTimeFormatter
-import java.time.format.FormatStyle
 import com.metes.worthit.core.designsystem.R as DesignR
 
-private val FAB_HEIGHT_DP = 56.dp
+private val FabHeight = 56.dp
+private val FabSpaceAround = 16.dp
+private val ScrollableFabClearance = FabHeight + FabSpaceAround
 
 @Composable
 fun SaveItemRoute(
@@ -138,6 +125,7 @@ fun SaveItemRoute(
 
         is SaveItemUiState.Success -> SaveItemScreen(
             uiState = currentState,
+            snackbarHostState = snackbarHostState,
             modifier = modifier,
             onAddItemClick = { viewModel.processCommand(SaveItemCommand.SaveItem) },
             onNameChange = { viewModel.processCommand(SaveItemCommand.ChangeName(it)) },
@@ -160,6 +148,7 @@ fun SaveItemRoute(
 @Composable
 fun SaveItemScreen(
     uiState: SaveItemUiState.Success,
+    snackbarHostState: SnackbarHostState,
     modifier: Modifier = Modifier,
     onAddItemClick: () -> Unit,
     onNameChange: (String) -> Unit,
@@ -177,9 +166,7 @@ fun SaveItemScreen(
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
 
     val formattedDate = remember(uiState.dateOfPurchaseMillis) {
-        uiState.dateOfPurchaseMillis.let {
-            dateFormatter.format(Instant.ofEpochMilli(it))
-        } ?: ""
+        dateFormatter.format(Instant.ofEpochMilli(uiState.dateOfPurchaseMillis))
     }
 
     val showDatePicker = rememberSaveable { mutableStateOf(false) }
@@ -206,38 +193,50 @@ fun SaveItemScreen(
         }
     )
 
-    Column(
-        modifier = modifier
-            .fillMaxSize()
-            .nestedScroll(scrollBehavior.nestedScrollConnection)
-    ) {
-        TopAppBar(
-            title = {
-                Text(text = stringResource(if (uiState.isEditingMode) R.string.editing_item else R.string.adding_item))
-            },
-            navigationIcon = {
-                IconButton(onClick = onBackClick) {
-                    Icon(
-                        painter = painterResource(DesignR.drawable.back_24dp),
-                        contentDescription = stringResource(R.string.back_desc)
-                    )
-                }
-            },
-            scrollBehavior = scrollBehavior,
-        )
-
-        Box(
+    Box(modifier = modifier.fillMaxSize()) {
+        Scaffold(
             modifier = Modifier
                 .fillMaxSize()
-                .weight(1f)
-        ) {
+                .nestedScroll(scrollBehavior.nestedScrollConnection),
+            topBar = {
+                TopAppBar(
+                    title = {
+                        Text(text = stringResource(if (uiState.isEditingMode) R.string.editing_item else R.string.adding_item))
+                    },
+                    navigationIcon = {
+                        IconButton(onClick = onBackClick) {
+                            Icon(
+                                painter = painterResource(DesignR.drawable.back_24dp),
+                                contentDescription = stringResource(R.string.back_desc)
+                            )
+                        }
+                    },
+                    scrollBehavior = scrollBehavior,
+                )
+            },
+            floatingActionButton = {
+                AnimatedVisibility(
+                    visible = !isImeVisible,
+                    enter = scaleIn() + fadeIn(),
+                    exit = scaleOut() + fadeOut(),
+                ) {
+                    FloatingActionButton(onClick = onAddItemClick) {
+                        Icon(
+                            painter = painterResource(DesignR.drawable.add_24dp),
+                            contentDescription = stringResource(R.string.add_item_desc)
+                        )
+                    }
+                }
+            },
+        ) { paddingValues ->
             Column(
                 modifier = Modifier
                     .fillMaxSize()
+                    .padding(paddingValues)
                     .imePadding()
                     .verticalScroll(rememberScrollState())
-                    .padding(horizontal = 16.dp)
-                    .padding(bottom = if (isImeVisible) 16.dp else FAB_HEIGHT_DP + 16.dp),
+                    .padding(bottom = ScrollableFabClearance)
+                    .padding(horizontal = 16.dp),
                 verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 ItemImage(
@@ -286,23 +285,22 @@ fun SaveItemScreen(
                 }
             }
 
-            androidx.compose.animation.AnimatedVisibility(
-                visible = !isImeVisible,
+            SnackbarHost(
+                hostState = snackbarHostState,
                 modifier = Modifier
-                    .align(Alignment.BottomEnd),
-                enter = scaleIn() + fadeIn(),
-                exit = scaleOut() + fadeOut(),
-            ) {
-                FloatingActionButton(
+                    .align(Alignment.BottomCenter)
+                    .padding(bottom = (FabHeight - FabSpaceAround) / 2)
+                    .padding(end = FabHeight + 32.dp, start = 32.dp)
+            ) { data ->
+                val visuals = data.visuals
+                val customVisuals = (visuals as? CustomSnackbarVisuals) ?: return@SnackbarHost
+
+                WorthItSnackbar(
+                    snackbarData = data,
+                    isError = customVisuals.isError,
                     modifier = Modifier
-                        .padding(bottom = 16.dp, end = 16.dp),
-                    onClick = onAddItemClick,
-                ) {
-                    Icon(
-                        painter = painterResource(DesignR.drawable.add_24dp),
-                        contentDescription = stringResource(R.string.add_item_desc)
-                    )
-                }
+                        .fillMaxWidth()
+                )
             }
         }
     }
