@@ -1,13 +1,11 @@
 package com.metes.worthit.feature.items
 
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.metes.worthit.core.designsystem.component.other.LoadingScreen
@@ -15,6 +13,7 @@ import com.metes.worthit.feature.items.component.Items
 
 @Composable
 fun ItemsRoute(
+    scaffoldPadding: PaddingValues,
     modifier: Modifier = Modifier,
     viewModel: ItemsViewModel = hiltViewModel(),
     onNavigateToSaveItem: (Int) -> Unit,
@@ -33,6 +32,7 @@ fun ItemsRoute(
         ItemsUiState.Loading -> LoadingScreen()
         is ItemsUiState.Success -> ItemsScreen(
             uiState = currentState,
+            scaffoldPadding = scaffoldPadding,
             modifier = modifier,
             onItemSwipe = { itemId: Int, itemLocalImagePath: String? ->
                 viewModel.processCommand(ItemsCommand.DeleteItem(itemId, itemLocalImagePath))
@@ -47,23 +47,17 @@ fun ItemsRoute(
 @Composable
 fun ItemsScreen(
     uiState: ItemsUiState.Success,
+    scaffoldPadding: PaddingValues,
     modifier: Modifier = Modifier,
     onItemSwipe: (Int, String?) -> Unit,
     onItemClick: (Int) -> Unit,
 ) {
-    Scaffold(
+    Items(
+        items = uiState.uiItems,
         modifier = modifier
             .fillMaxSize(),
-    ) { innerPadding ->
-        Items(
-            items = uiState.uiItems,
-            currentDate = uiState.currentDate,
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(horizontal = 8.dp),
-            contentPadding = innerPadding,
-            onClick = onItemClick,
-            onDismiss = onItemSwipe,
-        )
-    }
+        contentPadding = scaffoldPadding,
+        onClick = onItemClick,
+        onDismiss = onItemSwipe,
+    )
 }

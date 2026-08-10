@@ -1,6 +1,7 @@
 package com.metes.worthit.feature.items
 
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
@@ -17,25 +18,26 @@ import com.metes.worthit.core.designsystem.component.other.WorthItText
 @Composable
 fun SettingsRoute(
     modifier: Modifier = Modifier,
+    scaffoldPadding: PaddingValues,
     viewModel: SettingsViewModel = hiltViewModel(),
 ) {
 
-    SettingsScreen(modifier = modifier)
+    SettingsScreen(modifier = modifier, scaffoldPadding = scaffoldPadding)
 }
 
 @Composable
 fun SettingsScreen(
     modifier: Modifier = Modifier,
+    scaffoldPadding: PaddingValues,
 ) {
-    Scaffold(
+    Box(
         modifier = modifier
             .fillMaxSize()
-    ) { innerPadding ->
+    ) {
         Box(
             modifier = modifier
-                .fillMaxSize()
-                .padding(innerPadding),
-            contentAlignment = Alignment.Center
+                .fillMaxSize(),
+            contentAlignment = Alignment.Center,
         ) {
             WorthItText(text = "Settings Screen")
         }

@@ -10,6 +10,7 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.unit.dp
 import com.metes.worthit.core.designsystem.component.other.ContentWrapper
 import com.metes.worthit.core.designsystem.component.other.WorthItText
+import com.metes.worthit.core.designsystem.util.rememberDateFormatter
 import com.metes.worthit.feature.items.ItemUiModel
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
@@ -18,18 +19,12 @@ import java.time.format.FormatStyle
 @Composable
 fun ItemBaseDetails(
     item: ItemUiModel,
-    currentDate: LocalDate,
     modifier: Modifier = Modifier,
 ) {
-    val configuration = LocalConfiguration.current
-    val dateFormatter = remember(configuration) {
-        DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM)
-    }
+    val dateFormatter = rememberDateFormatter()
 
-    val formattedDates = remember(item.dateOfPurchase, currentDate, configuration) {
-        item.dateOfPurchase?.let {
-            "${item.dateOfPurchase.format(dateFormatter)} - ${currentDate.format(dateFormatter)}"
-        }
+    val formattedDates = remember(item.dateOfPurchase) {
+        dateFormatter.format(item.dateOfPurchase)
     }
 
     Column(

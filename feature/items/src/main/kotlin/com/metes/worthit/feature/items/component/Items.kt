@@ -13,7 +13,6 @@ import java.time.LocalDate
 @Composable
 fun Items(
     items: List<ItemUiModel>,
-    currentDate: LocalDate,
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues(0.dp),
     onClick: (Int) -> Unit,
@@ -30,7 +29,6 @@ fun Items(
                 item = item,
                 onClick = onClick,
                 onDismiss = onDismiss,
-                currentDate = currentDate
             )
         }
     }

@@ -73,7 +73,7 @@ class SaveItemViewModel @Inject constructor(
     private val imageUriFlow =
         savedStateHandle.getStateFlow(KEY_IMAGE_PATH, initialImagePath?.toUri())
     private val descriptionFlow = savedStateHandle.getStateFlow(KEY_DESCRIPTION, "")
-    private val boughtDateMillisFlow = savedStateHandle.getStateFlow(
+    private val dateOfPurchaseMillisFlow = savedStateHandle.getStateFlow(
         KEY_BOUGHT_DATE_MILLIS, initialSelectedDateMillis
     )
     private val currencyFlow = userSettings.getCurrencyName().map { currencyName ->
@@ -93,11 +93,11 @@ class SaveItemViewModel @Inject constructor(
 
     private val metaDataFlow = combine(
         currencyFlow,
-        boughtDateMillisFlow,
+        dateOfPurchaseMillisFlow,
         hasAttemptedSaveFlow,
         currentDateProvider.currentDateFlow,
-    ) { currency, boughtDateMillis, hasAttemptedSave, currentDate ->
-        MetaData(currency, boughtDateMillis, hasAttemptedSave, currentDate)
+    ) { currency, dateOfPurchaseMillis, hasAttemptedSave, currentDate ->
+        MetaData(currency, dateOfPurchaseMillis, hasAttemptedSave, currentDate)
     }
 
     private val formStateFlow = combine(userInputFlow, metaDataFlow) { userInput, metadata ->
@@ -110,7 +110,7 @@ class SaveItemViewModel @Inject constructor(
             description = userInput.description,
             imageUri = userInput.imageUri,
             currency = metadata.currency,
-            dateOfPurchaseMillis = metadata.boughtDateMillis,
+            dateOfPurchaseMillis = metadata.dateOfPurchaseMillis,
             currentDate = metadata.currentDate,
             isValidName = isValidName,
             isEditingMode = isEditingMode
@@ -153,7 +153,7 @@ class SaveItemViewModel @Inject constructor(
                         savedStateHandle[KEY_PRICE] = item.price?.toString() ?: ""
                         savedStateHandle[KEY_IMAGE_PATH] = item.imageLocalPath?.toUri()
                         savedStateHandle[KEY_BOUGHT_DATE_MILLIS] =
-                            item.dateOfPurchase.toEpochMilliOrNull() ?: initialSelectedDateMillis
+                            item.dateOfPurchase?.toEpochMilliOrNull() ?: initialSelectedDateMillis
                     }
                 }
             } finally {
@@ -219,7 +219,7 @@ class SaveItemViewModel @Inject constructor(
         viewModelScope.launch {
             try {
                 val createdAtInstant = Instant.now(clock)
-                val dateOfPurchase = currentState.dateOfPurchaseMillis?.let { utcMillis ->
+                val dateOfPurchase = currentState.dateOfPurchaseMillis.let { utcMillis ->
                     Instant.ofEpochMilli(utcMillis)
                         .atZone(ZoneOffset.UTC)
                         .toLocalDate()
@@ -281,7 +281,7 @@ sealed interface SaveItemUiState {
         val description: String,
         val imageUri: Uri?,
         val currency: Currency,
-        val dateOfPurchaseMillis: Long?,
+        val dateOfPurchaseMillis: Long,
         val currentDate: LocalDate,
         val isValidName: Boolean,
         val isEditingMode: Boolean,
@@ -297,7 +297,7 @@ private data class UserInputData(
 
 private data class MetaData(
     val currency: Currency,
-    val boughtDateMillis: Long?,
+    val dateOfPurchaseMillis: Long,
     val hasAttemptedSave: Boolean,
     val currentDate: LocalDate,
 )

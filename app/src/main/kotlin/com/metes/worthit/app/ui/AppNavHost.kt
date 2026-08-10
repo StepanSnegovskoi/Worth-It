@@ -1,13 +1,15 @@
 package com.metes.worthit.app.ui
 
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.consumeWindowInsets
+import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.metes.worthit.core.navigation.NavigationManager
 import com.metes.worthit.core.navigation.Screen
-import com.metes.worthit.core.navigation.navigateBack
 import com.metes.worthit.core.navigation.safeNavigateTo
 import com.metes.worthit.core.navigation.safePopBackStack
 import com.metes.worthit.feature.add_item.SaveItemRoute
@@ -17,6 +19,7 @@ import com.metes.worthit.feature.items.SettingsScreen
 @Composable
 fun AppNavHost(
     navHostController: NavHostController,
+    scaffoldPadding: PaddingValues,
     modifier: Modifier = Modifier,
 ) {
     NavHost(
@@ -26,21 +29,27 @@ fun AppNavHost(
     ) {
         composable<Screen.Items> {
             ItemsRoute(
+                scaffoldPadding = scaffoldPadding,
                 onNavigateToSaveItem = { itemId ->
                     navHostController.safeNavigateTo(Screen.SaveItem(itemId = itemId))
-                }
+                },
             )
         }
 
         composable<Screen.SaveItem> {
             SaveItemRoute(
+                modifier = Modifier
+                    .padding(scaffoldPadding)
+                    .consumeWindowInsets(scaffoldPadding),
                 onNavigateToItems = { navHostController.safePopBackStack() },
-                onBackClick = { navHostController.safePopBackStack() }
+                onBackClick = { navHostController.safePopBackStack() },
             )
         }
 
         composable<Screen.Settings> {
-            SettingsScreen()
+            SettingsScreen(
+                scaffoldPadding = scaffoldPadding,
+            )
         }
     }
 }

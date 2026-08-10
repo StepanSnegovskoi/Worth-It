@@ -22,7 +22,7 @@ data class ItemDbModel(
     @ColumnInfo(name = "created_at_millis")
     val createdAtMillis: Long,
     @ColumnInfo(name = "date_of_purchase_millis")
-    val dateOfPurchaseMillis: Long?,
+    val dateOfPurchaseMillis: Long,
     @ColumnInfo(name = "description")
     val description: String?,
     @ColumnInfo(name = "image_local_path")
@@ -35,7 +35,7 @@ fun Item.toDbModel() = ItemDbModel(
     price = price,
     currencyName = currency.name,
     createdAtMillis = createdAt.toEpochMilli(),
-    dateOfPurchaseMillis = dateOfPurchase?.toEpochDay(),
+    dateOfPurchaseMillis = dateOfPurchase.toEpochDay(),
     description = description,
     imageLocalPath = imageLocalPath
 )
@@ -46,7 +46,7 @@ fun ItemDbModel.toEntity() = Item(
     price = price,
     currency = Currency.fromNameOrDefault(currencyName),
     createdAt = Instant.ofEpochMilli(createdAtMillis),
-    dateOfPurchase = dateOfPurchaseMillis?.let { LocalDate.ofEpochDay(it) },
+    dateOfPurchase = LocalDate.ofEpochDay(dateOfPurchaseMillis),
     description = description,
     imageLocalPath = imageLocalPath
 )

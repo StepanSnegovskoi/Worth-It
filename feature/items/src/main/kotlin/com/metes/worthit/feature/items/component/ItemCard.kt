@@ -24,7 +24,6 @@ import com.metes.worthit.core.designsystem.R as DesignR
 @Composable
 fun ItemCard(
     item: ItemUiModel,
-    currentDate: LocalDate,
     modifier: Modifier = Modifier,
     onClick: (Int) -> Unit,
 ) {
@@ -54,7 +53,6 @@ fun ItemCard(
             )
             ItemBaseDetails(
                 item = item,
-                currentDate = currentDate
             )
         }
     }

@@ -9,7 +9,7 @@ data class Item(
     val price: Long?,
     val currency: Currency,
     val createdAt: Instant,
-    val dateOfPurchase: LocalDate?,
+    val dateOfPurchase: LocalDate,
     val description: String?,
     val imageLocalPath: String?
 ) {

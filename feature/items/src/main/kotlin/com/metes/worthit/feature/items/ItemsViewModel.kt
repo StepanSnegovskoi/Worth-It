@@ -11,6 +11,8 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
@@ -21,18 +23,16 @@ import javax.inject.Inject
 class ItemsViewModel @Inject constructor(
     private val deleteItemUseCase: DeleteItemUseCase,
     observeItemsUseCase: ObserveItemsUseCase,
-    currentDateProvider: DateProvider,
 ) : ViewModel() {
 
-    val uiState =
-        combine(observeItemsUseCase(), currentDateProvider.currentDateFlow) { items, currentDate ->
-            val uiItems = items.toUiModels(currentDate)
-            ItemsUiState.Success(uiItems = uiItems, currentDate = currentDate)
-        }.stateIn(
-            scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(stopTimeoutMillis = 5_000),
-            initialValue = ItemsUiState.Loading
-        )
+    val uiState = observeItemsUseCase().map { items ->
+        val uiItems = items.toUiModels()
+        ItemsUiState.Success(uiItems = uiItems)
+    }.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(stopTimeoutMillis = 5_000),
+        initialValue = ItemsUiState.Loading
+    )
 
     private val _events = Channel<ItemsEvent>()
     val events = _events.receiveAsFlow()
@@ -69,7 +69,6 @@ sealed interface ItemsUiState {
 
     data class Success(
         val uiItems: List<ItemUiModel>,
-        val currentDate: LocalDate,
     ) : ItemsUiState
 }
 
@@ -78,7 +77,5 @@ data class ItemUiModel(
     val id: Int,
     val name: String,
     val localImagePath: String?,
-    val dateOfPurchase: LocalDate?,
-    val daysCount: Long?,
-    val pricePerDay: Double?,
+    val dateOfPurchase: LocalDate,
 )

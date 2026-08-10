@@ -11,7 +11,6 @@ import java.time.LocalDate
 @Composable
 fun SwipeableItemCard(
     item: ItemUiModel,
-    currentDate: LocalDate,
     modifier: Modifier = Modifier,
     state: SwipeToDismissBoxState = rememberSwipeToDismissBoxState(),
     onClick: (Int) -> Unit,
@@ -31,7 +30,6 @@ fun SwipeableItemCard(
         ItemCard(
             item = item,
             onClick = onClick,
-            currentDate = currentDate
         )
     }
 }

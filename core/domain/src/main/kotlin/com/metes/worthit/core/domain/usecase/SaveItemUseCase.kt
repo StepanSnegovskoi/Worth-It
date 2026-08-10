@@ -25,7 +25,7 @@ class SaveItemUseCase @Inject constructor(
         price: String?,
         currency: Currency,
         createdAt: Instant,
-        dateOfPurchase: LocalDate?,
+        dateOfPurchase: LocalDate,
         description: String,
         imageUriString: String?,
         originalImageLocalPath: String?,

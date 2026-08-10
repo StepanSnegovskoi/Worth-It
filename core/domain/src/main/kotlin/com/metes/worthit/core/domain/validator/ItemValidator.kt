@@ -17,9 +17,7 @@ class ItemValidator @Inject constructor(
         }
     }
 
-    fun validatePurchaseDate(date: LocalDate?): Result<LocalDate?, List<BusinessError>> {
-        if (date == null) return Result.Success(date)
-
+    fun validatePurchaseDate(date: LocalDate): Result<LocalDate, List<BusinessError>> {
         return if (date.isAfter(LocalDate.now(clock))) {
             Result.Error(listOf(BusinessError.ItemPurchaseDateInTheFuture))
         } else {
@@ -54,7 +52,7 @@ class ItemValidator @Inject constructor(
 
     fun validateAll(
         name: String?,
-        dateOfPurchase: LocalDate?,
+        dateOfPurchase: LocalDate,
         priceInput: String?
     ): Result<ValidatedFields, List<BusinessError>> {
         val nameResult = validateName(name)
@@ -87,6 +85,6 @@ class ItemValidator @Inject constructor(
 
 data class ValidatedFields(
     val name: String,
-    val dateOfPurchase: LocalDate?,
+    val dateOfPurchase: LocalDate,
     val price: Long?
 )
