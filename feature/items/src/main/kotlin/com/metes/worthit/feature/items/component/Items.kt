@@ -8,7 +8,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.metes.worthit.feature.items.ItemUiModel
-import java.time.LocalDate
 
 @Composable
 fun Items(
@@ -16,7 +15,7 @@ fun Items(
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues(0.dp),
     onClick: (Int) -> Unit,
-    onDismiss: (Int, String?) -> Unit,
+    onDeleteClick: (Int, String?) -> Unit,
 ) {
     LazyColumn(
         modifier = modifier,
@@ -28,7 +27,7 @@ fun Items(
                 modifier = Modifier.animateItem(),
                 item = item,
                 onClick = onClick,
-                onDismiss = onDismiss,
+                onDeleteClick = onDeleteClick,
             )
         }
     }

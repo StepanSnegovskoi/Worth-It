@@ -34,7 +34,7 @@ fun ItemsRoute(
             uiState = currentState,
             scaffoldPadding = scaffoldPadding,
             modifier = modifier,
-            onItemSwipe = { itemId: Int, itemLocalImagePath: String? ->
+            onItemDeleteClick = { itemId: Int, itemLocalImagePath: String? ->
                 viewModel.processCommand(ItemsCommand.DeleteItem(itemId, itemLocalImagePath))
             },
             onItemClick = { itemId: Int ->
@@ -49,7 +49,7 @@ fun ItemsScreen(
     uiState: ItemsUiState.Success,
     scaffoldPadding: PaddingValues,
     modifier: Modifier = Modifier,
-    onItemSwipe: (Int, String?) -> Unit,
+    onItemDeleteClick: (Int, String?) -> Unit,
     onItemClick: (Int) -> Unit,
 ) {
     Items(
@@ -58,6 +58,6 @@ fun ItemsScreen(
             .fillMaxSize(),
         contentPadding = scaffoldPadding,
         onClick = onItemClick,
-        onDismiss = onItemSwipe,
+        onDeleteClick = onItemDeleteClick,
     )
 }
