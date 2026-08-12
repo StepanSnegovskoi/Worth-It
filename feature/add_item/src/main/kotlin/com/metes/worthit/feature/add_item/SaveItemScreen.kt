@@ -65,6 +65,7 @@ import com.metes.worthit.feature.add_item.component.other.DescriptionTextField
 import com.metes.worthit.feature.add_item.component.other.NameTextField
 import com.metes.worthit.feature.add_item.component.other.PriceField
 import com.metes.worthit.feature.add_item.component.other.WorthItSnackbar
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import java.time.Instant
 import com.metes.worthit.core.designsystem.R as DesignR
@@ -98,6 +99,7 @@ fun SaveItemRoute(
                 SaveItemEvent.NavigateToItems -> onNavigateToItems()
 
                 is SaveItemEvent.ShowErrors -> {
+                    snackbarHostState.currentSnackbarData?.dismiss()
                     launch {
                         snackbarHostState
                             .showSnackbar(
