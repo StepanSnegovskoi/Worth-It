@@ -47,6 +47,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -158,6 +159,7 @@ fun SaveItemScreen(
     onCurrencyChange: (Currency) -> Unit,
     onSelectBoughtDate: (Long) -> Unit,
 ) {
+    val keyboardController = LocalSoftwareKeyboardController.current
     val dateFormatter = rememberDateFormatter()
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
 
@@ -200,7 +202,10 @@ fun SaveItemScreen(
                         Text(text = stringResource(if (uiState.isEditingMode) R.string.editing_item else R.string.adding_item))
                     },
                     navigationIcon = {
-                        IconButton(onClick = onBackClick) {
+                        IconButton(onClick = {
+                            keyboardController?.hide()
+                            onBackClick()
+                        }) {
                             Icon(
                                 painter = painterResource(DesignR.drawable.back_24dp),
                                 contentDescription = stringResource(R.string.back_desc)
