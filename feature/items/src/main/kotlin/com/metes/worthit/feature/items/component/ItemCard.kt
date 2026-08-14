@@ -13,6 +13,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import com.metes.worthit.core.designsystem.component.other.ItemImage
 import com.metes.worthit.feature.items.ItemUiModel
@@ -48,6 +49,7 @@ fun ItemCard(
                     .size(96.dp)
                     .clip(RoundedCornerShape(12.dp)),
                 model = item.localImagePath,
+                contentScale = ContentScale.Crop,
                 defaultImage = R.drawable.image_24dp,
                 contentDescription = item.name
             )

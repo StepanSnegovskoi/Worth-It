@@ -18,6 +18,7 @@ fun ItemImage(
     model: Any? = null,
     @DrawableRes defaultImage: Int,
     contentDescription: String?,
+    contentScale: ContentScale,
     onRemoveClick: (() -> Unit)? = null
 ) {
     Box(
@@ -27,7 +28,7 @@ fun ItemImage(
             modifier = Modifier.matchParentSize(),
             model = model ?: defaultImage,
             contentDescription = contentDescription,
-            contentScale = ContentScale.Crop
+            contentScale = contentScale
         )
 
         if (onRemoveClick != null && model != null) {

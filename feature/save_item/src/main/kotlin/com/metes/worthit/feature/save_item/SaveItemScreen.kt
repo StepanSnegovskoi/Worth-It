@@ -46,6 +46,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
@@ -249,6 +250,7 @@ fun SaveItemScreen(
                         .size(240.dp)
                         .align(Alignment.CenterHorizontally),
                     model = uiState.imageUri,
+                    contentScale = ContentScale.Fit,
                     defaultImage = R.drawable.image_search_24dp,
                     contentDescription = stringResource(R.string.select_image_desc),
                     onRemoveClick = onRemoveImageClick
