@@ -224,7 +224,7 @@ fun SaveItemScreen(
                         onAddItemClick()
                     }) {
                         Icon(
-                            painter = painterResource(DesignR.drawable.add_24dp),
+                            painter = painterResource(if(uiState.isEditingMode) DesignR.drawable.edit_24dp else DesignR.drawable.correct_24dp),
                             contentDescription = stringResource(R.string.add_item_desc)
                         )
                     }
