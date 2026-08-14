@@ -3,6 +3,7 @@ package com.metes.worthit.feature.items
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.plus
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -58,8 +59,8 @@ fun ItemsScreen(
         items = uiState.uiItems,
         modifier = modifier
             .fillMaxSize()
-            .padding(8.dp),
-        contentPadding = scaffoldPadding,
+            .padding(start = 8.dp, end = 8.dp, bottom = 8.dp),
+        contentPadding = scaffoldPadding + PaddingValues(top = 8.dp),
         onClick = onItemClick,
         onDeleteClick = onItemDeleteClick,
     )
