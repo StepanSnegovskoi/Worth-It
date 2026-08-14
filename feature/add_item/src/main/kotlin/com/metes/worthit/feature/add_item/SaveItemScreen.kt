@@ -240,7 +240,7 @@ fun SaveItemScreen(
                     .padding(paddingValues)
                     .verticalScroll(rememberScrollState())
                     .padding(bottom = ScrollableFabClearance)
-                    .padding(horizontal = 16.dp),
+                    .padding(start = 16.dp, end = 16.dp, top = 16.dp),
                 verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 ItemImage(
