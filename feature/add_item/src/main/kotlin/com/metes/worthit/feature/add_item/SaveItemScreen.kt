@@ -221,7 +221,10 @@ fun SaveItemScreen(
                     enter = scaleIn() + fadeIn(),
                     exit = scaleOut() + fadeOut(),
                 ) {
-                    FloatingActionButton(onClick = onAddItemClick) {
+                    FloatingActionButton(onClick = {
+                        keyboardController?.hide()
+                        onAddItemClick()
+                    }) {
                         Icon(
                             painter = painterResource(DesignR.drawable.add_24dp),
                             contentDescription = stringResource(R.string.add_item_desc)
