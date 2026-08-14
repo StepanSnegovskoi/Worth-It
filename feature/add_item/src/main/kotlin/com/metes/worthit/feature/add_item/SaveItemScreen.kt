@@ -58,7 +58,7 @@ import com.metes.worthit.core.designsystem.component.other.LoadingScreen
 import com.metes.worthit.core.designsystem.component.snackbar.CustomSnackbarVisuals
 import com.metes.worthit.core.designsystem.util.rememberDateFormatter
 import com.metes.worthit.core.domain.entity.Currency
-import com.metes.worthit.core.ui.toUiText
+import com.metes.worthit.core.ui.asCombinedString
 import com.metes.worthit.feature.add_item.component.currency.CurrenciesDialog
 import com.metes.worthit.feature.add_item.component.date.DateField
 import com.metes.worthit.feature.add_item.component.date.PastOrPresentDatePickerDialog
@@ -66,7 +66,6 @@ import com.metes.worthit.feature.add_item.component.other.DescriptionTextField
 import com.metes.worthit.feature.add_item.component.other.NameTextField
 import com.metes.worthit.feature.add_item.component.other.PriceField
 import com.metes.worthit.feature.add_item.component.other.WorthItSnackbar
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import java.time.Instant
 import com.metes.worthit.core.designsystem.R as DesignR
@@ -105,9 +104,7 @@ fun SaveItemRoute(
                         snackbarHostState
                             .showSnackbar(
                                 CustomSnackbarVisuals(
-                                    message = event.errors.joinToString(separator = "\n") { error ->
-                                        error.toUiText().asString(context)
-                                    },
+                                    message = event.errors.asCombinedString(context = context),
                                     isError = true
                                 )
                             )
