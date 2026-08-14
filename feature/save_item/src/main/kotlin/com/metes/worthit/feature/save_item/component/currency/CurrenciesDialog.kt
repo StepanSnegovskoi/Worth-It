@@ -1,4 +1,4 @@
-package com.metes.worthit.feature.add_item.component.currency
+package com.metes.worthit.feature.save_item.component.currency
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.heightIn

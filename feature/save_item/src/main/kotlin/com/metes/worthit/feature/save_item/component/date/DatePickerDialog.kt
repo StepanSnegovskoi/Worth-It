@@ -1,4 +1,4 @@
-package com.metes.worthit.feature.add_item.component.date
+package com.metes.worthit.feature.save_item.component.date
 
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDialog
@@ -8,7 +8,7 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import com.metes.worthit.feature.add_item.R
+import com.metes.worthit.feature.save_item.R
 
 @Composable
 fun DatePickerDialog(

@@ -1,4 +1,4 @@
-package com.metes.worthit.feature.add_item.component.other
+package com.metes.worthit.feature.save_item.component.other
 
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Icon
@@ -11,8 +11,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import com.metes.worthit.core.designsystem.component.other.WorthItOutlinedTextField
 import com.metes.worthit.core.ui.iconResId
-import com.metes.worthit.feature.add_item.R
-import com.metes.worthit.core.designsystem.component.other.WorthItTextField
+import com.metes.worthit.feature.save_item.R
 import com.metes.worthit.core.domain.entity.Currency
 
 @Composable

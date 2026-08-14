@@ -1,6 +1,6 @@
 @file:OptIn(ExperimentalCoroutinesApi::class)
 
-package com.metes.worthit.feature.add_item
+package com.metes.worthit.feature.save_item
 
 import android.net.Uri
 import androidx.compose.runtime.Immutable
@@ -21,7 +21,7 @@ import com.metes.worthit.core.domain.validator.ItemValidator
 import com.metes.worthit.core.navigation.Screen
 import com.metes.worthit.core.common.toEpochMilliOrNull
 import com.metes.worthit.core.domain.utils.UserSettings
-import com.metes.worthit.feature.add_item.SaveItemEvent.NavigateToItems
+import com.metes.worthit.feature.save_item.SaveItemEvent.NavigateToItems
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.Channel

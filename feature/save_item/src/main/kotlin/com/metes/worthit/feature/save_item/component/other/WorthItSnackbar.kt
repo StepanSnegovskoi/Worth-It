@@ -1,4 +1,4 @@
-package com.metes.worthit.feature.add_item.component.other
+package com.metes.worthit.feature.save_item.component.other
 
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.layout.Arrangement

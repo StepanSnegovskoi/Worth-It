@@ -4,7 +4,7 @@ plugins {
 }
 
 android {
-    namespace = "com.metes.worthit.feature.add_item"
+    namespace = "com.metes.worthit.feature.save_item"
 }
 
 dependencies {

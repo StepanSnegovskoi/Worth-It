@@ -1,4 +1,4 @@
-package com.metes.worthit.feature.add_item.component.other
+package com.metes.worthit.feature.save_item.component.other
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.text.KeyboardOptions
@@ -11,30 +11,28 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import com.metes.worthit.core.designsystem.component.other.WorthItOutlinedTextField
-import com.metes.worthit.core.designsystem.component.other.WorthItTextField
-import com.metes.worthit.feature.add_item.R
+import com.metes.worthit.feature.save_item.R
 import com.metes.worthit.core.designsystem.R as DesignR
 
 @Composable
-fun NameTextField(
-    name: String,
-    isError: Boolean,
+fun DescriptionTextField(
+    description: String,
     modifier: Modifier = Modifier,
-    onRemoveNameClick: () -> Unit,
-    onNameChange: (String) -> Unit,
+    onRemoveDescriptionClick: () -> Unit,
+    onDescriptionChange: (String) -> Unit,
 ) {
     WorthItOutlinedTextField(
         modifier = modifier.fillMaxWidth(),
-        value = name,
+        value = description,
         keyboardOptions = KeyboardOptions.Default.copy(capitalization = KeyboardCapitalization.Sentences),
-        onValueChange = onNameChange,
-        isError = isError,
-        errorMessage = stringResource(R.string.enter_name),
-        label = { Text(text = stringResource(R.string.name_hint)) },
+        onValueChange = onDescriptionChange,
+        maxLines = Int.MAX_VALUE,
+        singleLine = false,
+        label = { Text(text = stringResource(R.string.description_hint)) },
         trailingIcon = {
-            if (name.isNotEmpty()) {
+            if (description.isNotEmpty()) {
                 IconButton(
-                    onClick = onRemoveNameClick
+                    onClick = onRemoveDescriptionClick
                 ) {
                     Icon(
                         painter = painterResource(DesignR.drawable.close_24dp),

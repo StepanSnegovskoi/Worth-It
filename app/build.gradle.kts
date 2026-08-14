@@ -43,7 +43,7 @@ dependencies {
     implementation(project(":core:common"))
     implementation(project(":core:intent"))
     implementation(project(":feature:items"))
-    implementation(project(":feature:add_item"))
+    implementation(project(":feature:save_item"))
     implementation(project(":feature:settings"))
     implementation(project(":feature:share"))
 
