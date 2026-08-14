@@ -5,6 +5,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
@@ -15,6 +16,7 @@ fun AppNavigation(
     navHostController: NavHostController,
     modifier: Modifier = Modifier,
 ) {
+    val keyboardController = LocalSoftwareKeyboardController.current
     val navBackStackEntry by navHostController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination
 
@@ -24,6 +26,7 @@ fun AppNavigation(
             WorthItBottomBar(
                 currentDestination = currentDestination,
                 onNavigate = { route ->
+                    keyboardController?.hide()
                     navHostController.safeNavigateTo(route) {
                         popUpTo(navHostController.graph.findStartDestination().id)
                         launchSingleTop = true
