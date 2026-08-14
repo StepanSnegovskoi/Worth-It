@@ -16,4 +16,6 @@
     <string name="adding_item">Добавление предмета</string>
     <string name="editing_item">Редактирование предмета</string>
     <string name="price_must_be_a_number">Цена должна быть числом</string>
+    <string name="cd_save_changes">Сохранить изменения</string>
+    <string name="cd_add_item">Добавить предмет</string>
 </resources>

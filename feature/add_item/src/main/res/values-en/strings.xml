@@ -16,4 +16,6 @@
     <string name="adding_item">Adding item</string>
     <string name="editing_item">Editing item</string>
     <string name="price_must_be_a_number">The price must be a number</string>
+    <string name="cd_save_changes">Save changes</string>
+    <string name="cd_add_item">Add item</string>
 </resources>

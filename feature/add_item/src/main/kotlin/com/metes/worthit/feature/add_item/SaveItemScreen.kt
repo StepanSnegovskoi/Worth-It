@@ -223,9 +223,12 @@ fun SaveItemScreen(
                         keyboardController?.hide()
                         onAddItemClick()
                     }) {
+                        val iconRes = if (uiState.isEditingMode) DesignR.drawable.done_24dp else DesignR.drawable.add_24dp
+                        val contentDescriptionRes = if (uiState.isEditingMode) R.string.cd_save_changes else R.string.cd_add_item
+
                         Icon(
-                            painter = painterResource(if (uiState.isEditingMode) DesignR.drawable.done_24dp else DesignR.drawable.add_24dp),
-                            contentDescription = stringResource(R.string.add_item_desc)
+                            painter = painterResource(iconRes),
+                            contentDescription = stringResource(contentDescriptionRes)
                         )
                     }
                 }
