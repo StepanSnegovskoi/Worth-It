@@ -25,7 +25,7 @@ fun WorthItSnackbar(
     snackbarData: SnackbarData,
     isError: Boolean,
     modifier: Modifier = Modifier,
-    @DrawableRes correctIconRes: Int = DesignR.drawable.correct_24dp,
+    @DrawableRes correctIconRes: Int = DesignR.drawable.done_24dp,
     @DrawableRes errorIconRes: Int = DesignR.drawable.error_24dp,
 ) {
     Snackbar(
