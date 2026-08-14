@@ -100,10 +100,12 @@ class ImageCompressor @Inject constructor(
         var inSampleSize = 1
 
         if (height > reqHeight || width > reqWidth) {
-            val heightRatio = (height.toFloat() / reqHeight.toFloat()).roundToInt()
-            val widthRatio = (width.toFloat() / reqWidth.toFloat()).roundToInt()
+            val halfHeight = height / 2
+            val halfWidth = width / 2
 
-            inSampleSize = minOf(heightRatio, widthRatio)
+            while(halfHeight > reqHeight && halfWidth > reqWidth) {
+                inSampleSize *= 2
+            }
         }
 
         return inSampleSize
