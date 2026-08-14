@@ -2,10 +2,12 @@ package com.metes.worthit.feature.items
 
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.metes.worthit.core.designsystem.component.other.LoadingScreen
@@ -55,7 +57,8 @@ fun ItemsScreen(
     Items(
         items = uiState.uiItems,
         modifier = modifier
-            .fillMaxSize(),
+            .fillMaxSize()
+            .padding(8.dp),
         contentPadding = scaffoldPadding,
         onClick = onItemClick,
         onDeleteClick = onItemDeleteClick,
