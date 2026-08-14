@@ -195,6 +195,7 @@ fun SaveItemScreen(
         Scaffold(
             modifier = Modifier
                 .fillMaxSize()
+                .imePadding()
                 .nestedScroll(scrollBehavior.nestedScrollConnection),
             topBar = {
                 TopAppBar(
@@ -237,7 +238,6 @@ fun SaveItemScreen(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(paddingValues)
-                    .imePadding()
                     .verticalScroll(rememberScrollState())
                     .padding(bottom = ScrollableFabClearance)
                     .padding(horizontal = 16.dp),
