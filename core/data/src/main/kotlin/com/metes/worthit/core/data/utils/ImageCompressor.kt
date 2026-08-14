@@ -5,6 +5,7 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Matrix
 import android.net.Uri
+import android.util.Log
 import androidx.exifinterface.media.ExifInterface
 import com.metes.worthit.core.common.DispatcherProvider
 import com.metes.worthit.core.domain.error.Error
@@ -32,18 +33,22 @@ class ImageCompressor @Inject constructor(
         quality: Int = DEFAULT_QUALITY,
         compressFormat: Bitmap.CompressFormat = ImageFormatCompat.webpLossy
     ): Result<Unit, Error> = withContext(dispatchers.io) {
+        Log.d("TESTTEST", "start compressing")
         var sampleBitmap: Bitmap? = null
         var finalBitmap: Bitmap? = null
-
         try {
             val orientation = getOrientationFromUri(imageUri)
+            Log.d("TESTTEST", "orientation $orientation")
 
             sampleBitmap = decodeSampleBitmap(imageUri, reqWidth, reqHeight)
+            Log.d("TESTTEST", "sampleBitmap $sampleBitmap")
             finalBitmap = sampleBitmap.rotated(orientation)
+            Log.d("TESTTEST", "finalBitmap $finalBitmap")
 
             val isSuccess = outputFile.outputStream().use { output ->
                 finalBitmap.compress(compressFormat, quality, output)
             }
+            Log.d("TESTTEST", "isSuccess $isSuccess")
 
             if (isSuccess) {
                 return@withContext Result.Success(Unit)
@@ -90,7 +95,7 @@ class ImageCompressor @Inject constructor(
     }
 
 
-    private fun calculateInSampleSize(
+    fun calculateInSampleSize(
         options: BitmapFactory.Options,
         reqWidth: Int,
         reqHeight: Int
@@ -100,14 +105,13 @@ class ImageCompressor @Inject constructor(
         var inSampleSize = 1
 
         if (height > reqHeight || width > reqWidth) {
-            val halfHeight = height / 2
-            val halfWidth = width / 2
+            val halfHeight: Int = height / 2
+            val halfWidth: Int = width / 2
 
-            while(halfHeight > reqHeight && halfWidth > reqWidth) {
+            while ((halfHeight / inSampleSize) >= reqHeight && (halfWidth / inSampleSize) >= reqWidth) {
                 inSampleSize *= 2
             }
         }
-
         return inSampleSize
     }
 
