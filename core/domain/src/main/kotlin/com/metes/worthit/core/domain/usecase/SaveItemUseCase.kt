@@ -8,6 +8,8 @@ import com.metes.worthit.core.domain.error.UnexpectedError
 import com.metes.worthit.core.domain.repository.ItemsRepository
 import com.metes.worthit.core.domain.repository.StorageRepository
 import com.metes.worthit.core.domain.utils.Result
+import com.metes.worthit.core.domain.utils.onError
+import com.metes.worthit.core.domain.utils.onSuccess
 import com.metes.worthit.core.domain.validator.ItemValidator
 import kotlinx.coroutines.CancellationException
 import java.time.Instant
@@ -29,7 +31,7 @@ class SaveItemUseCase @Inject constructor(
         description: String,
         imageUriString: String?,
         originalImageLocalPath: String?,
-    ): Result<Unit, List<Error>> {
+    ): Result<Unit, List<Error>> = try {
         val validatorResult = itemValidator.validateAll(name, dateOfPurchase, price)
 
         if (validatorResult is Result.Error) {
@@ -38,10 +40,13 @@ class SaveItemUseCase @Inject constructor(
 
         val validatedFields = (validatorResult as Result.Success).data
 
-        val finalImagePath = imageUriString?.let {
-            when (val imageResult = internalRepository.saveImage(imageUriString)) {
-                is Result.Error -> return Result.Error(listOf(imageResult.data))
-                is Result.Success -> imageResult.data
+        var finalImagePath: String? = null
+
+        imageUriString?.let {
+            internalRepository.saveImage(imageUriString).onError { error ->
+                return Result.Error(listOf(error))
+            }.onSuccess { path ->
+                finalImagePath = path
             }
         }
 
@@ -56,32 +61,26 @@ class SaveItemUseCase @Inject constructor(
             imageLocalPath = finalImagePath
         )
 
-        val isImageChanged = finalImagePath != originalImageLocalPath
-
-        val saveResult = try {
-            if (itemsRepository.saveItem(item)) {
-                Result.Success(Unit)
-            } else {
-                Result.Error(listOf(BusinessError.ItemFailedToSave))
-            }
-        } catch (c: CancellationException) {
-            throw c
-        } catch (_: Exception) {
+        val saveResult = if (itemsRepository.saveItem(item)) {
+            Result.Success(Unit)
+        } else {
             Result.Error(listOf(BusinessError.ItemFailedToSave))
-        }
+        }.also { saveResult ->
+            val isImageChanged = finalImagePath != originalImageLocalPath
 
-        if (isImageChanged) {
-            when (saveResult) {
-                is Result.Error<*> -> {
+            if (isImageChanged) {
+                saveResult.onError {
                     finalImagePath?.let { internalRepository.deleteFile(it) }
-                }
-
-                is Result.Success<*> -> {
+                }.onSuccess {
                     originalImageLocalPath?.let { internalRepository.deleteFile(it) }
                 }
             }
         }
 
-        return saveResult
+        saveResult
+    } catch (c: CancellationException) {
+        throw c
+    } catch (_: Exception) {
+        Result.Error(listOf(BusinessError.ItemFailedToSave))
     }
 }
