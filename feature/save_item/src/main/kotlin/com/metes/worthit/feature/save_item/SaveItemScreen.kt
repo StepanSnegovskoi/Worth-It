@@ -230,6 +230,20 @@ fun SaveItemScreen(
                         }
                     },
                     scrollBehavior = scrollBehavior,
+                    actions = {
+                        AnimatedVisibility(
+                            visible = uiState.imageUri != null,
+                            enter = scaleIn() + fadeIn(),
+                            exit = scaleOut() + fadeOut(),
+                        ) {
+                            IconButton(onClick = onRemoveImageClick) {
+                                Icon(
+                                    painter = painterResource(R.drawable.remove_image_36dp),
+                                    contentDescription = stringResource(R.string.cd_remove_image)
+                                )
+                            }
+                        }
+                    }
                 )
             },
             floatingActionButton = {
@@ -265,15 +279,15 @@ fun SaveItemScreen(
             ) {
                 ItemImage(
                     modifier = Modifier
+                        .padding(bottom = 8.dp)
+                        .size(240.dp)
                         .clip(RoundedCornerShape(16.dp))
                         .clickable(onClick = onImageClick)
-                        .size(240.dp)
                         .align(Alignment.CenterHorizontally),
                     model = uiState.imageUri,
                     contentScale = ContentScale.Fit,
                     defaultImage = R.drawable.image_search_24dp,
                     contentDescription = stringResource(R.string.select_image_desc),
-                    onRemoveClick = onRemoveImageClick
                 )
 
                 NameTextField(

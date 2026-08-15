@@ -19,28 +19,11 @@ fun ItemImage(
     @DrawableRes defaultImage: Int,
     contentDescription: String?,
     contentScale: ContentScale,
-    onRemoveClick: (() -> Unit)? = null
 ) {
-    Box(
+    AsyncImage(
         modifier = modifier,
-    ) {
-        AsyncImage(
-            modifier = Modifier.matchParentSize(),
-            model = model ?: defaultImage,
-            contentDescription = contentDescription,
-            contentScale = contentScale
-        )
-
-        if (onRemoveClick != null && model != null) {
-            IconButton(
-                modifier = Modifier.align(Alignment.TopEnd),
-                onClick = onRemoveClick
-            ) {
-                Icon(
-                    painter = painterResource(R.drawable.close_48dp),
-                    contentDescription = null
-                )
-            }
-        }
-    }
+        model = model ?: defaultImage,
+        contentDescription = contentDescription,
+        contentScale = contentScale
+    )
 }

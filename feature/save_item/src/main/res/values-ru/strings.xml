@@ -18,4 +18,5 @@
     <string name="price_must_be_a_number">Цена должна быть числом</string>
     <string name="cd_save_changes">Сохранить изменения</string>
     <string name="cd_add_item">Добавить предмет</string>
+    <string name="cd_remove_image">Удалить изображение</string>
 </resources>
