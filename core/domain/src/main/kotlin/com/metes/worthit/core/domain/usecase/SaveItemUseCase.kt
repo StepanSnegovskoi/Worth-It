@@ -32,7 +32,7 @@ class SaveItemUseCase @Inject constructor(
         imageUriString: String?,
         originalImageLocalPath: String?,
     ): Result<Unit, List<Error>> = try {
-        val validatorResult = itemValidator.validateAll(name, dateOfPurchase, price)
+        val validatorResult = itemValidator.validateAll(name, description, dateOfPurchase, price)
 
         if (validatorResult is Result.Error) {
             return Result.Error(validatorResult.data)
@@ -57,7 +57,7 @@ class SaveItemUseCase @Inject constructor(
             currency = currency,
             createdAt = createdAt,
             dateOfPurchase = validatedFields.dateOfPurchase,
-            description = description,
+            description = validatedFields.description,
             imageLocalPath = finalImagePath
         )
 

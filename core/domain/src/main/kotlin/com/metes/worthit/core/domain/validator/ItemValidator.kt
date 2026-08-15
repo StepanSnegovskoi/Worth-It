@@ -10,11 +10,16 @@ class ItemValidator @Inject constructor(
     private val clock: Clock,
 ) {
     fun validateName(name: String?): Result<String, List<BusinessError>> {
-        return if (name.isNullOrBlank()) {
+        val trimmedName = name?.trim()
+        return if (trimmedName.isNullOrBlank()) {
             Result.Error(listOf(BusinessError.ItemNameIsBlank))
         } else {
-            Result.Success(name)
+            Result.Success(trimmedName)
         }
+    }
+
+    fun validateDescription(description: String?): Result<String?, List<BusinessError>> {
+        return Result.Success(description?.trim())
     }
 
     fun validatePurchaseDate(date: LocalDate): Result<LocalDate, List<BusinessError>> {
@@ -25,18 +30,20 @@ class ItemValidator @Inject constructor(
         }
     }
 
+
     fun validatePrice(priceInput: String?): Result<Long?, List<BusinessError>> {
-        if (priceInput.isNullOrBlank()) {
+        val trimmedPriceInput = priceInput?.trim()
+        if (trimmedPriceInput.isNullOrBlank()) {
             return Result.Success(null)
         }
 
         val errors = mutableListOf<BusinessError>()
 
-        if (priceInput.length > MAX_PRICE_LENGTH) {
+        if (trimmedPriceInput.length > MAX_PRICE_LENGTH) {
             errors.add(BusinessError.ItemPriceLengthCantBeMoreThan(MAX_PRICE_LENGTH))
         }
 
-        if (!priceInput.all { it.isDigit() }) {
+        if (!trimmedPriceInput.all { it.isDigit() }) {
             errors.add(BusinessError.ItemPriceInvalidFormat)
         }
 
@@ -44,7 +51,7 @@ class ItemValidator @Inject constructor(
             return Result.Error(errors)
         }
 
-        val price = priceInput
+        val price = trimmedPriceInput
             .toLongOrNull() ?: return Result.Error(listOf(BusinessError.ItemPriceInvalidFormat))
 
         return Result.Success(price)
@@ -52,15 +59,18 @@ class ItemValidator @Inject constructor(
 
     fun validateAll(
         name: String?,
+        description: String?,
         dateOfPurchase: LocalDate,
         priceInput: String?
     ): Result<ValidatedFields, List<BusinessError>> {
         val nameResult = validateName(name)
+        val descriptionResult = validateDescription(description)
         val dateResult = validatePurchaseDate(dateOfPurchase)
         val priceResult = validatePrice(priceInput)
 
         val errors = buildList {
             if (nameResult is Result.Error) addAll(nameResult.data)
+            if (descriptionResult is Result.Error) addAll(descriptionResult.data)
             if (dateResult is Result.Error) addAll(dateResult.data)
             if (priceResult is Result.Error) addAll(priceResult.data)
         }
@@ -72,6 +82,7 @@ class ItemValidator @Inject constructor(
         return Result.Success(
             ValidatedFields(
                 name = (nameResult as Result.Success).data,
+                description = (descriptionResult as Result.Success).data,
                 dateOfPurchase = (dateResult as Result.Success).data,
                 price = (priceResult as Result.Success).data
             )
@@ -85,6 +96,7 @@ class ItemValidator @Inject constructor(
 
 data class ValidatedFields(
     val name: String,
+    val description: String?,
     val dateOfPurchase: LocalDate,
     val price: Long?
 )
