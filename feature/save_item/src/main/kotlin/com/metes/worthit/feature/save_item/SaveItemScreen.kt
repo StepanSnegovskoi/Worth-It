@@ -45,6 +45,8 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
@@ -84,6 +86,8 @@ fun SaveItemRoute(
 ) {
     val context = LocalContext.current
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val nameFocusRequester = remember { FocusRequester() }
+    val priceFocusRequester = remember { FocusRequester() }
 
     val photoPicker =
         rememberLauncherForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
@@ -100,6 +104,16 @@ fun SaveItemRoute(
                 SaveItemEvent.NavigateToItems -> onNavigateToItems()
 
                 is SaveItemEvent.ShowErrors -> {
+                    val currentState = uiState
+
+                    if (currentState is SaveItemUiState.Success) {
+                        if (!currentState.isValidName) {
+                            nameFocusRequester.requestFocus()
+                        } else if (!currentState.isValidPrice) {
+                            priceFocusRequester.requestFocus()
+                        }
+                    }
+
                     snackbarHostState.currentSnackbarData?.dismiss()
                     launch {
                         snackbarHostState
@@ -121,6 +135,8 @@ fun SaveItemRoute(
         is SaveItemUiState.Success -> SaveItemScreen(
             uiState = currentState,
             snackbarHostState = snackbarHostState,
+            nameFocusRequester = nameFocusRequester,
+            priceFocusRequester = priceFocusRequester,
             modifier = modifier,
             onAddItemClick = { viewModel.processCommand(SaveItemCommand.SaveItem) },
             onNameChange = { viewModel.processCommand(SaveItemCommand.ChangeName(it)) },
@@ -144,6 +160,8 @@ fun SaveItemRoute(
 fun SaveItemScreen(
     uiState: SaveItemUiState.Success,
     snackbarHostState: SnackbarHostState,
+    nameFocusRequester: FocusRequester,
+    priceFocusRequester: FocusRequester,
     modifier: Modifier = Modifier,
     onAddItemClick: () -> Unit,
     onNameChange: (String) -> Unit,
@@ -224,8 +242,10 @@ fun SaveItemScreen(
                         keyboardController?.hide()
                         onAddItemClick()
                     }) {
-                        val iconRes = if (uiState.isEditingMode) DesignR.drawable.done_24dp else DesignR.drawable.add_24dp
-                        val contentDescriptionRes = if (uiState.isEditingMode) R.string.cd_save_changes else R.string.cd_add_item
+                        val iconRes =
+                            if (uiState.isEditingMode) DesignR.drawable.done_24dp else DesignR.drawable.add_24dp
+                        val contentDescriptionRes =
+                            if (uiState.isEditingMode) R.string.cd_save_changes else R.string.cd_add_item
 
                         Icon(
                             painter = painterResource(iconRes),
@@ -259,6 +279,7 @@ fun SaveItemScreen(
                 NameTextField(
                     name = uiState.name,
                     isError = !uiState.isValidName,
+                    modifier = Modifier.focusRequester(nameFocusRequester),
                     onRemoveNameClick = onRemoveNameClick,
                     onNameChange = onNameChange
                 )
@@ -281,9 +302,11 @@ fun SaveItemScreen(
                     )
 
                     PriceField(
-                        modifier = Modifier.weight(1f),
-                        currency = uiState.currency,
                         price = uiState.price,
+                        currency = uiState.currency,
+                        modifier = Modifier
+                            .weight(1f)
+                            .focusRequester(priceFocusRequester),
                         onIconClick = { showCurrencies.value = true },
                         onPriceChange = onPriceChange
                     )

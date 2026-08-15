@@ -21,6 +21,8 @@ import com.metes.worthit.core.domain.validator.ItemValidator
 import com.metes.worthit.core.navigation.Screen
 import com.metes.worthit.core.common.toEpochMilliOrNull
 import com.metes.worthit.core.domain.utils.UserSettings
+import com.metes.worthit.core.domain.utils.onError
+import com.metes.worthit.core.domain.utils.onSuccess
 import com.metes.worthit.feature.save_item.SaveItemEvent.NavigateToItems
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -212,6 +214,8 @@ class SaveItemViewModel @Inject constructor(
     }
 
     private fun saveItem() {
+        savedStateHandle[KEY_HAS_ATTEMPTED_SAVE] = true
+
         if (isSavingFlow.value) return
 
         val currentState = uiState.value
@@ -220,38 +224,34 @@ class SaveItemViewModel @Inject constructor(
         isSavingFlow.value = true
 
         viewModelScope.launch {
-            try {
-                val createdAtInstant = Instant.now(clock)
-                val dateOfPurchase = currentState.dateOfPurchaseMillis.let { utcMillis ->
-                    Instant.ofEpochMilli(utcMillis)
-                        .atZone(ZoneOffset.UTC)
-                        .toLocalDate()
+            val createdAtInstant = Instant.now(clock)
+            val dateOfPurchase = currentState.dateOfPurchaseMillis.let { utcMillis ->
+                Instant.ofEpochMilli(utcMillis)
+                    .atZone(ZoneOffset.UTC)
+                    .toLocalDate()
+            }
+
+            val result = saveItemUseCase(
+                itemId = args.itemId,
+                name = currentState.name,
+                description = currentState.description,
+                price = currentState.price,
+                currency = currentState.currency,
+                createdAt = createdAtInstant,
+                dateOfPurchase = dateOfPurchase,
+                imageUriString = currentState.imageUri?.toString(),
+                originalImageLocalPath = initialImagePath
+            )
+
+            when (result) {
+                is Result.Error<List<Error>> -> {
+                    _events.send(SaveItemEvent.ShowErrors(result.data))
+                    isSavingFlow.value = false
                 }
 
-                val result = saveItemUseCase(
-                    itemId = args.itemId,
-                    name = currentState.name,
-                    description = currentState.description,
-                    price = currentState.price,
-                    currency = currentState.currency,
-                    createdAt = createdAtInstant,
-                    dateOfPurchase = dateOfPurchase,
-                    imageUriString = currentState.imageUri?.toString(),
-                    originalImageLocalPath = initialImagePath
-                )
-
-                when (result) {
-                    is Result.Error<List<Error>> -> {
-                        _events.send(SaveItemEvent.ShowErrors(result.data))
-                        isSavingFlow.value = false
-                    }
-
-                    is Result.Success<Unit> -> {
-                        _events.send(NavigateToItems)
-                    }
+                is Result.Success<Unit> -> {
+                    _events.send(NavigateToItems)
                 }
-            } finally {
-                savedStateHandle[KEY_HAS_ATTEMPTED_SAVE] = true
             }
         }
     }
