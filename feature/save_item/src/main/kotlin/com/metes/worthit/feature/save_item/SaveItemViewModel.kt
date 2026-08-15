@@ -144,23 +144,19 @@ class SaveItemViewModel @Inject constructor(
         viewModelScope.launch {
             try {
                 if (itemId == null) return@launch
+                val result = getItemByIdUseCase(itemId)
 
-                when (val result = getItemByIdUseCase(itemId)) {
-                    is Result.Error<List<Error>> -> {
-                        _events.send(SaveItemEvent.ShowErrors(result.data))
-                    }
-
-                    is Result.Success<Item> -> {
-                        val item = result.data
-
-                        savedStateHandle[KEY_NAME] = item.name
-                        savedStateHandle[KEY_DESCRIPTION] = item.description
-                        savedStateHandle[KEY_PRICE] = item.price?.toString() ?: ""
-                        savedStateHandle[KEY_IMAGE_PATH] = item.imageLocalPath?.toUri()
-                        savedStateHandle[KEY_BOUGHT_DATE_MILLIS] =
-                            item.dateOfPurchase.toEpochMilliOrNull()
-                    }
+                result.onError { errors ->
+                    _events.send(SaveItemEvent.ShowErrors(errors))
+                }.onSuccess { item ->
+                    savedStateHandle[KEY_NAME] = item.name
+                    savedStateHandle[KEY_DESCRIPTION] = item.description
+                    savedStateHandle[KEY_PRICE] = item.price?.toString() ?: ""
+                    savedStateHandle[KEY_IMAGE_PATH] = item.imageLocalPath?.toUri()
+                    savedStateHandle[KEY_BOUGHT_DATE_MILLIS] =
+                        item.dateOfPurchase.toEpochMilliOrNull()
                 }
+
             } finally {
                 isInitializingFlow.value = false
             }
@@ -243,15 +239,11 @@ class SaveItemViewModel @Inject constructor(
                 originalImageLocalPath = initialImagePath
             )
 
-            when (result) {
-                is Result.Error<List<Error>> -> {
-                    _events.send(SaveItemEvent.ShowErrors(result.data))
-                    isSavingFlow.value = false
-                }
-
-                is Result.Success<Unit> -> {
-                    _events.send(NavigateToItems)
-                }
+            result.onError { errors ->
+                _events.send(SaveItemEvent.ShowErrors(errors))
+                isSavingFlow.value = false
+            }.onSuccess {
+                _events.send(NavigateToItems)
             }
         }
     }
