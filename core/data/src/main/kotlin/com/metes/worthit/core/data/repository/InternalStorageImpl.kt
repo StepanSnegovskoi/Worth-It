@@ -10,6 +10,7 @@ import com.metes.worthit.core.domain.error.FileError
 import com.metes.worthit.core.domain.error.UnexpectedError
 import com.metes.worthit.core.domain.repository.StorageRepository
 import com.metes.worthit.core.domain.utils.Result
+import com.metes.worthit.core.domain.utils.onSuccess
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.withContext
@@ -48,7 +49,7 @@ class InternalStorageImpl @Inject constructor(
 
                     val result = imageCompressor.compress(uri, imageFile)
 
-                    if (result is Result.Success) {
+                    result.onSuccess {
                         return@withContext Result.Success(imageFile.path)
                     }
 
