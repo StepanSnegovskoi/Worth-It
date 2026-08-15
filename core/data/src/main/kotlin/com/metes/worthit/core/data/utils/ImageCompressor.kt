@@ -6,7 +6,7 @@ import android.graphics.BitmapFactory
 import android.graphics.Matrix
 import android.net.Uri
 import androidx.exifinterface.media.ExifInterface
-import com.metes.worthit.core.common.DispatcherProvider
+import com.metes.worthit.core.common.IoDispatcher
 import com.metes.worthit.core.domain.error.Error
 import com.metes.worthit.core.domain.error.FileError
 import com.metes.worthit.core.domain.utils.Result
@@ -14,13 +14,14 @@ import com.metes.worthit.core.domain.utils.throwIfNull
 import dagger.Reusable
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 import java.io.File
 import javax.inject.Inject
 
 @Reusable
 class ImageCompressor @Inject constructor(
-    private val dispatchers: DispatcherProvider,
+    @IoDispatcher private val ioDispatcher: CoroutineDispatcher,
     @param:ApplicationContext private val context: Context,
 ) {
     suspend fun compress(
@@ -30,7 +31,7 @@ class ImageCompressor @Inject constructor(
         reqHeight: Int = 512,
         quality: Int = DEFAULT_QUALITY,
         compressFormat: Bitmap.CompressFormat = ImageFormatCompat.webpLossy
-    ): Result<Unit, Error> = withContext(dispatchers.io) {
+    ): Result<Unit, Error> = withContext(ioDispatcher) {
         var sampleBitmap: Bitmap? = null
         var finalBitmap: Bitmap? = null
 

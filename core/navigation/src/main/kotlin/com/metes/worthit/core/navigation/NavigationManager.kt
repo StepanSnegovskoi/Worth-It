@@ -1,6 +1,7 @@
 package com.metes.worthit.core.navigation
 
-import com.metes.worthit.core.common.StandardDispatchers
+import com.metes.worthit.core.common.MainDispatcher
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.channels.Channel
@@ -11,9 +12,9 @@ import javax.inject.Singleton
 
 @Singleton
 class NavigationManager @Inject constructor(
-    private val dispatchers: StandardDispatchers
+    @MainDispatcher private val mainDispatcher: CoroutineDispatcher,
 ) {
-    private val navigationScope = CoroutineScope(SupervisorJob() + dispatchers.main)
+    private val navigationScope = CoroutineScope(SupervisorJob() + mainDispatcher)
 
     private val _navEvents = Channel<NavigationEvent>(Channel.BUFFERED)
     val navEvents = _navEvents.receiveAsFlow()

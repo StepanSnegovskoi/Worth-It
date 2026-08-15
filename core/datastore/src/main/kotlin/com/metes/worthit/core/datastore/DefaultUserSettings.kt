@@ -4,9 +4,10 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
-import com.metes.worthit.core.common.DispatcherProvider
+import com.metes.worthit.core.common.IoDispatcher
 import com.metes.worthit.core.domain.entity.Currency
 import com.metes.worthit.core.domain.utils.UserSettings
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
@@ -16,10 +17,10 @@ import javax.inject.Singleton
 @Singleton
 class DefaultUserSettings @Inject constructor(
     private val dataStore: DataStore<Preferences>,
-    private val dispatcherProvider: DispatcherProvider,
+    @IoDispatcher private val ioDispatcher: CoroutineDispatcher,
 ): UserSettings {
 
-    override suspend fun saveCurrency(currency: Currency) = withContext<Unit>(dispatcherProvider.io) {
+    override suspend fun saveCurrency(currency: Currency) = withContext<Unit>(ioDispatcher) {
         dataStore.edit { preferences ->
             preferences[KEY_CURRENCY_PREF] = currency.name
         }
