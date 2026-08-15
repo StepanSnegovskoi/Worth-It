@@ -5,7 +5,6 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Matrix
 import android.net.Uri
-import android.util.Log
 import androidx.exifinterface.media.ExifInterface
 import com.metes.worthit.core.common.DispatcherProvider
 import com.metes.worthit.core.domain.error.Error
@@ -18,7 +17,6 @@ import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.withContext
 import java.io.File
 import javax.inject.Inject
-import kotlin.math.roundToInt
 
 @Reusable
 class ImageCompressor @Inject constructor(
@@ -33,22 +31,18 @@ class ImageCompressor @Inject constructor(
         quality: Int = DEFAULT_QUALITY,
         compressFormat: Bitmap.CompressFormat = ImageFormatCompat.webpLossy
     ): Result<Unit, Error> = withContext(dispatchers.io) {
-        Log.d("TESTTEST", "start compressing")
         var sampleBitmap: Bitmap? = null
         var finalBitmap: Bitmap? = null
+
         try {
             val orientation = getOrientationFromUri(imageUri)
-            Log.d("TESTTEST", "orientation $orientation")
 
             sampleBitmap = decodeSampleBitmap(imageUri, reqWidth, reqHeight)
-            Log.d("TESTTEST", "sampleBitmap $sampleBitmap")
             finalBitmap = sampleBitmap.rotated(orientation)
-            Log.d("TESTTEST", "finalBitmap $finalBitmap")
 
             val isSuccess = outputFile.outputStream().use { output ->
                 finalBitmap.compress(compressFormat, quality, output)
             }
-            Log.d("TESTTEST", "isSuccess $isSuccess")
 
             if (isSuccess) {
                 return@withContext Result.Success(Unit)
