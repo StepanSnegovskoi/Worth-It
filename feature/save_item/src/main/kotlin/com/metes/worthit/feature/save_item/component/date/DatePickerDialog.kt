@@ -8,6 +8,7 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import com.metes.worthit.core.designsystem.component.other.WorthItText
 import com.metes.worthit.feature.save_item.R
 
 @Composable
@@ -28,7 +29,7 @@ fun DatePickerDialog(
                         onButtonClick(state.selectedDateMillis)
                     }
                 ) {
-                    Text(text = stringResource(R.string.confirm))
+                    WorthItText(text = stringResource(R.string.confirm))
                 }
             }
         ) {

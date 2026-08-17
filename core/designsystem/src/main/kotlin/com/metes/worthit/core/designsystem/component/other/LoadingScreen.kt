@@ -8,17 +8,21 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import com.metes.worthit.core.designsystem.theme.AppTheme
 
 @Composable
 fun LoadingScreen(modifier: Modifier = Modifier) {
-    Scaffold(modifier = modifier.fillMaxSize()) { innerPadding ->
+    Scaffold(
+        modifier = modifier.fillMaxSize(),
+        containerColor = AppTheme.colorScheme.background
+    ) { innerPadding ->
         Box(
             modifier = modifier
                 .fillMaxSize()
                 .padding(innerPadding),
             contentAlignment = Alignment.Center
         ) {
-            CircularProgressIndicator()
+            CircularProgressIndicator(color = AppTheme.colorScheme.onBackground)
         }
     }
 }

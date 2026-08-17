@@ -12,6 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import com.metes.worthit.core.designsystem.theme.AppTheme
 import com.metes.worthit.core.domain.entity.Currency
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -25,7 +26,7 @@ fun CurrenciesDialog(
     if (show) {
         BasicAlertDialog(
             modifier = modifier
-                .clip(RoundedCornerShape(16.dp))
+                .clip(AppTheme.shape.container)
                 .background(Color.White),
             onDismissRequest = onDismissRequest,
             content = {

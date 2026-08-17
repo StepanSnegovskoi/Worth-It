@@ -7,6 +7,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextOverflow
+import com.metes.worthit.core.designsystem.theme.AppTheme
 
 @Composable
 fun WorthItText(
@@ -15,7 +16,7 @@ fun WorthItText(
     maxLines: Int = 1,
     overflow: TextOverflow = TextOverflow.Ellipsis,
     style: TextStyle = LocalTextStyle.current,
-    color: Color = Color.Black
+    color: Color = AppTheme.colorScheme.onBackground,
 ) {
     Text(
         text = text,
@@ -23,6 +24,6 @@ fun WorthItText(
         maxLines = maxLines,
         overflow = overflow,
         style = style,
-        color = color
+        color = color,
     )
 }

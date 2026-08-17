@@ -9,6 +9,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
+import com.metes.worthit.core.designsystem.component.other.WorthItIcon
+import com.metes.worthit.core.designsystem.component.other.WorthItIconButton
 import com.metes.worthit.core.designsystem.component.other.WorthItOutlinedTextField
 import com.metes.worthit.core.ui.iconResId
 import com.metes.worthit.feature.save_item.R
@@ -29,12 +31,12 @@ fun PriceField(
         keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
         label = { Text(text = stringResource(R.string.price_hint)) },
         trailingIcon = {
-            IconButton(
+            WorthItIconButton(
                 onClick = onIconClick
             ) {
-                Icon(
-                    painter = painterResource(currency.iconResId),
-                    contentDescription = null
+                WorthItIcon(
+                    drawableRes = currency.iconResId,
+                    contentDescriptionRes = R.string.cd_select_currency
                 )
             }
         }

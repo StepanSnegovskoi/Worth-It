@@ -19,4 +19,9 @@
     <string name="cd_save_changes">Сохранить изменения</string>
     <string name="cd_add_item">Добавить предмет</string>
     <string name="cd_remove_image">Удалить изображение</string>
+    <string name="cd_select_date">Выбрать дату</string>
+    <string name="cd_clear_description">Очистить описание</string>
+    <string name="cd_clear_name">Очистить название</string>
+    <string name="cd_select_currency">Выбрать валюту</string>
+    <string name="cd_back">Вернуться</string>
 </resources>

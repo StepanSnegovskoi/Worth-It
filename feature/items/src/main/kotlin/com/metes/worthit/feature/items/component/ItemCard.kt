@@ -9,17 +9,15 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import com.metes.worthit.core.designsystem.component.other.ItemImage
+import com.metes.worthit.core.designsystem.theme.AppTheme
 import com.metes.worthit.feature.items.ItemUiModel
 import com.metes.worthit.feature.items.R
-import java.time.LocalDate
-import com.metes.worthit.core.designsystem.R as DesignR
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -33,9 +31,10 @@ fun ItemCard(
             onClick(item.id)
         },
         modifier = modifier.fillMaxWidth(),
-        shape = RoundedCornerShape(16.dp),
+        shape = AppTheme.shape.container,
         colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surfaceVariant
+            containerColor = AppTheme.colorScheme.surface,
+            contentColor = AppTheme.colorScheme.onSurface
         )
     ) {
         Row(
@@ -50,7 +49,7 @@ fun ItemCard(
                     .clip(RoundedCornerShape(12.dp)),
                 model = item.localImagePath,
                 contentScale = ContentScale.Crop,
-                defaultImage = R.drawable.image_24dp,
+                defaultImageDrawableRes = R.drawable.image_24dp,
                 contentDescription = item.name
             )
             ItemBaseDetails(

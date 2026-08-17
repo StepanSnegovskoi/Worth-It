@@ -6,6 +6,7 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hasRoute
 import com.metes.worthit.core.designsystem.component.nav.WorthItBottomBarItem
+import com.metes.worthit.core.designsystem.theme.AppTheme
 import com.metes.worthit.core.navigation.Screen
 
 @Composable
@@ -14,7 +15,7 @@ fun WorthItBottomBar(
     modifier: Modifier = Modifier,
     onNavigate: (Screen) -> Unit,
 ) {
-    NavigationBar(modifier = modifier) {
+    NavigationBar(modifier = modifier, containerColor = AppTheme.colorScheme.background) {
         bottomNavItems.forEach { navItem ->
             val isSelected = currentDestination?.hasRoute(navItem.routeClass) == true
 

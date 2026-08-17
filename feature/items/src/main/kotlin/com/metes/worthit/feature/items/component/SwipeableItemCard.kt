@@ -20,6 +20,9 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
+import com.metes.worthit.core.designsystem.component.other.WorthItIcon
+import com.metes.worthit.core.designsystem.component.other.WorthItIconButton
+import com.metes.worthit.core.designsystem.theme.AppTheme
 import com.metes.worthit.feature.items.ItemUiModel
 import com.metes.worthit.feature.items.R
 import kotlin.math.roundToInt
@@ -37,7 +40,7 @@ fun SwipeableItemCard(
 ) {
     val density = LocalDensity.current
 
-    val state = remember {
+    val state = remember(density) {
         AnchoredDraggableState(
             initialValue = State.CLOSED,
             anchors = DraggableAnchors {
@@ -50,19 +53,18 @@ fun SwipeableItemCard(
     Box(
         modifier = modifier,
     ) {
-        IconButton(
+        WorthItIconButton(
             modifier = Modifier
                 .size(96.dp)
                 .padding(8.dp)
                 .align(Alignment.CenterStart),
-            shape = RoundedCornerShape(8.dp),
             onClick = {
                 onDeleteClick(item.id, item.localImagePath)
-            }
+            },
         ) {
-            Icon(
-                painter = painterResource(R.drawable.delete_48dp),
-                contentDescription = stringResource(R.string.cd_delete)
+            WorthItIcon(
+                drawableRes = R.drawable.delete_48dp,
+                contentDescriptionRes = R.string.cd_delete
             )
         }
         ItemCard(

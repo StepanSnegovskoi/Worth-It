@@ -29,13 +29,11 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
-import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarColors
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -53,14 +51,18 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.metes.worthit.core.designsystem.component.other.ItemImage
 import com.metes.worthit.core.designsystem.component.other.LoadingScreen
+import com.metes.worthit.core.designsystem.component.other.WorthItAnimatedVisibility
+import com.metes.worthit.core.designsystem.component.other.WorthItIcon
+import com.metes.worthit.core.designsystem.component.other.WorthItIconButton
+import com.metes.worthit.core.designsystem.component.other.WorthItText
 import com.metes.worthit.core.designsystem.component.snackbar.CustomSnackbarVisuals
+import com.metes.worthit.core.designsystem.theme.AppTheme
 import com.metes.worthit.core.designsystem.util.rememberDateFormatter
 import com.metes.worthit.core.domain.entity.Currency
 import com.metes.worthit.core.ui.asCombinedString
@@ -70,6 +72,8 @@ import com.metes.worthit.feature.save_item.component.date.PastOrPresentDatePicke
 import com.metes.worthit.feature.save_item.component.other.DescriptionTextField
 import com.metes.worthit.feature.save_item.component.other.NameTextField
 import com.metes.worthit.feature.save_item.component.other.PriceField
+import com.metes.worthit.feature.save_item.component.other.SaveItemFloatingActionButton
+import com.metes.worthit.feature.save_item.component.other.TitleText
 import com.metes.worthit.feature.save_item.component.other.WorthItSnackbar
 import kotlinx.coroutines.launch
 import java.time.Instant
@@ -226,60 +230,63 @@ fun SaveItemScreen(
                 .fillMaxSize()
                 .imePadding()
                 .nestedScroll(scrollBehavior.nestedScrollConnection),
+            containerColor = AppTheme.colorScheme.background,
+            floatingActionButton = {
+                WorthItAnimatedVisibility(visible = !isImeVisible) {
+                    SaveItemFloatingActionButton(isEditingMode = uiState.isEditingMode) {
+                        keyboardController?.hide()
+                        onAddItemClick()
+                    }
+                }
+            },
             topBar = {
                 TopAppBar(
                     title = {
-                        Text(text = stringResource(if (uiState.isEditingMode) R.string.editing_item else R.string.adding_item))
+                        TitleText(isEditingMode = uiState.isEditingMode)
                     },
+                    colors = TopAppBarColors(
+                        containerColor = AppTheme.colorScheme.background,
+                        scrolledContainerColor = AppTheme.colorScheme.background,
+                        navigationIconContentColor = AppTheme.colorScheme.primary,
+                        titleContentColor = AppTheme.colorScheme.onBackground,
+                        actionIconContentColor = AppTheme.colorScheme.primary,
+                        subtitleContentColor = AppTheme.colorScheme.primary
+                    ),
+                    scrollBehavior = scrollBehavior,
                     navigationIcon = {
-                        IconButton(onClick = {
+                        WorthItIconButton(onClick = {
                             keyboardController?.hide()
                             onBackClick()
                         }) {
-                            Icon(
-                                painter = painterResource(DesignR.drawable.back_24dp),
-                                contentDescription = stringResource(R.string.back_desc)
+                            WorthItIcon(
+                                drawableRes = DesignR.drawable.back_24dp,
+                                contentDescriptionRes = R.string.cd_back
                             )
                         }
                     },
-                    scrollBehavior = scrollBehavior,
                     actions = {
-                        AnimatedVisibility(
-                            visible = uiState.imageUri != null,
-                            enter = scaleIn() + fadeIn(),
-                            exit = scaleOut() + fadeOut(),
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.spacedBy(8.dp)
                         ) {
-                            IconButton(onClick = onRemoveImageClick) {
-                                Icon(
-                                    painter = painterResource(R.drawable.remove_image_36dp),
-                                    contentDescription = stringResource(R.string.cd_remove_image)
-                                )
+                            WorthItAnimatedVisibility(visible = uiState.imageUri != null) {
+                                WorthItIconButton(onClick = onRemoveImageClick) {
+                                    WorthItIcon(
+                                        drawableRes = R.drawable.remove_image_36dp,
+                                        contentDescriptionRes = R.string.cd_remove_image,
+                                    )
+                                }
+                            }
+
+                            WorthItAnimatedVisibility(visible = isImeVisible) {
+                                SaveItemFloatingActionButton(isEditingMode = uiState.isEditingMode) {
+                                    keyboardController?.hide()
+                                    onAddItemClick()
+                                }
                             }
                         }
                     }
                 )
-            },
-            floatingActionButton = {
-                AnimatedVisibility(
-                    visible = !isImeVisible,
-                    enter = scaleIn() + fadeIn(),
-                    exit = scaleOut() + fadeOut(),
-                ) {
-                    FloatingActionButton(onClick = {
-                        keyboardController?.hide()
-                        onAddItemClick()
-                    }) {
-                        val iconRes =
-                            if (uiState.isEditingMode) DesignR.drawable.done_24dp else DesignR.drawable.add_24dp
-                        val contentDescriptionRes =
-                            if (uiState.isEditingMode) R.string.cd_save_changes else R.string.cd_add_item
-
-                        Icon(
-                            painter = painterResource(iconRes),
-                            contentDescription = stringResource(contentDescriptionRes)
-                        )
-                    }
-                }
             },
         ) { paddingValues ->
             Column(
@@ -299,7 +306,7 @@ fun SaveItemScreen(
                         .align(Alignment.CenterHorizontally),
                     model = uiState.imageUri,
                     contentScale = ContentScale.Fit,
-                    defaultImage = R.drawable.image_search_24dp,
+                    defaultImageDrawableRes = R.drawable.image_search_24dp,
                     contentDescription = stringResource(R.string.select_image_desc),
                 )
 

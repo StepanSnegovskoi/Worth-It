@@ -7,13 +7,14 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.metes.worthit.core.designsystem.theme.AppTheme
 import com.metes.worthit.feature.items.ItemUiModel
 
 @Composable
 fun Items(
     items: List<ItemUiModel>,
     modifier: Modifier = Modifier,
-    contentPadding: PaddingValues = PaddingValues(0.dp),
+    contentPadding: PaddingValues,
     onClick: (Int) -> Unit,
     onDeleteClick: (Int, String?) -> Unit,
 ) {

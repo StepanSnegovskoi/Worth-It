@@ -10,6 +10,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardCapitalization
+import com.metes.worthit.core.designsystem.component.other.WorthItIcon
+import com.metes.worthit.core.designsystem.component.other.WorthItIconButton
 import com.metes.worthit.core.designsystem.component.other.WorthItOutlinedTextField
 import com.metes.worthit.feature.save_item.R
 import com.metes.worthit.core.designsystem.R as DesignR
@@ -32,15 +34,15 @@ fun NameTextField(
         label = { Text(text = stringResource(R.string.name_hint)) },
         trailingIcon = {
             if (name.isNotEmpty()) {
-                IconButton(
+                WorthItIconButton(
                     onClick = onRemoveNameClick
                 ) {
-                    Icon(
-                        painter = painterResource(DesignR.drawable.close_24dp),
-                        contentDescription = null
+                    WorthItIcon(
+                        drawableRes = DesignR.drawable.close_24dp,
+                        contentDescriptionRes = R.string.cd_clear_name
                     )
                 }
             }
-        }
+        },
     )
 }

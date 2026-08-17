@@ -33,13 +33,9 @@ fun SettingsScreen(
     Box(
         modifier = modifier
             .fillMaxSize()
+            .padding(scaffoldPadding),
+        contentAlignment = Alignment.Center,
     ) {
-        Box(
-            modifier = modifier
-                .fillMaxSize(),
-            contentAlignment = Alignment.Center,
-        ) {
-            WorthItText(text = "Settings Screen")
-        }
+        WorthItText(text = "Settings Screen")
     }
 }

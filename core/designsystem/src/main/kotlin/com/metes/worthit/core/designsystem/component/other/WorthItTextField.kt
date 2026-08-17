@@ -5,9 +5,12 @@ import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldColors
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.TextStyle
+import com.metes.worthit.core.designsystem.theme.AppTheme
 
 @Composable
 fun WorthItTextField(
@@ -35,6 +38,10 @@ fun WorthItTextField(
         isError = isError,
         onValueChange = onValueChange,
         keyboardOptions = keyboardOptions,
+        colors = TextFieldDefaults.colors(
+            focusedTextColor = AppTheme.colorScheme.onBackground,
+            unfocusedTextColor = AppTheme.colorScheme.onBackground,
+        ),
         label = label,
         placeholder = placeholder,
         trailingIcon = trailingIcon,

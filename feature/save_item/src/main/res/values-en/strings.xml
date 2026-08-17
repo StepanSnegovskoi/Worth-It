@@ -19,4 +19,9 @@
     <string name="cd_save_changes">Save changes</string>
     <string name="cd_add_item">Add item</string>
     <string name="cd_remove_image">Remove image</string>
+    <string name="cd_select_date">Select date</string>
+    <string name="cd_clear_description">Clear description</string>
+    <string name="cd_clear_name">Clear name</string>
+    <string name="cd_select_currency">Select currency</string>
+    <string name="cd_back">Back</string>
 </resources>

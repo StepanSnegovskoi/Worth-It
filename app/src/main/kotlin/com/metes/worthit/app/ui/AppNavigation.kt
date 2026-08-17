@@ -9,6 +9,7 @@ import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
+import com.metes.worthit.core.designsystem.theme.AppTheme
 import com.metes.worthit.core.navigation.safeNavigateTo
 
 @Composable
@@ -21,7 +22,9 @@ fun AppNavigation(
     val currentDestination = navBackStackEntry?.destination
 
     Scaffold(
-        modifier = modifier.fillMaxSize(),
+        modifier = modifier
+            .fillMaxSize(),
+        containerColor = AppTheme.colorScheme.background,
         bottomBar = {
             WorthItBottomBar(
                 currentDestination = currentDestination,

@@ -1,58 +1,67 @@
 package com.metes.worthit.core.designsystem.theme
 
-import android.app.Activity
-import android.os.Build
-import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.darkColorScheme
-import androidx.compose.material3.dynamicDarkColorScheme
-import androidx.compose.material3.dynamicLightColorScheme
-import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.platform.LocalContext
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.staticCompositionLocalOf
+import androidx.compose.ui.graphics.Color
 
-private val DarkColorScheme = darkColorScheme(
-    primary = Purple80,
-    secondary = PurpleGrey80,
-    tertiary = Pink80
+val lightColorsScheme = AppColorScheme(
+    background = BackgroundLight,
+    onBackground = TextLight,
+    primary = BluePrimaryLight,
+    onPrimary = White,
+    secondary = SecondaryLight,
+    surface = White,
+    onSurface = TextLight,
+    error = Error,
+    correct = Correct,
 )
 
-private val LightColorScheme = lightColorScheme(
-    primary = Purple40,
-    secondary = PurpleGrey40,
-    tertiary = Pink40
-
-    /* Other default colors to override
-    background = Color(0xFFFFFBFE),
-    surface = Color(0xFFFFFBFE),
-    onPrimary = Color.White,
-    onSecondary = Color.White,
-    onTertiary = Color.White,
-    onBackground = Color(0xFF1C1B1F),
-    onSurface = Color(0xFF1C1B1F),
-    */
+val darkColorsScheme = AppColorScheme(
+    background = BackgroundDark,
+    onBackground = TextDark,
+    primary = BluePrimaryDark,
+    onPrimary = OnPrimaryDark,
+    secondary = SecondaryDark,
+    surface = SurfaceDark,
+    onSurface = TextDark,
+    error = Error,
+    correct = Correct,
 )
 
 @Composable
-fun WorthItTheme(
-    darkTheme: Boolean = isSystemInDarkTheme(),
-    // Dynamic color is available on Android 12+
-    dynamicColor: Boolean = true,
+fun AppTheme(
+    isDarkTheme: Boolean,
     content: @Composable () -> Unit
 ) {
-    val colorScheme = when {
-        dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
-            val context = LocalContext.current
-            if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
-        }
+    val theme = if (isDarkTheme) darkColorsScheme else lightColorsScheme
+    val shape = AppShape()
 
-        darkTheme -> DarkColorScheme
-        else -> LightColorScheme
-    }
-
-    MaterialTheme(
-        colorScheme = colorScheme,
-        typography = Typography,
+    CompositionLocalProvider(
+        LocalAppTheme provides theme,
+        LocalAppShape provides shape,
         content = content
+    )
+}
+
+object AppTheme {
+    val colorScheme: AppColorScheme
+        @Composable get() = LocalAppTheme.current
+
+    val shape: AppShape
+        @Composable get() = LocalAppShape.current
+}
+
+val LocalAppTheme = staticCompositionLocalOf {
+    AppColorScheme(
+        background = Color.Unspecified,
+        onBackground = Color.Unspecified,
+        primary = Color.Unspecified,
+        onPrimary = Color.Unspecified,
+        secondary = Color.Unspecified,
+        surface = Color.Unspecified,
+        onSurface = Color.Unspecified,
+        error = Color.Unspecified,
+        correct = Correct,
     )
 }
