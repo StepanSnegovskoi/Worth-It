@@ -6,12 +6,15 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import com.metes.worthit.core.designsystem.component.other.WorthItIcon
 import com.metes.worthit.core.designsystem.component.other.WorthItIconButton
 import com.metes.worthit.core.designsystem.component.other.WorthItOutlinedTextField
+import com.metes.worthit.core.designsystem.component.other.WorthItText
+import com.metes.worthit.core.designsystem.component.other.WorthItTextField
 import com.metes.worthit.core.ui.iconResId
 import com.metes.worthit.feature.save_item.R
 import com.metes.worthit.core.domain.entity.Currency
@@ -24,7 +27,7 @@ fun PriceField(
     onIconClick: () -> Unit,
     onPriceChange: (String) -> Unit,
 ) {
-    WorthItOutlinedTextField(
+    WorthItTextField(
         modifier = modifier,
         value = price,
         onValueChange = onPriceChange,
@@ -39,6 +42,9 @@ fun PriceField(
                     contentDescriptionRes = R.string.cd_select_currency
                 )
             }
-        }
+        },
+        placeholder = {
+            WorthItText(text = stringResource(R.string.placeholder_price))
+        },
     )
 }

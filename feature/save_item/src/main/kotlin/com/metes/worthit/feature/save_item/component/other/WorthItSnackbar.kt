@@ -48,7 +48,7 @@ fun WorthItSnackbar(
                 tint = color
             )
             Spacer(modifier = Modifier.width(12.dp))
-            WorthItText(text = snackbarData.visuals.message)
+            WorthItText(text = snackbarData.visuals.message, maxLines = Int.MAX_VALUE)
         }
     }
 }

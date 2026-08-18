@@ -24,4 +24,7 @@
     <string name="cd_clear_name">Очистить название</string>
     <string name="cd_select_currency">Выбрать валюту</string>
     <string name="cd_back">Вернуться</string>
+    <string name="placeholder_bike_name">Велосипед</string>
+    <string name="placeholder_bike_description">Это мой первый велосипед, я люблю кататься на нём.</string>
+    <string name="placeholder_price">999</string>
 </resources>

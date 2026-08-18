@@ -6,9 +6,11 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextFieldColors
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.TextStyle
+import com.metes.worthit.core.designsystem.component.defaults.WorthItOutlinedTextFieldDefaults
 import com.metes.worthit.core.designsystem.theme.AppTheme
 
 @Composable
@@ -21,6 +23,7 @@ fun WorthItOutlinedTextField(
     singleLine: Boolean = true,
     isError: Boolean = false,
     errorMessage: String? = null,
+    colors: TextFieldColors = WorthItOutlinedTextFieldDefaults.colors(),
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
     label: @Composable (() -> Unit)? = null,
     placeholder: @Composable (() -> Unit)? = null,
@@ -37,19 +40,13 @@ fun WorthItOutlinedTextField(
         isError = isError,
         onValueChange = onValueChange,
         keyboardOptions = keyboardOptions,
-        colors = OutlinedTextFieldDefaults.colors(
-            focusedTextColor = AppTheme.colorScheme.onBackground,
-            unfocusedTextColor = AppTheme.colorScheme.onBackground,
-            disabledLabelColor = AppTheme.colorScheme.onBackground,
-            focusedLabelColor = AppTheme.colorScheme.onBackground,
-            unfocusedLabelColor = AppTheme.colorScheme.onBackground,
-        ),
+        colors = colors,
         label = label,
         placeholder = placeholder,
         trailingIcon = trailingIcon,
         supportingText = {
             if (isError && errorMessage != null) {
-                Text(text = errorMessage, color = AppTheme.colorScheme.error)
+                WorthItText(text = errorMessage, maxLines = Int.MAX_VALUE, color = AppTheme.colorScheme.error)
             }
         },
     )

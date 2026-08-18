@@ -16,7 +16,7 @@ fun WorthItText(
     maxLines: Int = 1,
     overflow: TextOverflow = TextOverflow.Ellipsis,
     style: TextStyle = LocalTextStyle.current,
-    color: Color = AppTheme.colorScheme.onBackground,
+    color: Color = Color.Unspecified,
 ) {
     Text(
         text = text,

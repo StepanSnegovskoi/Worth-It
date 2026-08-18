@@ -10,6 +10,7 @@ import androidx.compose.ui.res.stringResource
 import com.metes.worthit.core.designsystem.component.other.WorthItIcon
 import com.metes.worthit.core.designsystem.component.other.WorthItIconButton
 import com.metes.worthit.core.designsystem.component.other.WorthItOutlinedTextField
+import com.metes.worthit.core.designsystem.component.other.WorthItTextField
 import com.metes.worthit.feature.save_item.R
 
 @Composable
@@ -18,7 +19,7 @@ fun DateField(
     modifier: Modifier = Modifier,
     onIconClick: () -> Unit,
 ) {
-    WorthItOutlinedTextField(
+    WorthItTextField(
         modifier = modifier,
         value = date,
         readOnly = true,

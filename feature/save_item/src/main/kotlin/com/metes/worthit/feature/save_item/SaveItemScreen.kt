@@ -35,6 +35,7 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarColors
 import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.ripple
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -52,6 +53,9 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.role
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -299,11 +303,15 @@ fun SaveItemScreen(
             ) {
                 ItemImage(
                     modifier = Modifier
+                        .align(Alignment.CenterHorizontally)
                         .padding(bottom = 8.dp)
                         .size(240.dp)
                         .clip(RoundedCornerShape(16.dp))
-                        .clickable(onClick = onImageClick)
-                        .align(Alignment.CenterHorizontally),
+                        .clickable(
+                            onClick = onImageClick,
+                            interactionSource = remember { MutableInteractionSource() },
+                            indication = ripple()
+                        ),
                     model = uiState.imageUri,
                     contentScale = ContentScale.Fit,
                     defaultImageDrawableRes = R.drawable.image_search_24dp,
@@ -330,8 +338,8 @@ fun SaveItemScreen(
                     horizontalArrangement = Arrangement.spacedBy(16.dp)
                 ) {
                     DateField(
-                        modifier = Modifier.weight(1f),
                         date = formattedDate,
+                        modifier = Modifier.weight(1f),
                         onIconClick = { showDatePicker.value = true },
                     )
 

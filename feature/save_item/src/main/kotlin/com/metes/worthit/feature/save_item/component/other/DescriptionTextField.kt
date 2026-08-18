@@ -7,12 +7,15 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import com.metes.worthit.core.designsystem.component.other.WorthItIcon
 import com.metes.worthit.core.designsystem.component.other.WorthItIconButton
 import com.metes.worthit.core.designsystem.component.other.WorthItOutlinedTextField
+import com.metes.worthit.core.designsystem.component.other.WorthItText
+import com.metes.worthit.core.designsystem.component.other.WorthItTextField
 import com.metes.worthit.feature.save_item.R
 import com.metes.worthit.core.designsystem.R as DesignR
 
@@ -23,14 +26,14 @@ fun DescriptionTextField(
     onRemoveDescriptionClick: () -> Unit,
     onDescriptionChange: (String) -> Unit,
 ) {
-    WorthItOutlinedTextField(
+    WorthItTextField(
         modifier = modifier.fillMaxWidth(),
         value = description,
         keyboardOptions = KeyboardOptions.Default.copy(capitalization = KeyboardCapitalization.Sentences),
         onValueChange = onDescriptionChange,
         maxLines = Int.MAX_VALUE,
         singleLine = false,
-        label = { Text(text = stringResource(R.string.description_hint)) },
+        label = { WorthItText(text = stringResource(R.string.description_hint)) },
         trailingIcon = {
             if (description.isNotEmpty()) {
                 WorthItIconButton(
@@ -42,6 +45,9 @@ fun DescriptionTextField(
                     )
                 }
             }
+        },
+        placeholder = {
+            WorthItText(text = stringResource(R.string.placeholder_bike_description))
         },
     )
 }

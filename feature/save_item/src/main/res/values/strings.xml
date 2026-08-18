@@ -23,4 +23,7 @@
     <string name="cd_clear_name">Clear name</string>
     <string name="cd_select_currency">Select currency</string>
     <string name="cd_back">Back</string>
+    <string name="placeholder_bike_name">Bike</string>
+    <string name="placeholder_bike_description">This is my first bike, I love riding it.</string>
+    <string name="placeholder_price">999</string>
 </resources>

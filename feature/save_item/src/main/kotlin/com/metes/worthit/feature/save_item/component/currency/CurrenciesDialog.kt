@@ -27,7 +27,7 @@ fun CurrenciesDialog(
         BasicAlertDialog(
             modifier = modifier
                 .clip(AppTheme.shape.container)
-                .background(Color.White),
+                .background(AppTheme.colorScheme.surface),
             onDismissRequest = onDismissRequest,
             content = {
                 Currencies(

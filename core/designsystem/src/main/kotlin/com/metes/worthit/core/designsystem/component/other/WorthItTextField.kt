@@ -10,6 +10,7 @@ import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.TextStyle
+import com.metes.worthit.core.designsystem.component.defaults.WorthItTextFieldDefaults
 import com.metes.worthit.core.designsystem.theme.AppTheme
 
 @Composable
@@ -22,6 +23,7 @@ fun WorthItTextField(
     singleLine: Boolean = true,
     isError: Boolean = false,
     errorMessage: String? = null,
+    colors: TextFieldColors = WorthItTextFieldDefaults.colors(),
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
     label: @Composable (() -> Unit)? = null,
     placeholder: @Composable (() -> Unit)? = null,
@@ -38,10 +40,7 @@ fun WorthItTextField(
         isError = isError,
         onValueChange = onValueChange,
         keyboardOptions = keyboardOptions,
-        colors = TextFieldDefaults.colors(
-            focusedTextColor = AppTheme.colorScheme.onBackground,
-            unfocusedTextColor = AppTheme.colorScheme.onBackground,
-        ),
+        colors = colors,
         label = label,
         placeholder = placeholder,
         trailingIcon = trailingIcon,
