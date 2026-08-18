@@ -310,7 +310,7 @@ fun SaveItemScreen(
                         .clickable(
                             onClick = onImageClick,
                             interactionSource = remember { MutableInteractionSource() },
-                            indication = ripple(color = AppTheme.colorScheme.primary)
+                            indication = ripple()
                         ),
                     model = uiState.imageUri,
                     contentScale = ContentScale.Fit,
