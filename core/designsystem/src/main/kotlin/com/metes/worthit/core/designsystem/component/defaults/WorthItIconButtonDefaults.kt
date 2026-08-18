@@ -9,7 +9,7 @@ object WorthItIconButtonDefaults {
     @Composable
     fun colors(
         contentColor: Color = AppTheme.colorScheme.primary,
-        disabledContentColor: Color = Color.Unspecified,
+        disabledContentColor: Color = AppTheme.colorScheme.primary.copy(alpha = 0.35f),
         containerColor: Color = Color.Transparent,
         disabledContainerColor: Color = Color.Transparent,
     ): IconButtonColors = IconButtonColors(

@@ -4,7 +4,6 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonColors
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import com.metes.worthit.core.designsystem.component.defaults.WorthItIconButtonDefaults
 import com.metes.worthit.core.designsystem.theme.AppTheme
@@ -14,6 +13,7 @@ fun WorthItIconButton(
     modifier: Modifier = Modifier,
     shape: Shape = AppTheme.shape.button,
     colors: IconButtonColors = WorthItIconButtonDefaults.colors(),
+    enabled: Boolean = true,
     onClick: () -> Unit,
     content: @Composable () -> Unit,
 ) {
@@ -21,7 +21,8 @@ fun WorthItIconButton(
         modifier = modifier,
         onClick = onClick,
         shape = shape,
-        colors = colors
+        colors = colors,
+        enabled = enabled,
     ) {
         content()
     }

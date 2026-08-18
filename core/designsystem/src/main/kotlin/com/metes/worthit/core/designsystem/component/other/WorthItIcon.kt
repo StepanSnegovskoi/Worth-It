@@ -3,6 +3,7 @@ package com.metes.worthit.core.designsystem.component.other
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.compose.material3.Icon
+import androidx.compose.material3.LocalContentColor
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -15,7 +16,7 @@ fun WorthItIcon(
     @DrawableRes drawableRes: Int,
     modifier: Modifier = Modifier,
     @StringRes contentDescriptionRes: Int? = null,
-    tint: Color = AppTheme.colorScheme.primary,
+    tint: Color = LocalContentColor.current,
 ) {
     Icon(
         modifier = modifier,
