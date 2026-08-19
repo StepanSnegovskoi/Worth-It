@@ -58,7 +58,10 @@ import androidx.compose.ui.semantics.role
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.repeatOnLifecycle
 import com.metes.worthit.core.designsystem.component.other.ItemImage
 import com.metes.worthit.core.designsystem.component.other.LoadingScreen
 import com.metes.worthit.core.designsystem.component.other.WorthItAnimatedVisibility
@@ -69,6 +72,7 @@ import com.metes.worthit.core.designsystem.component.snackbar.CustomSnackbarVisu
 import com.metes.worthit.core.designsystem.theme.AppTheme
 import com.metes.worthit.core.designsystem.util.rememberDateFormatter
 import com.metes.worthit.core.domain.entity.Currency
+import com.metes.worthit.core.ui.ObserveAsEvents
 import com.metes.worthit.core.ui.asCombinedString
 import com.metes.worthit.feature.save_item.component.currency.CurrenciesDialog
 import com.metes.worthit.feature.save_item.component.date.DateField
@@ -90,11 +94,12 @@ private val ScrollableFabClearance = FabHeight + FabSpaceAround
 @Composable
 fun SaveItemRoute(
     modifier: Modifier = Modifier,
-    viewModel: SaveItemViewModel = hiltViewModel(),
+    viewModel: SaveItemViewModel,
     onNavigateToItems: () -> Unit,
     onBackClick: () -> Unit,
 ) {
     val context = LocalContext.current
+    val lifecycleOwner = LocalLifecycleOwner.current
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val nameFocusRequester = remember { FocusRequester() }
     val priceFocusRequester = remember { FocusRequester() }
@@ -108,32 +113,30 @@ fun SaveItemRoute(
 
     val snackbarHostState = remember { SnackbarHostState() }
 
-    LaunchedEffect(Unit) {
-        viewModel.events.collect { event ->
-            when (event) {
-                SaveItemEvent.NavigateToItems -> onNavigateToItems()
+    ObserveAsEvents(viewModel.events) { event ->
+        when (event) {
+            SaveItemEvent.NavigateToItems -> onNavigateToItems()
 
-                is SaveItemEvent.ShowErrors -> {
-                    val currentState = uiState
+            is SaveItemEvent.ShowErrors -> {
+                val currentState = uiState
 
-                    if (currentState is SaveItemUiState.Success) {
-                        if (!currentState.isValidName) {
-                            nameFocusRequester.requestFocus()
-                        } else if (!currentState.isValidPrice) {
-                            priceFocusRequester.requestFocus()
-                        }
+                if (currentState is SaveItemUiState.Success) {
+                    if (!currentState.isValidName) {
+                        nameFocusRequester.requestFocus()
+                    } else if (!currentState.isValidPrice) {
+                        priceFocusRequester.requestFocus()
                     }
+                }
 
-                    snackbarHostState.currentSnackbarData?.dismiss()
-                    launch {
-                        snackbarHostState
-                            .showSnackbar(
-                                CustomSnackbarVisuals(
-                                    message = event.errors.asCombinedString(context = context),
-                                    isError = true
-                                )
+                snackbarHostState.currentSnackbarData?.dismiss()
+                launch {
+                    snackbarHostState
+                        .showSnackbar(
+                            CustomSnackbarVisuals(
+                                message = event.errors.asCombinedString(context = context),
+                                isError = true
                             )
-                    }
+                        )
                 }
             }
         }

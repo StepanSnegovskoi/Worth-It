@@ -8,22 +8,22 @@ import androidx.core.net.toUri
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.navigation.toRoute
+import com.metes.worthit.core.common.toEpochMilliOrNull
 import com.metes.worthit.core.domain.entity.Currency
 import com.metes.worthit.core.domain.entity.Currency.Companion.fromNameOrDefault
-import com.metes.worthit.core.domain.entity.Item
 import com.metes.worthit.core.domain.error.Error
 import com.metes.worthit.core.domain.usecase.GetItemByIdUseCase
 import com.metes.worthit.core.domain.usecase.SaveItemUseCase
 import com.metes.worthit.core.domain.utils.DateProvider
 import com.metes.worthit.core.domain.utils.Result
-import com.metes.worthit.core.domain.validator.ItemValidator
-import com.metes.worthit.core.navigation.Screen
-import com.metes.worthit.core.common.toEpochMilliOrNull
 import com.metes.worthit.core.domain.utils.UserSettings
 import com.metes.worthit.core.domain.utils.onError
 import com.metes.worthit.core.domain.utils.onSuccess
+import com.metes.worthit.core.domain.validator.ItemValidator
 import com.metes.worthit.feature.save_item.SaveItemEvent.NavigateToItems
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedFactory
+import dagger.assisted.AssistedInject
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.Channel
@@ -40,7 +40,6 @@ import java.time.Clock
 import java.time.Instant
 import java.time.LocalDate
 import java.time.ZoneOffset
-import javax.inject.Inject
 
 private const val KEY_NAME = "item_name"
 private const val KEY_PRICE = "item_price"
@@ -49,8 +48,8 @@ private const val KEY_IMAGE_PATH = "item_image_path"
 private const val KEY_BOUGHT_DATE_MILLIS = "item_bought_date"
 private const val KEY_HAS_ATTEMPTED_SAVE = "has_attempted_save"
 
-@HiltViewModel
-class SaveItemViewModel @Inject constructor(
+@HiltViewModel(assistedFactory = SaveItemViewModel.Factory::class)
+class SaveItemViewModel @AssistedInject constructor(
     private val saveItemUseCase: SaveItemUseCase,
     private val getItemByIdUseCase: GetItemByIdUseCase,
     private val savedStateHandle: SavedStateHandle,
@@ -58,21 +57,19 @@ class SaveItemViewModel @Inject constructor(
     private val itemValidator: ItemValidator,
     private val clock: Clock,
     currentDateProvider: DateProvider,
+    @Assisted private val itemId: Int? = null,
+    @Assisted private val imagePath: String? = null,
 ) : ViewModel() {
-
-    private val args = savedStateHandle.toRoute<Screen.SaveItem>()
 
     private val initialSelectedDateMillis = LocalDate.now(clock).toEpochMilliOrNull()
 
-    private val initialImagePath = args.imagePath
-
-    private val isEditingMode = args.itemId != null
+    private val isEditingMode = itemId != null
 
     private val hasAttemptedSaveFlow = savedStateHandle.getStateFlow(KEY_HAS_ATTEMPTED_SAVE, false)
     private val nameFlow = savedStateHandle.getStateFlow(KEY_NAME, "")
     private val priceFlow = savedStateHandle.getStateFlow(KEY_PRICE, "")
     private val imageUriFlow =
-        savedStateHandle.getStateFlow(KEY_IMAGE_PATH, initialImagePath?.toUri())
+        savedStateHandle.getStateFlow(KEY_IMAGE_PATH, imagePath?.toUri())
     private val descriptionFlow = savedStateHandle.getStateFlow(KEY_DESCRIPTION, "")
     private val dateOfPurchaseMillisFlow = savedStateHandle.getStateFlow(
         KEY_BOUGHT_DATE_MILLIS, initialSelectedDateMillis
@@ -137,7 +134,7 @@ class SaveItemViewModel @Inject constructor(
     val events = _events.receiveAsFlow()
 
     init {
-        setItem(args.itemId)
+        setItem(itemId)
     }
 
     private fun setItem(itemId: Int?) {
@@ -228,7 +225,7 @@ class SaveItemViewModel @Inject constructor(
             }
 
             val result = saveItemUseCase(
-                itemId = args.itemId,
+                itemId = itemId,
                 name = currentState.name,
                 description = currentState.description,
                 price = currentState.price,
@@ -236,7 +233,7 @@ class SaveItemViewModel @Inject constructor(
                 createdAt = createdAtInstant,
                 dateOfPurchase = dateOfPurchase,
                 imageUriString = currentState.imageUri?.toString(),
-                originalImageLocalPath = initialImagePath
+                originalImageLocalPath = imagePath
             )
 
             result.onError { errors ->
@@ -246,6 +243,15 @@ class SaveItemViewModel @Inject constructor(
                 _events.send(NavigateToItems)
             }
         }
+    }
+
+    @AssistedFactory
+    interface Factory {
+
+        fun create(
+            itemId: Int? = null,
+            imagePath: String? = null,
+        ): SaveItemViewModel
     }
 }
 

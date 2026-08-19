@@ -1,12 +1,14 @@
 package com.metes.worthit.core.navigation
 
-import androidx.lifecycle.Lifecycle
-import androidx.navigation.NavHostController
-import androidx.navigation.NavOptionsBuilder
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.saveable.rememberSerializable
+import androidx.navigation3.runtime.NavBackStack
+import androidx.navigation3.runtime.NavKey
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.serializer
 
 @Serializable
-sealed interface Screen {
+sealed interface Screen : NavKey {
 
     @Serializable
     data object Items : Screen
@@ -21,18 +23,9 @@ sealed interface Screen {
     data object Settings : Screen
 }
 
-fun NavHostController.navigateBack() {
-    safePopBackStack()
-}
-
-fun NavHostController.safePopBackStack() {
-    if (currentBackStackEntry?.lifecycle?.currentState == Lifecycle.State.RESUMED) {
-        popBackStack()
-    }
-}
-
-fun NavHostController.safeNavigateTo(screen: Any, builder: NavOptionsBuilder.() -> Unit = {}) {
-    if (currentBackStackEntry?.lifecycle?.currentState == Lifecycle.State.RESUMED) {
-        navigate(screen, builder)
+@Composable
+fun rememberMyAppNavBackStack(vararg elements: Screen): NavBackStack<Screen> {
+    return rememberSerializable(serializer = serializer()) {
+        NavBackStack(*elements)
     }
 }

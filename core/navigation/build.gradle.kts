@@ -1,5 +1,6 @@
 plugins {
     alias(libs.plugins.worthit.android.library)
+    alias(libs.plugins.worthit.android.library.compose)
     alias(libs.plugins.serialization)
 }
 
@@ -8,7 +9,10 @@ android {
 }
 
 dependencies {
-    api(libs.navigation.compose)
+    api(libs.androidx.navigation3.ui)
+    api(libs.androidx.navigation3.runtime)
+    api(libs.androidx.lifecycle.viewmodel.navigation3)
+    api(libs.androidx.hilt.navigation.compose)
     implementation(libs.javax.inject)
 
     implementation(project(":core:common"))

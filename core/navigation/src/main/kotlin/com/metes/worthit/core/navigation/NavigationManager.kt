@@ -24,15 +24,8 @@ class NavigationManager @Inject constructor(
             _navEvents.send(NavigationEvent.NavigateTo(screen))
         }
     }
-
-    fun navigateBack() {
-        navigationScope.launch {
-            _navEvents.send(NavigationEvent.NavigateBack)
-        }
-    }
 }
 
 sealed interface NavigationEvent {
     data class NavigateTo(val screen: Screen) : NavigationEvent
-    data object NavigateBack : NavigationEvent
 }
