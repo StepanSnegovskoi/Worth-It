@@ -9,6 +9,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.metes.worthit.core.designsystem.component.other.WorthItText
+import com.metes.worthit.core.designsystem.theme.AppTheme
 
 @Composable
 fun SettingsRoute(
@@ -31,6 +32,6 @@ fun SettingsScreen(
             .padding(scaffoldPadding),
         contentAlignment = Alignment.Center,
     ) {
-        WorthItText(text = "Settings Screen")
+        WorthItText(text = "Settings Screen", color = AppTheme.colorScheme.onBackground)
     }
 }
