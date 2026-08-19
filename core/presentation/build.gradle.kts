@@ -4,9 +4,11 @@ plugins {
 }
 
 android {
-    namespace = "com.metes.worthit.core.ui"
+    namespace = "com.metes.worthit.core.presentation"
 }
 
 dependencies {
+    implementation(project(":core:domain"))
+    implementation(project(":core:ui"))
     androidTestImplementation(libs.androidx.junit)
 }
