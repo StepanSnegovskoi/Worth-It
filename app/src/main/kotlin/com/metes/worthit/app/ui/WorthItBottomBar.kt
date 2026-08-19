@@ -22,7 +22,11 @@ fun WorthItBottomBar(
         containerColor = AppTheme.colorScheme.background
     ) {
         items.forEach { navItem ->
-            val isSelected = currentScreen == navItem.route
+            val isSelected = when (navItem.route) {
+                is Screen.Items -> currentScreen is Screen.Items
+                is Screen.SaveItem -> currentScreen is Screen.SaveItem
+                is Screen.Settings -> currentScreen is Screen.Settings
+            }
 
             WorthItBottomBarItem(
                 selected = isSelected,
