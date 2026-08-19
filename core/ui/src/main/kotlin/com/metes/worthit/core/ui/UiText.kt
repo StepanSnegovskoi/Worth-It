@@ -11,7 +11,7 @@ sealed interface UiText {
 
     data class StringResource(
         @param:StringRes val resId: Int,
-        val args: List<String> = emptyList(),
+        val args: List<Any> = emptyList(),
     ) : UiText
 
     @Composable
@@ -19,14 +19,14 @@ sealed interface UiText {
     fun asString(): String {
         return when(this) {
             is DynamicString -> value
-            is StringResource -> stringResource(resId, args)
+            is StringResource -> stringResource(resId, *args.toTypedArray())
         }
     }
 
     fun asString(context: Context): String {
         return when (this) {
             is DynamicString -> value
-            is StringResource -> context.getString(resId, args)
+            is StringResource -> context.getString(resId, *args.toTypedArray())
         }
     }
 }

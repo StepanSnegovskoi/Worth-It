@@ -16,7 +16,7 @@ fun Error.toUiText(): UiText {
         BusinessError.ItemFailedToDelete -> UiText.StringResource(R.string.item_failed_to_delete)
         is BusinessError.ItemPriceLengthCantBeMoreThan -> UiText.StringResource(
             R.string.item_price_length_cant_be_more_than,
-            listOf(length.toString())
+            listOf(length)
         )
 
         BusinessError.ItemPriceInvalidFormat -> UiText.StringResource(R.string.item_price_can_contain_only_numbers)
@@ -29,8 +29,6 @@ fun Error.toUiText(): UiText {
         is UnexpectedError -> UiText.StringResource(R.string.unexpected_error)
     }
 }
-
-fun List<Error>.toUiTextList(): List<UiText> = map { it.toUiText() }
 
 fun List<Error>.asCombinedString(context: Context, separator: String = "\n"): String {
     return joinToString(separator = separator) { it.toUiText().asString(context) }
