@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="cd_delete">Удалить</string>
+    <string name="the_list_of_items_is_empty">Список предметов пуст</string>
+    <string name="let_s_add_something">Давай добавим что-то!</string>
 </resources>

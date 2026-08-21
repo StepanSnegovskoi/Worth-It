@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="cd_delete">Delete</string>
+    <string name="the_list_of_items_is_empty">The list of items is empty</string>
+    <string name="let_s_add_something">Let\'s add something!</string>
 </resources>

@@ -13,9 +13,11 @@ fun ContentWrapper(
     shape: Shape = AppTheme.shape.container,
     color: Color = AppTheme.colorScheme.primary,
     alpha: Float = AppTheme.alpha.extraLow,
+    onClick: (() -> Unit)? = null,
     content: @Composable () -> Unit,
 ) {
     Surface(
+        onClick = { onClick?.invoke() },
         modifier = modifier,
         shape = shape,
         color = color.copy(alpha = alpha),

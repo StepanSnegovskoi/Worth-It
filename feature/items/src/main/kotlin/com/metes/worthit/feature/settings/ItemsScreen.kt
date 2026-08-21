@@ -21,13 +21,14 @@ fun ItemsRoute(
     scaffoldPadding: PaddingValues,
     modifier: Modifier = Modifier,
     viewModel: ItemsViewModel = hiltViewModel(),
-    onNavigateToSaveItem: (Int) -> Unit,
+    onNavigateToEditingItem: (Int) -> Unit,
+    onNavigateToAddingItem: () -> Unit,
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     ObserveAsEvents(viewModel.events) { event ->
         when(event) {
-            is ItemsEvent.NavigateToSaveItem -> onNavigateToSaveItem(event.itemId)
+            is ItemsEvent.NavigateToSaveItem -> onNavigateToEditingItem(event.itemId)
         }
     }
 
@@ -48,6 +49,7 @@ fun ItemsRoute(
             onItemClick = { itemId: Int ->
                 viewModel.processCommand(ItemsCommand.ClickItem(itemId))
             },
+            onEmptyListClick = onNavigateToAddingItem
         )
     }
 }
@@ -59,6 +61,7 @@ fun ItemsScreen(
     modifier: Modifier = Modifier,
     onItemDeleteClick: (Int, String?) -> Unit,
     onItemClick: (Int) -> Unit,
+    onEmptyListClick: () -> Unit,
 ) {
     val layoutDirection = LocalLayoutDirection.current
 
@@ -76,6 +79,7 @@ fun ItemsScreen(
             .padding(start = 8.dp, end = 8.dp, bottom = 8.dp),
         contentPadding = combinedContentPadding,
         onClick = onItemClick,
+        onEmptyListClick = onEmptyListClick,
         onDeleteClick = onItemDeleteClick,
     )
 }

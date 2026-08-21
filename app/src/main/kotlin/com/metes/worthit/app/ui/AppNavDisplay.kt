@@ -35,9 +35,12 @@ fun AppNavDisplay(
             entry<Screen.Items> {
                 ItemsRoute(
                     scaffoldPadding = scaffoldPadding,
-                    onNavigateToSaveItem = { itemId ->
+                    onNavigateToEditingItem = { itemId ->
                         backStack.add(Screen.SaveItem(itemId = itemId))
                     },
+                    onNavigateToAddingItem = {
+                        backStack.add(Screen.SaveItem())
+                    }
                 )
             }
             entry<Screen.SaveItem> { key ->
