@@ -18,7 +18,7 @@ import com.metes.worthit.core.presentation.iconResId
 import com.metes.worthit.core.presentation.titleResId
 
 @Composable
-fun Currency(
+internal fun Currency(
     currency: Currency,
     modifier: Modifier = Modifier,
     onClick: (Currency) -> Unit,

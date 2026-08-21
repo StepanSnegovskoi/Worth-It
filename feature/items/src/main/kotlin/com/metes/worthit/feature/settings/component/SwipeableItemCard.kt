@@ -26,7 +26,7 @@ private enum class State {
 }
 
 @Composable
-fun SwipeableItemCard(
+internal fun SwipeableItemCard(
     item: ItemUiModel,
     modifier: Modifier = Modifier,
     onClick: (Int) -> Unit,

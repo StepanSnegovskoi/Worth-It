@@ -19,7 +19,7 @@ import com.metes.worthit.core.navigation.safeNavigateBack
 import com.metes.worthit.feature.settings.SaveItemViewModel
 
 @Composable
-fun AppNavDisplay(
+internal fun AppNavDisplay(
     backStack: NavBackStack<Screen>,
     scaffoldPadding: PaddingValues,
     modifier: Modifier = Modifier,

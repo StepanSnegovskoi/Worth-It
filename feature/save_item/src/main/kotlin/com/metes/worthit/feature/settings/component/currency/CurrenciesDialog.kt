@@ -15,7 +15,7 @@ import com.metes.worthit.core.domain.entity.Currency
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CurrenciesDialog(
+internal fun CurrenciesDialog(
     show: Boolean,
     modifier: Modifier = Modifier,
     onDismissRequest: () -> Unit,

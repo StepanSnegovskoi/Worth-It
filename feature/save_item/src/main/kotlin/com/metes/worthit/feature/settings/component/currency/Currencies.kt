@@ -9,7 +9,7 @@ import androidx.compose.ui.unit.dp
 import com.metes.worthit.core.domain.entity.Currency
 
 @Composable
-fun Currencies(
+internal fun Currencies(
     modifier: Modifier = Modifier,
     currencies: List<Currency> = Currency.entries,
     onClick: (Currency) -> Unit,

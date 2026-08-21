@@ -10,7 +10,7 @@ import com.metes.worthit.core.designsystem.component.other.WorthItTextField
 import com.metes.worthit.feature.save_item.R
 
 @Composable
-fun DateField(
+internal fun DateField(
     date: String,
     modifier: Modifier = Modifier,
     onIconClick: () -> Unit,

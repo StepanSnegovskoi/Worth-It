@@ -18,7 +18,7 @@ import com.metes.worthit.core.designsystem.theme.AppTheme
 import com.metes.worthit.core.designsystem.R as DesignR
 
 @Composable
-fun WorthItSnackbar(
+internal fun WorthItSnackbar(
     snackbarData: SnackbarData,
     isError: Boolean,
     modifier: Modifier = Modifier,

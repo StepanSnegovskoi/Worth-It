@@ -13,7 +13,7 @@ import com.metes.worthit.core.designsystem.util.rememberDateFormatter
 import com.metes.worthit.feature.settings.ItemUiModel
 
 @Composable
-fun ItemBaseDetails(
+internal fun ItemBaseDetails(
     item: ItemUiModel,
     modifier: Modifier = Modifier,
 ) {

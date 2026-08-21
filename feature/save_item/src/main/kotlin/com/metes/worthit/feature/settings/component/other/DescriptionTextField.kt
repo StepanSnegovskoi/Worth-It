@@ -14,7 +14,7 @@ import com.metes.worthit.feature.save_item.R
 import com.metes.worthit.core.designsystem.R as DesignR
 
 @Composable
-fun DescriptionTextField(
+internal fun DescriptionTextField(
     description: String,
     modifier: Modifier = Modifier,
     onRemoveDescriptionClick: () -> Unit,

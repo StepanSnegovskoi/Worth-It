@@ -3,7 +3,7 @@ package com.metes.worthit.core.data.utils
 import android.graphics.Bitmap
 import android.os.Build
 
-object ImageFormatCompat {
+internal object ImageFormatCompat {
 
     val webpLossy: Bitmap.CompressFormat
         get() =

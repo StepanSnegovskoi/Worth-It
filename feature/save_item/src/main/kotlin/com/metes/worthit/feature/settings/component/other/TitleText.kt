@@ -8,7 +8,7 @@ import com.metes.worthit.core.designsystem.theme.AppTheme
 import com.metes.worthit.feature.save_item.R
 
 @Composable
-fun TitleText(
+internal fun TitleText(
     isEditingMode: Boolean,
     modifier: Modifier = Modifier,
 ) {

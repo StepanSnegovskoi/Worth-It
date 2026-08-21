@@ -11,7 +11,7 @@ import com.metes.worthit.core.designsystem.component.other.WorthItTextButton
 import com.metes.worthit.feature.save_item.R
 
 @Composable
-fun DatePickerDialog(
+internal fun DatePickerDialog(
     show: Boolean,
     state: DatePickerState,
     modifier: Modifier = Modifier,

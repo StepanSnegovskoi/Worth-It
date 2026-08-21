@@ -21,7 +21,7 @@ import com.metes.worthit.feature.settings.ItemUiModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ItemCard(
+internal fun ItemCard(
     item: ItemUiModel,
     modifier: Modifier = Modifier,
     onClick: (Int) -> Unit,

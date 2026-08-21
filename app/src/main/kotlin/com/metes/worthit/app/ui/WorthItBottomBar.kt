@@ -11,7 +11,7 @@ import com.metes.worthit.core.designsystem.theme.AppTheme
 import com.metes.worthit.core.navigation.Screen
 
 @Composable
-fun WorthItBottomBar(
+internal fun WorthItBottomBar(
     currentScreen: Screen,
     items: List<BottomNavItem>,
     modifier: Modifier = Modifier,

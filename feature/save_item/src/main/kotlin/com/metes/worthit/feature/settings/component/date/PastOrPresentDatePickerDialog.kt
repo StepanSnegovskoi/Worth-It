@@ -11,7 +11,7 @@ import java.time.ZoneOffset
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun PastOrPresentDatePickerDialog(
+internal fun PastOrPresentDatePickerDialog(
     show: Boolean,
     currentDate: LocalDate,
     selectedDateMillis: Long?,

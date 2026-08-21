@@ -11,7 +11,7 @@ import com.metes.worthit.core.designsystem.theme.AppTheme
 import com.metes.worthit.core.navigation.Screen
 
 @Composable
-fun AppNavigation(
+internal fun AppNavigation(
     backStack: NavBackStack<Screen>,
     bottomNavItems: List<BottomNavItem>,
     modifier: Modifier = Modifier,

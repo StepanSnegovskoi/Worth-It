@@ -8,10 +8,10 @@ import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.conflate
 import kotlinx.coroutines.flow.distinctUntilChanged
 
-val Configuration.isSystemInDarkTheme
+internal val Configuration.isSystemInDarkTheme
     get() = (uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
 
-fun ComponentActivity.isSystemInDarkTheme() = callbackFlow {
+internal fun ComponentActivity.isSystemInDarkTheme() = callbackFlow {
     channel.trySend(resources.configuration.isSystemInDarkTheme)
 
     val listener = Consumer<Configuration> {

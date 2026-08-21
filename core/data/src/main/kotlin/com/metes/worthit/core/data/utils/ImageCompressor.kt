@@ -20,7 +20,7 @@ import java.io.File
 import javax.inject.Inject
 
 @Reusable
-class ImageCompressor @Inject constructor(
+internal class ImageCompressor @Inject constructor(
     @IoDispatcher private val ioDispatcher: CoroutineDispatcher,
     @param:ApplicationContext private val context: Context,
 ) {

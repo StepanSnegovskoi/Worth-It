@@ -11,7 +11,7 @@ import kotlinx.coroutines.flow.update
 import javax.inject.Inject
 
 @HiltViewModel
-class MainActivityViewModel @Inject constructor(
+internal class MainActivityViewModel @Inject constructor(
     private val navigationManager: NavigationManager,
 ) : ViewModel() {
     private val _state = MutableStateFlow<MainState>(MainState.Loading)
@@ -30,7 +30,7 @@ class MainActivityViewModel @Inject constructor(
     }
 }
 
-sealed interface MainState {
+internal sealed interface MainState {
     data object Idle : MainState
     data object Loading : MainState
 }

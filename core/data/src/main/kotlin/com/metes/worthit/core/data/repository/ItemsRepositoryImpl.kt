@@ -15,7 +15,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class ItemsRepositoryImpl @Inject constructor(
+internal class ItemsRepositoryImpl @Inject constructor(
     private val dao: ItemsDao,
     @IoDispatcher private val ioDispatcher: CoroutineDispatcher,
 ) : ItemsRepository {

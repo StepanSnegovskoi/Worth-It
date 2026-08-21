@@ -11,7 +11,7 @@ import com.metes.worthit.feature.save_item.R
 import com.metes.worthit.core.designsystem.R as DesignR
 
 @Composable
-fun SaveItemTopBarButton(
+internal fun SaveItemTopBarButton(
     isEditingMode: Boolean,
     modifier: Modifier = Modifier,
     colors: IconButtonColors = WorthItIconButtonDefaults.colors(),

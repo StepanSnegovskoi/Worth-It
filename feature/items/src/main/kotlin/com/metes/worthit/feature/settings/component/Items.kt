@@ -16,7 +16,7 @@ import com.metes.worthit.core.designsystem.theme.AppTheme
 import com.metes.worthit.feature.settings.ItemUiModel
 
 @Composable
-fun Items(
+internal fun Items(
     items: List<ItemUiModel>,
     contentPadding: PaddingValues,
     modifier: Modifier = Modifier,

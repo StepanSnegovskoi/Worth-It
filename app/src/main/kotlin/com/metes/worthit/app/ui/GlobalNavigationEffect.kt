@@ -12,7 +12,7 @@ import com.metes.worthit.core.navigation.NavigationManager
 import com.metes.worthit.core.navigation.Screen
 
 @Composable
-fun GlobalNavigationEffect(
+internal fun GlobalNavigationEffect(
     backStack: NavBackStack<Screen>,
     navigationManager: NavigationManager,
 ) {

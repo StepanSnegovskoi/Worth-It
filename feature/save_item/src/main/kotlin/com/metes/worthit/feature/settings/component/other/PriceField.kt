@@ -15,7 +15,7 @@ import com.metes.worthit.core.presentation.iconResId
 import com.metes.worthit.feature.save_item.R
 
 @Composable
-fun PriceField(
+internal fun PriceField(
     price: String,
     currency: Currency,
     modifier: Modifier = Modifier,

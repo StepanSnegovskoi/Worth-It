@@ -7,13 +7,13 @@ import com.metes.worthit.core.designsystem.R as DesignR
 import com.metes.worthit.core.navigation.Screen
 import kotlin.reflect.KClass
 
-data class BottomNavItem(
+internal data class BottomNavItem(
     val route: Screen,
     @param:StringRes val titleResId: Int,
     @param:DrawableRes val iconResId: Int,
 )
 
-val bottomNavItems = listOf(
+internal val bottomNavItems = listOf(
     BottomNavItem(
         route = Screen.Items,
         titleResId = R.string.items_screen,

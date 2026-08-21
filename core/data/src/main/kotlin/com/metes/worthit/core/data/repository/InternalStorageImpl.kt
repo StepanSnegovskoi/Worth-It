@@ -19,7 +19,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class InternalStorageImpl @Inject constructor(
+internal class InternalStorageImpl @Inject constructor(
     @param:ApplicationContext private val context: Context,
     @IoDispatcher private val ioDispatcher: CoroutineDispatcher,
     private val imageCompressor: ImageCompressor,

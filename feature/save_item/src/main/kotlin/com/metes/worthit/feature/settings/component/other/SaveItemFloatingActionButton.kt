@@ -9,7 +9,7 @@ import com.metes.worthit.core.designsystem.theme.AppTheme
 import com.metes.worthit.feature.save_item.R
 
 @Composable
-fun SaveItemFloatingActionButton(
+internal fun SaveItemFloatingActionButton(
     isEditingMode: Boolean,
     modifier: Modifier = Modifier,
     onClick: () -> Unit,

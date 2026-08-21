@@ -15,7 +15,7 @@ import com.metes.worthit.core.designsystem.theme.AppTheme
 import com.metes.worthit.feature.items.R
 
 @Composable
-fun ItemsListIsEmpty(
+internal fun ItemsListIsEmpty(
     modifier: Modifier = Modifier,
     onClick: () -> Unit,
 ) {

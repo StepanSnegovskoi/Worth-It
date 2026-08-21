@@ -19,7 +19,7 @@ enum class SortType {
 }
 
 @CacheableTask
-abstract class CountCodeLinesTask : DefaultTask() {
+internal abstract class CountCodeLinesTask : DefaultTask() {
 
     @get:Input
     abstract val sortType: Property<SortType>

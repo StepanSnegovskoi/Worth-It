@@ -14,7 +14,7 @@ import com.metes.worthit.feature.save_item.R
 import com.metes.worthit.core.designsystem.R as DesignR
 
 @Composable
-fun NameTextField(
+internal fun NameTextField(
     name: String,
     isError: Boolean,
     modifier: Modifier = Modifier,

@@ -17,7 +17,7 @@ object DatabaseModule {
 
     @Singleton
     @Provides
-    fun provideItemsDatabase(
+    internal fun provideItemsDatabase(
         @ApplicationContext context: Context
     ): WorthItDatabase {
         return Room.databaseBuilder(
@@ -29,7 +29,7 @@ object DatabaseModule {
 
     @Singleton
     @Provides
-    fun provideItemsDao(
+    internal fun provideItemsDao(
         worthItDatabase: WorthItDatabase
     ): ItemsDao {
         return worthItDatabase.dao()
