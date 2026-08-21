@@ -5,7 +5,10 @@ package com.metes.worthit.feature.settings
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.animation.animateContentSize
+import androidx.compose.animation.expandHorizontally
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.shrinkHorizontally
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
@@ -30,7 +33,6 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarColors
 import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.material3.ripple
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -58,8 +60,8 @@ import com.metes.worthit.core.designsystem.component.snackbar.CustomSnackbarVisu
 import com.metes.worthit.core.designsystem.theme.AppTheme
 import com.metes.worthit.core.designsystem.util.rememberDateFormatter
 import com.metes.worthit.core.domain.entity.Currency
-import com.metes.worthit.core.presentation.asCombinedString
 import com.metes.worthit.core.presentation.ObserveAsEvents
+import com.metes.worthit.core.presentation.asCombinedString
 import com.metes.worthit.feature.save_item.R
 import com.metes.worthit.feature.settings.component.currency.CurrenciesDialog
 import com.metes.worthit.feature.settings.component.date.DateField
@@ -260,10 +262,15 @@ fun SaveItemScreen(
                     },
                     actions = {
                         Row(
-                            modifier = Modifier.animateContentSize(),
+                            modifier = Modifier,
                             verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.End
                         ) {
-                            WorthItAnimatedVisibility(visible = uiState.imageUri != null) {
+                            WorthItAnimatedVisibility(
+                                visible = uiState.imageUri != null,
+                                enter = fadeIn() + expandHorizontally(),
+                                exit = fadeOut() + shrinkHorizontally(),
+                            ) {
                                 WorthItIconButton(onClick = onRemoveImageClick) {
                                     WorthItIcon(
                                         drawableRes = R.drawable.remove_image_36dp,
@@ -272,7 +279,11 @@ fun SaveItemScreen(
                                 }
                             }
 
-                            WorthItAnimatedVisibility(visible = isImeVisible) {
+                            WorthItAnimatedVisibility(
+                                visible = isImeVisible,
+                                enter = fadeIn() + expandHorizontally(),
+                                exit = fadeOut() + shrinkHorizontally(),
+                            ) {
                                 SaveItemTopBarButton(isEditingMode = uiState.isEditingMode) {
                                     keyboardController?.hide()
                                     onAddItemClick()
