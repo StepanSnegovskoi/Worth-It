@@ -1,7 +1,9 @@
 package com.metes.worthit.core.designsystem.theme
 
+import androidx.compose.foundation.LocalIndication
 import androidx.compose.material3.LocalRippleConfiguration
 import androidx.compose.material3.RippleConfiguration
+import androidx.compose.material3.ripple
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.staticCompositionLocalOf
@@ -38,12 +40,16 @@ fun AppTheme(
 ) {
     val theme = if (isDarkTheme) darkColorsScheme else lightColorsScheme
     val shape = AppShape()
+    val alpha = AppAlpha()
     val rippleConfiguration = RippleConfiguration(color = theme.primary)
+    val indication = ripple()
 
     CompositionLocalProvider(
         LocalAppTheme provides theme,
         LocalAppShape provides shape,
+        LocalAppAlpha provides alpha,
         LocalRippleConfiguration provides rippleConfiguration,
+        LocalIndication provides indication,
         content = content
     )
 }
@@ -54,6 +60,9 @@ object AppTheme {
 
     val shape: AppShape
         @Composable get() = LocalAppShape.current
+
+    val alpha: AppAlpha
+        @Composable get() = LocalAppAlpha.current
 }
 
 val LocalAppTheme = staticCompositionLocalOf {

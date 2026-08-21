@@ -299,8 +299,6 @@ fun SaveItemScreen(
                         .clip(RoundedCornerShape(16.dp))
                         .clickable(
                             onClick = onImageClick,
-                            interactionSource = remember { MutableInteractionSource() },
-                            indication = ripple()
                         ),
                     model = uiState.imageUri,
                     contentScale = ContentScale.Fit,
