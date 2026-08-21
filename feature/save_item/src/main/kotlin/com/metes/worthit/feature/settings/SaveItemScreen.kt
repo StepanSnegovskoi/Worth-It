@@ -5,6 +5,7 @@ package com.metes.worthit.feature.settings
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
@@ -67,6 +68,7 @@ import com.metes.worthit.feature.settings.component.other.DescriptionTextField
 import com.metes.worthit.feature.settings.component.other.NameTextField
 import com.metes.worthit.feature.settings.component.other.PriceField
 import com.metes.worthit.feature.settings.component.other.SaveItemFloatingActionButton
+import com.metes.worthit.feature.settings.component.other.SaveItemTopBarButton
 import com.metes.worthit.feature.settings.component.other.TitleText
 import com.metes.worthit.feature.settings.component.other.WorthItSnackbar
 import kotlinx.coroutines.launch
@@ -258,8 +260,8 @@ fun SaveItemScreen(
                     },
                     actions = {
                         Row(
+                            modifier = Modifier.animateContentSize(),
                             verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.spacedBy(8.dp)
                         ) {
                             WorthItAnimatedVisibility(visible = uiState.imageUri != null) {
                                 WorthItIconButton(onClick = onRemoveImageClick) {
@@ -271,7 +273,7 @@ fun SaveItemScreen(
                             }
 
                             WorthItAnimatedVisibility(visible = isImeVisible) {
-                                SaveItemFloatingActionButton(isEditingMode = uiState.isEditingMode) {
+                                SaveItemTopBarButton(isEditingMode = uiState.isEditingMode) {
                                     keyboardController?.hide()
                                     onAddItemClick()
                                 }
