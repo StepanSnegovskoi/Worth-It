@@ -29,3 +29,9 @@ fun rememberMyAppNavBackStack(vararg elements: Screen): NavBackStack<Screen> {
         NavBackStack(*elements)
     }
 }
+
+fun NavBackStack<Screen>.safeNavigateBack() {
+    if (this.size > 1) {
+        removeLastOrNull()
+    }
+}

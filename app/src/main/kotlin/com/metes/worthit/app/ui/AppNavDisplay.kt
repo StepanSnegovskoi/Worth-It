@@ -15,6 +15,7 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.navigation3.rememberViewModelStoreNavEntryDecorator
 import androidx.navigation3.runtime.NavBackStack
 import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
+import com.metes.worthit.core.navigation.safeNavigateBack
 import com.metes.worthit.feature.settings.SaveItemViewModel
 
 @Composable
@@ -55,8 +56,8 @@ fun AppNavDisplay(
                     modifier = Modifier
                         .padding(scaffoldPadding)
                         .consumeWindowInsets(scaffoldPadding),
-                    onNavigateToItems = { backStack.removeLastOrNull() },
-                    onBackClick = { backStack.removeLastOrNull() },
+                    onNavigateToItems = { backStack.safeNavigateBack() },
+                    onBackClick = { backStack.safeNavigateBack() },
                 )
             }
             entry<Screen.Settings> {
