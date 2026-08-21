@@ -11,13 +11,14 @@ import com.metes.worthit.core.designsystem.theme.AppTheme
 fun ContentWrapper(
     modifier: Modifier = Modifier,
     shape: Shape = AppTheme.shape.container,
-    color: Color = Color.Transparent,
+    color: Color = AppTheme.colorScheme.primary,
+    alpha: Float = AppTheme.alpha.extraLow,
     content: @Composable () -> Unit,
 ) {
     Surface(
         modifier = modifier,
         shape = shape,
-        color = color,
+        color = color.copy(alpha = alpha),
         content = content,
     )
 }
