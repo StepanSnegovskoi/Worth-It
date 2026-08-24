@@ -64,20 +64,19 @@ import com.metes.worthit.core.domain.entity.Currency
 import com.metes.worthit.core.presentation.ObserveAsEvents
 import com.metes.worthit.core.presentation.asCombinedString
 import com.metes.worthit.feature.save_item.R
+import com.metes.worthit.feature.settings.component.button.SaveItemFloatingActionButton
+import com.metes.worthit.feature.settings.component.button.SaveItemTopBarButton
 import com.metes.worthit.feature.settings.component.currency.CurrenciesDialog
 import com.metes.worthit.feature.settings.component.date.DateField
 import com.metes.worthit.feature.settings.component.date.PastOrPresentDatePickerDialog
-import com.metes.worthit.feature.settings.component.time_unit.PricePerTimeUnitField
 import com.metes.worthit.feature.settings.component.input_field.DescriptionTextField
 import com.metes.worthit.feature.settings.component.input_field.NameTextField
 import com.metes.worthit.feature.settings.component.input_field.PriceField
-import com.metes.worthit.feature.settings.component.button.SaveItemFloatingActionButton
-import com.metes.worthit.feature.settings.component.button.SaveItemTopBarButton
 import com.metes.worthit.feature.settings.component.other.TitleText
 import com.metes.worthit.feature.settings.component.other.WorthItSnackbar
+import com.metes.worthit.feature.settings.component.time_unit.PricePerTimeUnitField
 import kotlinx.coroutines.launch
 import java.time.Instant
-import java.time.ZoneOffset
 import com.metes.worthit.core.designsystem.R as DesignR
 
 private val FabHeight = 56.dp
