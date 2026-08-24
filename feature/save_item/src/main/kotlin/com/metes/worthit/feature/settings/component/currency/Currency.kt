@@ -10,6 +10,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.metes.worthit.core.designsystem.component.defaults.WorthItCardDefaults
+import com.metes.worthit.core.designsystem.component.other.WorthItCard
 import com.metes.worthit.core.designsystem.component.other.WorthItIcon
 import com.metes.worthit.core.designsystem.component.other.WorthItText
 import com.metes.worthit.core.designsystem.theme.AppTheme
@@ -23,12 +24,8 @@ internal fun Currency(
     modifier: Modifier = Modifier,
     onClick: (Currency) -> Unit,
 ) {
-    Card(
-        modifier = modifier
-            .fillMaxWidth(),
-        colors = WorthItCardDefaults.colors(
-            containerColor = AppTheme.colorScheme.primary.copy(alpha = 0.05f)
-        ),
+    WorthItCard(
+        modifier = modifier,
         onClick = {
             onClick(currency)
         },
@@ -43,6 +40,7 @@ internal fun Currency(
             WorthItIcon(
                 drawableRes = currency.iconResId,
                 contentDescriptionRes = currency.titleResId,
+                tint = AppTheme.colorScheme.primary
             )
         }
     }
