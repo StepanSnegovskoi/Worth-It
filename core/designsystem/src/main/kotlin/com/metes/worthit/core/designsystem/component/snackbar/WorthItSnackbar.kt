@@ -1,4 +1,4 @@
-package com.metes.worthit.feature.settings.component.other
+package com.metes.worthit.core.designsystem.component.snackbar
 
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.layout.Arrangement
@@ -18,7 +18,7 @@ import com.metes.worthit.core.designsystem.theme.AppTheme
 import com.metes.worthit.core.designsystem.R as DesignR
 
 @Composable
-internal fun WorthItSnackbar(
+fun WorthItSnackbar(
     snackbarData: SnackbarData,
     isError: Boolean,
     modifier: Modifier = Modifier,

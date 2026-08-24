@@ -59,6 +59,7 @@ import com.metes.worthit.core.designsystem.component.other.LoadingScreen
 import com.metes.worthit.core.designsystem.component.other.WorthItAnimatedVisibility
 import com.metes.worthit.core.designsystem.component.other.WorthItIcon
 import com.metes.worthit.core.designsystem.component.other.WorthItIconButton
+import com.metes.worthit.core.designsystem.component.snackbar.WorthItSnackbar
 import com.metes.worthit.core.designsystem.component.snackbar.CustomSnackbarVisuals
 import com.metes.worthit.core.designsystem.theme.AppTheme
 import com.metes.worthit.core.designsystem.util.rememberDateFormatter
@@ -75,7 +76,6 @@ import com.metes.worthit.feature.settings.component.input_field.DescriptionTextF
 import com.metes.worthit.feature.settings.component.input_field.NameTextField
 import com.metes.worthit.feature.settings.component.input_field.PriceField
 import com.metes.worthit.feature.settings.component.other.TitleText
-import com.metes.worthit.feature.settings.component.other.WorthItSnackbar
 import com.metes.worthit.feature.settings.component.time_unit.PricePerTimeUnitField
 import kotlinx.coroutines.launch
 import java.time.Instant
