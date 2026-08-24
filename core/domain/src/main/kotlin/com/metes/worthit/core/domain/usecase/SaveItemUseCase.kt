@@ -4,7 +4,6 @@ import com.metes.worthit.core.domain.entity.Currency
 import com.metes.worthit.core.domain.entity.Item
 import com.metes.worthit.core.domain.error.BusinessError
 import com.metes.worthit.core.domain.error.Error
-import com.metes.worthit.core.domain.error.UnexpectedError
 import com.metes.worthit.core.domain.repository.ItemsRepository
 import com.metes.worthit.core.domain.repository.StorageRepository
 import com.metes.worthit.core.domain.utils.Result

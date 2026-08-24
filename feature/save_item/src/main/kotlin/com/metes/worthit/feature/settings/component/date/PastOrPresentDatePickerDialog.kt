@@ -6,26 +6,27 @@ import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import com.metes.worthit.core.common.toUtcEpochMilli
 import java.time.LocalDate
-import java.time.ZoneOffset
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun PastOrPresentDatePickerDialog(
     show: Boolean,
     currentDate: LocalDate,
-    selectedDateMillis: Long?,
+    selectedDate: LocalDate,
     modifier: Modifier = Modifier,
     onDismissRequest: () -> Unit,
-    onButtonClick: (Long?) -> Unit,
+    onDateSelected: (LocalDate) -> Unit,
 ) {
     val (todayUtcMidnightMillis, currentYear) = remember(currentDate) {
-        val todayUtcMidnight = currentDate
-            .atStartOfDay(ZoneOffset.UTC)
-            .toInstant()
-            .toEpochMilli()
+        val todayUtcMidnight = currentDate.toUtcEpochMilli()
 
         todayUtcMidnight to currentDate.year
+    }
+
+    val selectedDateUtcMillis = remember(selectedDate) {
+        selectedDate.toUtcEpochMilli()
     }
 
     val selectableDates = remember(currentDate) {
@@ -42,7 +43,7 @@ internal fun PastOrPresentDatePickerDialog(
 
     val state = rememberDatePickerState(
         selectableDates = selectableDates,
-        initialSelectedDateMillis = selectedDateMillis ?: todayUtcMidnightMillis
+        initialSelectedDateMillis = selectedDateUtcMillis
     )
 
     DatePickerDialog(
@@ -50,6 +51,6 @@ internal fun PastOrPresentDatePickerDialog(
         state = state,
         modifier = modifier,
         onDismissRequest = onDismissRequest,
-        onButtonClick = onButtonClick,
+        onDateSelected = onDateSelected,
     )
 }

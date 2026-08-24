@@ -19,10 +19,10 @@ data class ItemDbModel(
     val price: Long?,
     @ColumnInfo(name = "currency_name")
     val currencyName: String?,
-    @ColumnInfo(name = "created_at_millis")
-    val createdAtMillis: Long,
-    @ColumnInfo(name = "date_of_purchase_millis")
-    val dateOfPurchaseMillis: Long,
+    @ColumnInfo(name = "created_at")
+    val createdAt: Instant,
+    @ColumnInfo(name = "date_of_purchase")
+    val dateOfPurchase: LocalDate,
     @ColumnInfo(name = "description")
     val description: String?,
     @ColumnInfo(name = "image_local_path")
@@ -34,8 +34,8 @@ fun Item.toDbModel() = ItemDbModel(
     name = name,
     price = price,
     currencyName = currency.name,
-    createdAtMillis = createdAt.toEpochMilli(),
-    dateOfPurchaseMillis = dateOfPurchase.toEpochDay(),
+    createdAt = createdAt,
+    dateOfPurchase = dateOfPurchase,
     description = description,
     imageLocalPath = imageLocalPath
 )
@@ -45,8 +45,8 @@ fun ItemDbModel.toEntity() = Item(
     name = name,
     price = price,
     currency = Currency.fromNameOrDefault(currencyName),
-    createdAt = Instant.ofEpochMilli(createdAtMillis),
-    dateOfPurchase = LocalDate.ofEpochDay(dateOfPurchaseMillis),
+    createdAt = createdAt,
+    dateOfPurchase = dateOfPurchase,
     description = description,
     imageLocalPath = imageLocalPath
 )

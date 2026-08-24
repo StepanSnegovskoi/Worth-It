@@ -52,6 +52,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.util.fastForEach
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.metes.worthit.core.common.toLocalDateFromUtc
+import com.metes.worthit.core.common.toUtcEpochMilli
 import com.metes.worthit.core.designsystem.component.other.ItemImage
 import com.metes.worthit.core.designsystem.component.other.LoadingScreen
 import com.metes.worthit.core.designsystem.component.other.WorthItAnimatedVisibility
@@ -204,10 +206,10 @@ fun SaveItemScreen(
     PastOrPresentDatePickerDialog(
         show = showDatePicker.value,
         currentDate = uiState.currentDate,
-        selectedDateMillis = uiState.dateOfPurchaseMillis,
+        selectedDate = uiState.dateOfPurchaseMillis.toLocalDateFromUtc(),
         onDismissRequest = { showDatePicker.value = false },
-        onButtonClick = { selectedDateMillis ->
-            selectedDateMillis?.let { onSelectBoughtDate(it) }
+        onDateSelected = { date ->
+            onSelectBoughtDate(date.toUtcEpochMilli())
             showDatePicker.value = false
         }
     )

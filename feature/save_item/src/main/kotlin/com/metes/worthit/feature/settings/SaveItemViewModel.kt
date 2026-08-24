@@ -8,7 +8,8 @@ import androidx.core.net.toUri
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.metes.worthit.core.common.toEpochMilliOrNull
+import com.metes.worthit.core.common.toLocalDateFromUtc
+import com.metes.worthit.core.common.toUtcEpochMilli
 import com.metes.worthit.core.domain.entity.Currency
 import com.metes.worthit.core.domain.entity.Currency.Companion.fromNameOrDefault
 import com.metes.worthit.core.domain.entity.TimeUnit
@@ -41,7 +42,6 @@ import kotlinx.coroutines.launch
 import java.time.Clock
 import java.time.Instant
 import java.time.LocalDate
-import java.time.ZoneOffset
 
 private const val KEY_NAME = "item_name"
 private const val KEY_PRICE = "item_price"
@@ -64,7 +64,7 @@ class SaveItemViewModel @AssistedInject constructor(
 ) : ViewModel() {
 
     private val isEditingMode = itemId != null
-    private val initialSelectedDateMillis = LocalDate.now(clock).toEpochMilliOrNull()
+    private val initialSelectedDateMillis = LocalDate.now(clock).toUtcEpochMilli()
 
     private val isInitializingFlow = MutableStateFlow(true)
     private val isSavingFlow = MutableStateFlow(false)
@@ -151,7 +151,7 @@ class SaveItemViewModel @AssistedInject constructor(
                     savedStateHandle[KEY_PRICE] = item.price?.toString() ?: ""
                     savedStateHandle[KEY_IMAGE_PATH] = item.imageLocalPath?.toUri()
                     savedStateHandle[KEY_BOUGHT_DATE_MILLIS] =
-                        item.dateOfPurchase.toEpochMilliOrNull()
+                        item.dateOfPurchase.toUtcEpochMilli()
                 }
 
             } finally {
@@ -221,12 +221,8 @@ class SaveItemViewModel @AssistedInject constructor(
 
         viewModelScope.launch {
             try {
-                val createdAtInstant = Instant.now(clock)
-                val dateOfPurchase = currentState.dateOfPurchaseMillis.let { utcMillis ->
-                    Instant.ofEpochMilli(utcMillis)
-                        .atZone(ZoneOffset.UTC)
-                        .toLocalDate()
-                }
+                val createdAt = Instant.now(clock)
+                val dateOfPurchase = currentState.dateOfPurchaseMillis.toLocalDateFromUtc()
 
                 val result = saveItemUseCase(
                     itemId = itemId,
@@ -234,7 +230,7 @@ class SaveItemViewModel @AssistedInject constructor(
                     description = currentState.description,
                     price = currentState.price,
                     currency = currentState.currency,
-                    createdAt = createdAtInstant,
+                    createdAt = createdAt,
                     dateOfPurchase = dateOfPurchase,
                     imageUriString = currentState.imageUri?.toString(),
                     originalImageLocalPath = imagePath
@@ -298,10 +294,7 @@ sealed interface SaveItemUiState {
         val pricesPerTimeUnits: List<PricePerTimeUnitModel>
             get() {
                 val priceLong = price.toLongOrNull() ?: return emptyList()
-
-                val dateOfPurchase = Instant.ofEpochMilli(dateOfPurchaseMillis)
-                    .atZone(ZoneOffset.UTC)
-                    .toLocalDate()
+                val dateOfPurchase = dateOfPurchaseMillis.toLocalDateFromUtc()
 
                 return TimeUnit.entries.map { timeUnit ->
                     PricePerTimeUnitModel(

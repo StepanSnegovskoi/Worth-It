@@ -6,9 +6,11 @@ import androidx.compose.material3.DatePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import com.metes.worthit.core.common.toLocalDateFromUtc
 import com.metes.worthit.core.designsystem.component.defaults.WorthItDatePickerDefaults
 import com.metes.worthit.core.designsystem.component.other.WorthItTextButton
 import com.metes.worthit.feature.save_item.R
+import java.time.LocalDate
 
 @Composable
 internal fun DatePickerDialog(
@@ -16,7 +18,7 @@ internal fun DatePickerDialog(
     state: DatePickerState,
     modifier: Modifier = Modifier,
     onDismissRequest: () -> Unit,
-    onButtonClick: (Long?) -> Unit,
+    onDateSelected: (LocalDate) -> Unit,
 ) {
     if (show) {
         DatePickerDialog(
@@ -27,7 +29,9 @@ internal fun DatePickerDialog(
                 WorthItTextButton(
                     text = stringResource(R.string.confirm),
                     onClick = {
-                        onButtonClick(state.selectedDateMillis)
+                        state.selectedDateMillis?.let { millis ->
+                            onDateSelected(millis.toLocalDateFromUtc())
+                        }
                     }
                 )
             }
