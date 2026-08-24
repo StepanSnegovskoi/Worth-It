@@ -11,6 +11,9 @@ import androidx.lifecycle.viewModelScope
 import com.metes.worthit.core.common.toEpochMilliOrNull
 import com.metes.worthit.core.domain.entity.Currency
 import com.metes.worthit.core.domain.entity.Currency.Companion.fromNameOrDefault
+import com.metes.worthit.core.domain.entity.TimeUnit
+import com.metes.worthit.core.domain.entity.between
+import com.metes.worthit.core.domain.entity.calculatePrice
 import com.metes.worthit.core.domain.error.Error
 import com.metes.worthit.core.domain.usecase.GetItemByIdUseCase
 import com.metes.worthit.core.domain.usecase.SaveItemUseCase
@@ -115,7 +118,7 @@ class SaveItemViewModel @AssistedInject constructor(
             currentDate = metadata.currentDate,
             isValidName = isValidName,
             isValidPrice = isValidPrice,
-            isEditingMode = isEditingMode
+            isEditingMode = isEditingMode,
         )
     }
 
@@ -287,7 +290,29 @@ sealed interface SaveItemUiState {
         val isValidName: Boolean,
         val isValidPrice: Boolean,
         val isEditingMode: Boolean,
-    ) : SaveItemUiState
+    ) : SaveItemUiState {
+
+        val pricesPerTimeUnits: List<PricePerTimeUnitModel>
+            get() {
+                val priceLong = price.toLongOrNull() ?: 0L
+                if (priceLong == 0L) return emptyList()
+
+                val dateOfPurchase = Instant.ofEpochMilli(dateOfPurchaseMillis)
+                    .atZone(ZoneOffset.UTC)
+                    .toLocalDate()
+
+                return TimeUnit.entries.map { timeUnit ->
+                    PricePerTimeUnitModel(
+                        timeUnit = timeUnit,
+                        amount = timeUnit.calculatePrice(
+                            price = priceLong,
+                            currentDate = currentDate,
+                            dateOfPurchase = dateOfPurchase,
+                        ).toString()
+                    )
+                }
+            }
+    }
 }
 
 private data class UserInputData(
@@ -302,4 +327,9 @@ private data class MetaData(
     val dateOfPurchaseMillis: Long,
     val hasAttemptedSave: Boolean,
     val currentDate: LocalDate,
+)
+
+data class PricePerTimeUnitModel(
+    val timeUnit: TimeUnit,
+    val amount: String = "",
 )

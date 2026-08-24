@@ -27,4 +27,6 @@
     <string name="placeholder_bike_name">Велосипед</string>
     <string name="placeholder_bike_description">Это мой первый велосипед, я люблю кататься на нём.</string>
     <string name="placeholder_price">999</string>
+    <string name="cd_select_time_unit">Выбрать период</string>
+    <string name="price_per_hint">Цена за %s</string>
 </resources>

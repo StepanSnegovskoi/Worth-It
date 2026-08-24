@@ -1,22 +1,28 @@
-package com.metes.worthit.feature.settings.component.other
+package com.metes.worthit.feature.settings.component.button
 
-import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.IconButtonColors
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import com.metes.worthit.core.designsystem.R as DesignR
+import com.metes.worthit.core.designsystem.component.defaults.WorthItIconButtonDefaults
 import com.metes.worthit.core.designsystem.component.other.WorthItIcon
+import com.metes.worthit.core.designsystem.component.other.WorthItIconButton
 import com.metes.worthit.core.designsystem.theme.AppTheme
 import com.metes.worthit.feature.save_item.R
+import com.metes.worthit.core.designsystem.R as DesignR
 
 @Composable
-internal fun SaveItemFloatingActionButton(
+internal fun SaveItemTopBarButton(
     isEditingMode: Boolean,
     modifier: Modifier = Modifier,
+    colors: IconButtonColors = WorthItIconButtonDefaults.colors(),
     onClick: () -> Unit,
 ) {
-    FloatingActionButton(
+    WorthItIconButton(
         modifier = modifier,
-        containerColor = AppTheme.colorScheme.primary,
+        colors = colors.copy(
+            containerColor = AppTheme.colorScheme.primary,
+            contentColor = AppTheme.colorScheme.onPrimary
+        ),
         onClick = onClick,
     ) {
         val iconRes =
@@ -27,7 +33,6 @@ internal fun SaveItemFloatingActionButton(
         WorthItIcon(
             drawableRes = iconRes,
             contentDescriptionRes = contentDescriptionRes,
-            tint = AppTheme.colorScheme.onPrimary,
         )
     }
 }

@@ -50,6 +50,7 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.util.fastForEach
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.metes.worthit.core.designsystem.component.other.ItemImage
 import com.metes.worthit.core.designsystem.component.other.LoadingScreen
@@ -66,15 +67,17 @@ import com.metes.worthit.feature.save_item.R
 import com.metes.worthit.feature.settings.component.currency.CurrenciesDialog
 import com.metes.worthit.feature.settings.component.date.DateField
 import com.metes.worthit.feature.settings.component.date.PastOrPresentDatePickerDialog
-import com.metes.worthit.feature.settings.component.other.DescriptionTextField
-import com.metes.worthit.feature.settings.component.other.NameTextField
-import com.metes.worthit.feature.settings.component.other.PriceField
-import com.metes.worthit.feature.settings.component.other.SaveItemFloatingActionButton
-import com.metes.worthit.feature.settings.component.other.SaveItemTopBarButton
+import com.metes.worthit.feature.settings.component.time_unit.PricePerTimeUnitField
+import com.metes.worthit.feature.settings.component.input_field.DescriptionTextField
+import com.metes.worthit.feature.settings.component.input_field.NameTextField
+import com.metes.worthit.feature.settings.component.input_field.PriceField
+import com.metes.worthit.feature.settings.component.button.SaveItemFloatingActionButton
+import com.metes.worthit.feature.settings.component.button.SaveItemTopBarButton
 import com.metes.worthit.feature.settings.component.other.TitleText
 import com.metes.worthit.feature.settings.component.other.WorthItSnackbar
 import kotlinx.coroutines.launch
 import java.time.Instant
+import java.time.ZoneOffset
 import com.metes.worthit.core.designsystem.R as DesignR
 
 private val FabHeight = 56.dp
@@ -350,6 +353,15 @@ fun SaveItemScreen(
                             .focusRequester(priceFocusRequester),
                         onIconClick = { showCurrencies.value = true },
                         onPriceChange = onPriceChange
+                    )
+                }
+
+                uiState.pricesPerTimeUnits.fastForEach { pricePerTimeUnit ->
+                    PricePerTimeUnitField(
+                        price = pricePerTimeUnit.amount,
+                        timeUnit = pricePerTimeUnit.timeUnit,
+                        modifier = Modifier
+                            .fillMaxWidth(),
                     )
                 }
             }

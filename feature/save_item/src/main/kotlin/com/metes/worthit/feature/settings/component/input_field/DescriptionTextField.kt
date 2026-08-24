@@ -1,4 +1,4 @@
-package com.metes.worthit.feature.settings.component.other
+package com.metes.worthit.feature.settings.component.input_field
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.text.KeyboardOptions
