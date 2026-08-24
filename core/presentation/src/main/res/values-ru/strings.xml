@@ -17,10 +17,10 @@
     <string name="item_not_found">Предмет не найден</string>
     <string name="failed_to_save_image">Не удалось сохранить изображение</string>
     <string name="item_failed_to_delete">Не удалось удалить предмет</string>
-    <string name="item_price_length_cant_be_more_than">Длина цены не может быть больше %s символов</string>
     <string name="item_price_can_contain_only_numbers">Цена может содержать только цифры</string>
     <string name="time_unit_day">День</string>
     <string name="time_unit_week">Неделя</string>
     <string name="time_unit_month">Месяц</string>
     <string name="time_unit_year">Год</string>
+    <string name="item_price_cant_be_negative">Цена предмета не может быть отрицательной</string>
 </resources>

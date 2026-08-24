@@ -7,7 +7,7 @@ import com.metes.worthit.core.database.converter.InstantConverter
 import com.metes.worthit.core.database.converter.LocalDateConverter
 import com.metes.worthit.core.database.entity.ItemDbModel
 
-@Database(entities = [ItemDbModel::class], version = 1, exportSchema = false)
+@Database(entities = [ItemDbModel::class], version = 2, exportSchema = false)
 @TypeConverters(value = [LocalDateConverter::class, InstantConverter::class])
 internal abstract class WorthItDatabase : RoomDatabase() {
 

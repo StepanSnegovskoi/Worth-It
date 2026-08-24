@@ -6,7 +6,7 @@ import java.time.LocalDate
 data class Item(
     val id: Int = DEFAULT_ID,
     val name: String,
-    val price: Long?,
+    val price: Double?,
     val currency: Currency,
     val createdAt: Instant,
     val dateOfPurchase: LocalDate,

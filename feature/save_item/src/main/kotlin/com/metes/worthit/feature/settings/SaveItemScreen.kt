@@ -349,6 +349,7 @@ fun SaveItemScreen(
                     PriceField(
                         price = uiState.price,
                         currency = uiState.currency,
+                        isError = !uiState.isValidPrice,
                         modifier = Modifier
                             .weight(1f)
                             .focusRequester(priceFocusRequester),

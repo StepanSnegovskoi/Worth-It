@@ -23,10 +23,10 @@ fun TimeUnit.between(from: LocalDate, to: LocalDate): Long {
 }
 
 fun TimeUnit.calculatePrice(
-    price: Long,
+    price: Double,
     currentDate: LocalDate,
     dateOfPurchase: LocalDate
-): Long = price / between(
+): Double = price / between(
     from = dateOfPurchase,
     to = currentDate
 )

@@ -11,8 +11,8 @@ sealed interface BusinessError : Error {
     data object ItemFailedToDelete : BusinessError
     data object ItemImageFailedToSave : BusinessError
     data object ItemPurchaseDateInTheFuture : BusinessError
-    data class ItemPriceLengthCantBeMoreThan(val length: Int) : BusinessError
-    data object ItemPriceInvalidFormat : BusinessError
+    data object ItemPriceCanContainOnlyNumbers : BusinessError
+    data object ItemPriceCantBeNegative : BusinessError
 }
 
 sealed interface FileError : Error {

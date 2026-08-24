@@ -16,10 +16,10 @@
     <string name="item_not_found">Item not found</string>
     <string name="failed_to_save_image">Failed to save image</string>
     <string name="item_failed_to_delete">Failed to delete item</string>
-    <string name="item_price_length_cant_be_more_than">Item\'s price length can\'t be more than %s symbols</string>
     <string name="item_price_can_contain_only_numbers">Item\'s price can contain only numbers</string>
     <string name="time_unit_day">Day</string>
     <string name="time_unit_week">Week</string>
     <string name="time_unit_month">Month</string>
     <string name="time_unit_year">Year</string>
+    <string name="item_price_cant_be_negative">Item price can\'t be negative</string>
 </resources>

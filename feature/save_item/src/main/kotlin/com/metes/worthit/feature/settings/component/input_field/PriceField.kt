@@ -18,6 +18,7 @@ import com.metes.worthit.feature.save_item.R
 internal fun PriceField(
     price: String,
     currency: Currency,
+    isError: Boolean,
     modifier: Modifier = Modifier,
     onIconClick: () -> Unit,
     onPriceChange: (String) -> Unit,
@@ -26,6 +27,7 @@ internal fun PriceField(
         modifier = modifier,
         value = price,
         onValueChange = onPriceChange,
+        isError = isError,
         keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
         label = { Text(text = stringResource(R.string.price_hint)) },
         trailingIcon = {

@@ -31,37 +31,36 @@ class ItemValidator @Inject constructor(
     }
 
 
-    fun validatePrice(priceInput: String?): Result<Long?, List<BusinessError>> {
-        val trimmedPriceInput = priceInput?.trim()
-        if (trimmedPriceInput.isNullOrBlank()) {
+    fun validatePrice(priceInput: String): Result<Double?, List<BusinessError>> {
+        val trimmedPriceInput = priceInput.trim()
+        if (trimmedPriceInput.isBlank()) {
             return Result.Success(null)
         }
 
         val errors = mutableListOf<BusinessError>()
 
-        if (trimmedPriceInput.length > MAX_PRICE_LENGTH) {
-            errors.add(BusinessError.ItemPriceLengthCantBeMoreThan(MAX_PRICE_LENGTH))
-        }
+        val priceDouble = normalizePriceInput(trimmedPriceInput).toDoubleOrNull()
 
-        if (!trimmedPriceInput.all { it.isDigit() }) {
-            errors.add(BusinessError.ItemPriceInvalidFormat)
+        if (priceDouble == null) {
+            errors.add(BusinessError.ItemPriceCanContainOnlyNumbers)
+        } else {
+            if (priceDouble < 0.0) {
+                errors.add(BusinessError.ItemPriceCantBeNegative)
+            }
         }
 
         if (errors.isNotEmpty()) {
             return Result.Error(errors)
         }
 
-        val price = trimmedPriceInput
-            .toLongOrNull() ?: return Result.Error(listOf(BusinessError.ItemPriceInvalidFormat))
-
-        return Result.Success(price)
+        return Result.Success(priceDouble)
     }
 
     fun validateAll(
         name: String?,
         description: String?,
         dateOfPurchase: LocalDate,
-        priceInput: String?
+        priceInput: String
     ): Result<ValidatedFields, List<BusinessError>> {
         val nameResult = validateName(name)
         val descriptionResult = validateDescription(description)
@@ -89,8 +88,10 @@ class ItemValidator @Inject constructor(
         )
     }
 
-    companion object {
-        private const val MAX_PRICE_LENGTH = Long.MAX_VALUE.toString().length - 1
+    fun normalizePriceInput(price: String): String {
+        val normalized = price.replace(',', '.')
+
+        return normalized
     }
 }
 
@@ -98,5 +99,5 @@ data class ValidatedFields(
     val name: String,
     val description: String?,
     val dateOfPurchase: LocalDate,
-    val price: Long?
+    val price: Double?
 )

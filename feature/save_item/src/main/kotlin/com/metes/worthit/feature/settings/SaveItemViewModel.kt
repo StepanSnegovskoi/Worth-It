@@ -8,6 +8,7 @@ import androidx.core.net.toUri
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.metes.worthit.core.common.toAmountString
 import com.metes.worthit.core.common.toLocalDateFromUtc
 import com.metes.worthit.core.common.toUtcEpochMilli
 import com.metes.worthit.core.domain.entity.Currency
@@ -171,7 +172,9 @@ class SaveItemViewModel @AssistedInject constructor(
             }
 
             is SaveItemCommand.ChangePrice -> {
-                savedStateHandle[KEY_PRICE] = command.price
+                val price = itemValidator.normalizePriceInput(command.price)
+
+                savedStateHandle[KEY_PRICE] = price
             }
 
             is SaveItemCommand.SelectImage -> {
@@ -293,17 +296,17 @@ sealed interface SaveItemUiState {
 
         val pricesPerTimeUnits: List<PricePerTimeUnitModel>
             get() {
-                val priceLong = price.toLongOrNull() ?: return emptyList()
+                val priceDouble = price.toDoubleOrNull() ?: return emptyList()
                 val dateOfPurchase = dateOfPurchaseMillis.toLocalDateFromUtc()
 
                 return TimeUnit.entries.map { timeUnit ->
                     PricePerTimeUnitModel(
                         timeUnit = timeUnit,
                         amount = timeUnit.calculatePrice(
-                            price = priceLong,
+                            price = priceDouble,
                             currentDate = currentDate,
                             dateOfPurchase = dateOfPurchase,
-                        ).toString()
+                        ).toAmountString()
                     )
                 }
             }

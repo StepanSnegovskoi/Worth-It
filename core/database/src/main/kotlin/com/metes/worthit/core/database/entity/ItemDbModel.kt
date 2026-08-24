@@ -16,7 +16,7 @@ data class ItemDbModel(
     @ColumnInfo(name = "name")
     val name: String,
     @ColumnInfo(name = "price")
-    val price: Long?,
+    val price: Double?,
     @ColumnInfo(name = "currency_name")
     val currencyName: String?,
     @ColumnInfo(name = "created_at")

@@ -23,7 +23,7 @@ class SaveItemUseCase @Inject constructor(
     suspend operator fun invoke(
         itemId: Int? = null,
         name: String,
-        price: String?,
+        price: String,
         currency: Currency,
         createdAt: Instant,
         dateOfPurchase: LocalDate,
