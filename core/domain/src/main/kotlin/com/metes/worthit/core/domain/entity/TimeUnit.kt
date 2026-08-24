@@ -13,13 +13,14 @@ enum class TimeUnit {
     YEAR,
 }
 
-fun TimeUnit.between(from: LocalDate, to: LocalDate) =
-    when (this) {
+fun TimeUnit.between(from: LocalDate, to: LocalDate): Long {
+    return when (this) {
         TimeUnit.DAY -> ChronoUnit.DAYS.between(from, to)
         TimeUnit.WEEK -> ChronoUnit.WEEKS.between(from, to)
         TimeUnit.MONTH -> ChronoUnit.MONTHS.between(from, to)
         TimeUnit.YEAR -> ChronoUnit.YEARS.between(from, to)
-    } + 1
+    }.coerceAtLeast(0) + 1
+}
 
 fun TimeUnit.calculatePrice(
     price: Long,
