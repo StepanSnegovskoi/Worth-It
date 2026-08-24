@@ -12,7 +12,6 @@ import com.metes.worthit.core.common.toEpochMilliOrNull
 import com.metes.worthit.core.domain.entity.Currency
 import com.metes.worthit.core.domain.entity.Currency.Companion.fromNameOrDefault
 import com.metes.worthit.core.domain.entity.TimeUnit
-import com.metes.worthit.core.domain.entity.between
 import com.metes.worthit.core.domain.entity.calculatePrice
 import com.metes.worthit.core.domain.error.Error
 import com.metes.worthit.core.domain.usecase.GetItemByIdUseCase
@@ -64,42 +63,40 @@ class SaveItemViewModel @AssistedInject constructor(
     @Assisted private val imagePath: String? = null,
 ) : ViewModel() {
 
+    private val isEditingMode = itemId != null
     private val initialSelectedDateMillis = LocalDate.now(clock).toEpochMilliOrNull()
 
-    private val isEditingMode = itemId != null
+    private val isInitializingFlow = MutableStateFlow(true)
+    private val isSavingFlow = MutableStateFlow(false)
 
     private val hasAttemptedSaveFlow = savedStateHandle.getStateFlow(KEY_HAS_ATTEMPTED_SAVE, false)
     private val nameFlow = savedStateHandle.getStateFlow(KEY_NAME, "")
     private val priceFlow = savedStateHandle.getStateFlow(KEY_PRICE, "")
-    private val imageUriFlow =
-        savedStateHandle.getStateFlow(KEY_IMAGE_PATH, imagePath?.toUri())
     private val descriptionFlow = savedStateHandle.getStateFlow(KEY_DESCRIPTION, "")
+    private val imageUriFlow = savedStateHandle.getStateFlow(KEY_IMAGE_PATH, imagePath?.toUri())
     private val dateOfPurchaseMillisFlow = savedStateHandle.getStateFlow(
-        KEY_BOUGHT_DATE_MILLIS, initialSelectedDateMillis
+        key = KEY_BOUGHT_DATE_MILLIS,
+        initialValue = initialSelectedDateMillis
     )
-    private val currencyFlow = userSettings.getCurrencyName().map { currencyName ->
-        fromNameOrDefault(currencyName)
-    }
-    private val isSavingFlow = MutableStateFlow(false)
-    private val isInitializingFlow = MutableStateFlow(true)
+
+    private val currencyFlow = userSettings.getCurrencyName()
+        .map { currency -> fromNameOrDefault(currency) }
 
     private val userInputFlow = combine(
         nameFlow,
         priceFlow,
         descriptionFlow,
         imageUriFlow,
-    ) { name, price, description, imageUri ->
-        UserInputData(name, price, description, imageUri)
-    }
+        ::UserInputData
+    )
 
     private val metaDataFlow = combine(
         currencyFlow,
         dateOfPurchaseMillisFlow,
         hasAttemptedSaveFlow,
         currentDateProvider.currentDateFlow,
-    ) { currency, dateOfPurchaseMillis, hasAttemptedSave, currentDate ->
-        MetaData(currency, dateOfPurchaseMillis, hasAttemptedSave, currentDate)
-    }
+        ::MetaData
+    )
 
     private val formStateFlow = combine(userInputFlow, metaDataFlow) { userInput, metadata ->
         val isValidName =
@@ -209,6 +206,9 @@ class SaveItemViewModel @AssistedInject constructor(
         }
     }
 
+    // bug, when user fast clicks at this screen in bottom bar after success saving
+    // the state of this screen is previous (viewmodel doesn't cleared because animation
+    // didn't finish)
     private fun saveItem() {
         savedStateHandle[KEY_HAS_ATTEMPTED_SAVE] = true
 
@@ -220,30 +220,33 @@ class SaveItemViewModel @AssistedInject constructor(
         isSavingFlow.value = true
 
         viewModelScope.launch {
-            val createdAtInstant = Instant.now(clock)
-            val dateOfPurchase = currentState.dateOfPurchaseMillis.let { utcMillis ->
-                Instant.ofEpochMilli(utcMillis)
-                    .atZone(ZoneOffset.UTC)
-                    .toLocalDate()
-            }
+            try {
+                val createdAtInstant = Instant.now(clock)
+                val dateOfPurchase = currentState.dateOfPurchaseMillis.let { utcMillis ->
+                    Instant.ofEpochMilli(utcMillis)
+                        .atZone(ZoneOffset.UTC)
+                        .toLocalDate()
+                }
 
-            val result = saveItemUseCase(
-                itemId = itemId,
-                name = currentState.name,
-                description = currentState.description,
-                price = currentState.price,
-                currency = currentState.currency,
-                createdAt = createdAtInstant,
-                dateOfPurchase = dateOfPurchase,
-                imageUriString = currentState.imageUri?.toString(),
-                originalImageLocalPath = imagePath
-            )
+                val result = saveItemUseCase(
+                    itemId = itemId,
+                    name = currentState.name,
+                    description = currentState.description,
+                    price = currentState.price,
+                    currency = currentState.currency,
+                    createdAt = createdAtInstant,
+                    dateOfPurchase = dateOfPurchase,
+                    imageUriString = currentState.imageUri?.toString(),
+                    originalImageLocalPath = imagePath
+                )
 
-            result.onError { errors ->
-                _events.send(SaveItemEvent.ShowErrors(errors))
+                result.onError { errors ->
+                    _events.send(SaveItemEvent.ShowErrors(errors))
+                }.onSuccess {
+                    _events.send(NavigateToItems)
+                }
+            } finally {
                 isSavingFlow.value = false
-            }.onSuccess {
-                _events.send(NavigateToItems)
             }
         }
     }
@@ -294,8 +297,7 @@ sealed interface SaveItemUiState {
 
         val pricesPerTimeUnits: List<PricePerTimeUnitModel>
             get() {
-                val priceLong = price.toLongOrNull() ?: 0L
-                if (priceLong == 0L) return emptyList()
+                val priceLong = price.toLongOrNull() ?: return emptyList()
 
                 val dateOfPurchase = Instant.ofEpochMilli(dateOfPurchaseMillis)
                     .atZone(ZoneOffset.UTC)
