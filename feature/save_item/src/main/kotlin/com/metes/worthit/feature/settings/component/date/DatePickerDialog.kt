@@ -1,6 +1,7 @@
 package com.metes.worthit.feature.settings.component.date
 
 import androidx.compose.material3.DatePicker
+import androidx.compose.material3.DatePickerColors
 import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.DatePickerState
 import androidx.compose.material3.LocalContentColor
@@ -20,13 +21,14 @@ internal fun DatePickerDialog(
     show: Boolean,
     state: DatePickerState,
     modifier: Modifier = Modifier,
+    colors: DatePickerColors = WorthItDatePickerDefaults.colors(),
     onDismissRequest: () -> Unit,
     onDateSelected: (LocalDate) -> Unit,
 ) {
     if (show) {
         DatePickerDialog(
             modifier = modifier,
-            colors = WorthItDatePickerDefaults.colors(),
+            colors = colors,
             onDismissRequest = onDismissRequest,
             confirmButton = {
                 WorthItTextButton(
@@ -49,7 +51,7 @@ internal fun DatePickerDialog(
              * from 'DatePickerColors', so we need to do this below.
              */
             CompositionLocalProvider(
-                LocalContentColor provides AppTheme.colorScheme.primary
+                LocalContentColor provides colors.navigationContentColor
             ) {
                 DatePicker(
                     state = state,
