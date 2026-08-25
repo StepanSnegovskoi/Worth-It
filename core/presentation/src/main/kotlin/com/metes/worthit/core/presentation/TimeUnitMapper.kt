@@ -19,3 +19,11 @@ val TimeUnit.pricePerPluralRes
         TimeUnit.MONTH -> R.plurals.price_per_month
         TimeUnit.YEAR -> R.plurals.price_per_year
     }
+
+val TimeUnit.namePluralRes
+    @PluralsRes get() = when (this) {
+        TimeUnit.DAY -> R.plurals.day
+        TimeUnit.WEEK -> R.plurals.week
+        TimeUnit.MONTH -> R.plurals.month
+        TimeUnit.YEAR -> R.plurals.year
+    }

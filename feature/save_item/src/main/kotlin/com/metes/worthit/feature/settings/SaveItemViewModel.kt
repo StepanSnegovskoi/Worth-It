@@ -13,6 +13,7 @@ import com.metes.worthit.core.common.toUtcEpochMilli
 import com.metes.worthit.core.domain.entity.Currency
 import com.metes.worthit.core.domain.entity.Currency.Companion.fromNameOrDefault
 import com.metes.worthit.core.domain.entity.TimeUnit
+import com.metes.worthit.core.domain.entity.between
 import com.metes.worthit.core.domain.entity.calculatePrice
 import com.metes.worthit.core.domain.error.Error
 import com.metes.worthit.core.domain.usecase.GetItemByIdUseCase
@@ -301,6 +302,7 @@ sealed interface SaveItemUiState {
                 return TimeUnit.entries.map { timeUnit ->
                     PricePerTimeUnitModel(
                         timeUnit = timeUnit,
+                        daysFromPurchase = timeUnit.between(dateOfPurchase, currentDate),
                         amount = timeUnit.calculatePrice(
                             price = priceBigDecimal,
                             currentDate = currentDate,
@@ -328,5 +330,6 @@ private data class MetaData(
 
 data class PricePerTimeUnitModel(
     val timeUnit: TimeUnit,
+    val daysFromPurchase: Int,
     val amount: String = "",
 )

@@ -365,6 +365,7 @@ fun SaveItemScreen(
                     PricePerTimeUnitField(
                         price = pricePerTimeUnit.amount,
                         timeUnit = pricePerTimeUnit.timeUnit,
+                        daysFromPurchase = pricePerTimeUnit.daysFromPurchase,
                         modifier = Modifier
                             .fillMaxWidth(),
                     )

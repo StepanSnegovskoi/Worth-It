@@ -16,4 +16,20 @@
         <item quantity="one">Price per %d year</item>
         <item quantity="other">Price per %d years</item>
     </plurals>
+    <plurals name="day">
+        <item quantity="one">day</item>
+        <item quantity="other">days</item>
+    </plurals>
+    <plurals name="week">
+        <item quantity="one">week</item>
+        <item quantity="other">weeks</item>
+    </plurals>
+    <plurals name="month">
+        <item quantity="one">month</item>
+        <item quantity="other">months</item>
+    </plurals>
+    <plurals name="year">
+        <item quantity="one">year</item>
+        <item quantity="other">years</item>
+    </plurals>
 </resources>

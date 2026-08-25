@@ -5,18 +5,18 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.pluralStringResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import com.metes.worthit.core.designsystem.component.other.WorthItText
 import com.metes.worthit.core.designsystem.component.other.WorthItTextField
 import com.metes.worthit.core.domain.entity.TimeUnit
-import com.metes.worthit.core.presentation.nameStringRes
+import com.metes.worthit.core.presentation.namePluralRes
 import com.metes.worthit.core.presentation.pricePerPluralRes
 
 @Composable
 internal fun PricePerTimeUnitField(
     price: String,
     timeUnit: TimeUnit,
+    daysFromPurchase: Int,
     modifier: Modifier = Modifier,
 ) {
     WorthItTextField(
@@ -32,7 +32,7 @@ internal fun PricePerTimeUnitField(
             )
         },
         trailingIcon = {
-            WorthItText(text = stringResource(timeUnit.nameStringRes))
+            WorthItText(text = pluralStringResource(timeUnit.namePluralRes, daysFromPurchase, daysFromPurchase))
         },
     )
 }
