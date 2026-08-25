@@ -1,5 +1,6 @@
 package com.metes.worthit.feature.settings.component
 
+import androidx.compose.foundation.basicMarquee
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
@@ -30,7 +31,8 @@ internal fun ItemBaseDetails(
         ContentWrapper {
             WorthItText(
                 modifier = Modifier
-                    .padding(4.dp),
+                    .padding(4.dp)
+                    .basicMarquee(),
                 text = item.name
             )
         }

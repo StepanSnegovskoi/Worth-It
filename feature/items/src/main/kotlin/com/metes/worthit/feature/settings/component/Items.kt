@@ -18,9 +18,11 @@ import com.metes.worthit.feature.settings.ItemUiModel
 @Composable
 internal fun Items(
     items: List<ItemUiModel>,
+    selectedItemIds: Set<Int>,
     contentPadding: PaddingValues,
     modifier: Modifier = Modifier,
     onClick: (Int) -> Unit,
+    onLongClick: (Int) -> Unit,
     onEmptyListClick: () -> Unit,
     onDeleteClick: (Int, String?) -> Unit,
 ) {
@@ -55,9 +57,11 @@ internal fun Items(
             contentType = { "ItemCard" },
         ) { item ->
             SwipeableItemCard(
-                modifier = Modifier.animateItem(),
                 item = item,
+                isSelected = item.id in selectedItemIds,
+                modifier = Modifier.animateItem(),
                 onClick = onClick,
+                onLongClick = onLongClick,
                 onDeleteClick = onDeleteClick,
             )
         }

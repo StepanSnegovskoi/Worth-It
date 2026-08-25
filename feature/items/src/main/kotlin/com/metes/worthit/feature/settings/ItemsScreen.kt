@@ -49,6 +49,9 @@ fun ItemsRoute(
             onItemClick = { itemId: Int ->
                 viewModel.processCommand(ItemsCommand.ClickItem(itemId))
             },
+            onItemLongClick = { itemId: Int ->
+                viewModel.processCommand(ItemsCommand.LongClickItem(itemId))
+            },
             onEmptyListClick = onNavigateToAddingItem
         )
     }
@@ -61,6 +64,7 @@ fun ItemsScreen(
     modifier: Modifier = Modifier,
     onItemDeleteClick: (Int, String?) -> Unit,
     onItemClick: (Int) -> Unit,
+    onItemLongClick: (Int) -> Unit,
     onEmptyListClick: () -> Unit,
 ) {
     val layoutDirection = LocalLayoutDirection.current
@@ -73,12 +77,14 @@ fun ItemsScreen(
     )
 
     Items(
-        items = uiState.uiItems,
+        items = uiState.items,
+        selectedItemIds = uiState.selectedItemIds,
+        contentPadding = combinedContentPadding,
         modifier = modifier
             .fillMaxSize()
             .padding(start = 8.dp, end = 8.dp, bottom = 8.dp),
-        contentPadding = combinedContentPadding,
         onClick = onItemClick,
+        onLongClick = onItemLongClick,
         onEmptyListClick = onEmptyListClick,
         onDeleteClick = onItemDeleteClick,
     )

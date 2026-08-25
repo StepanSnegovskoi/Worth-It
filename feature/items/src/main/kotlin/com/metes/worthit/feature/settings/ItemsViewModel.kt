@@ -8,7 +8,9 @@ import com.metes.worthit.core.domain.usecase.ObserveItemsUseCase
 import com.metes.worthit.feature.settings.mapper.toUiModels
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
@@ -22,9 +24,14 @@ class ItemsViewModel @Inject constructor(
     observeItemsUseCase: ObserveItemsUseCase,
 ) : ViewModel() {
 
-    val uiState = observeItemsUseCase().map { items ->
+    private val _selectedItemIds = MutableStateFlow<Set<Int>>(emptySet())
+
+    val uiState = combine(
+        observeItemsUseCase(),
+        _selectedItemIds,
+    ) { items, selectedItemIds ->
         val uiItems = items.toUiModels()
-        ItemsUiState.Success(uiItems = uiItems)
+        ItemsUiState.Success(items = uiItems, selectedItemIds = selectedItemIds)
     }.stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(stopTimeoutMillis = 5_000),
@@ -47,6 +54,16 @@ class ItemsViewModel @Inject constructor(
                     _events.send(ItemsEvent.NavigateToSaveItem(command.itemId))
                 }
             }
+
+            is ItemsCommand.LongClickItem -> {
+                val currentState = uiState.value as? ItemsUiState.Success ?: return
+
+                if (command.itemId in currentState.selectedItemIds) {
+                    _selectedItemIds.value -= command.itemId
+                } else {
+                    _selectedItemIds.value += command.itemId
+                }
+            }
         }
     }
 }
@@ -54,6 +71,7 @@ class ItemsViewModel @Inject constructor(
 sealed interface ItemsCommand {
     data class DeleteItem(val itemId: Int, val itemLocalImagePath: String?) : ItemsCommand
     data class ClickItem(val itemId: Int) : ItemsCommand
+    data class LongClickItem(val itemId: Int) : ItemsCommand
 }
 
 sealed interface ItemsEvent {
@@ -65,7 +83,8 @@ sealed interface ItemsUiState {
     data object Loading : ItemsUiState
 
     data class Success(
-        val uiItems: List<ItemUiModel>,
+        val items: List<ItemUiModel>,
+        val selectedItemIds: Set<Int>,
     ) : ItemsUiState
 }
 

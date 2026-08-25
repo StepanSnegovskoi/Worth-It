@@ -20,6 +20,7 @@ import com.metes.worthit.core.designsystem.component.other.WorthItIconButton
 import com.metes.worthit.feature.settings.ItemUiModel
 import com.metes.worthit.feature.items.R
 import kotlin.math.roundToInt
+import kotlin.random.Random
 
 private enum class State {
     CLOSED, OPEN
@@ -28,8 +29,10 @@ private enum class State {
 @Composable
 internal fun SwipeableItemCard(
     item: ItemUiModel,
+    isSelected: Boolean,
     modifier: Modifier = Modifier,
     onClick: (Int) -> Unit,
+    onLongClick: (Int) -> Unit,
     onDeleteClick: (Int, String?) -> Unit,
 ) {
     val density = LocalDensity.current
@@ -58,11 +61,12 @@ internal fun SwipeableItemCard(
         ) {
             WorthItIcon(
                 drawableRes = R.drawable.delete_48dp,
-                contentDescriptionRes = R.string.cd_delete
+                contentDescriptionRes = R.string.cd_delete,
             )
         }
         ItemCard(
             item = item,
+            isSelected = isSelected,
             modifier = Modifier
                 .offset {
                     IntOffset(
@@ -75,6 +79,7 @@ internal fun SwipeableItemCard(
                     orientation = Orientation.Horizontal
                 ),
             onClick = onClick,
+            onSelectLongClick = onLongClick,
         )
     }
 }
