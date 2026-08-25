@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <plurals name="price_per_day">
+        <item quantity="one">Цена за %d день</item>
+        <item quantity="few">Цена за %d дня</item>
+        <item quantity="many">Цена за %d дней</item>
+    </plurals>
+    <plurals name="price_per_week">
+        <item quantity="one">Цена за %d неделю</item>
+        <item quantity="few">Цена за %d недели</item>
+        <item quantity="many">Цена за %d недель</item>
+    </plurals>
+    <plurals name="price_per_month">
+        <item quantity="one">Цена за %d месяц</item>
+        <item quantity="few">Цена за %d месяца</item>
+        <item quantity="many">Цена за %d месяцев</item>
+    </plurals>
+    <plurals name="price_per_year">
+        <item quantity="one">Цена за %d год</item>
+        <item quantity="few">Цена за %d года</item>
+        <item quantity="many">Цена за %d лет</item>
+    </plurals>
+</resources>
