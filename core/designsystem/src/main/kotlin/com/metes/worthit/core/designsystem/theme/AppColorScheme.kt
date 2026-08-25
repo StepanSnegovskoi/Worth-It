@@ -7,6 +7,8 @@ data class AppColorScheme(
     val onBackground: Color,
     val primary: Color,
     val onPrimary: Color,
+    val primaryContainer: Color,
+    val onPrimaryContainer: Color,
     val secondary: Color,
     val surface: Color,
     val onSurface: Color,

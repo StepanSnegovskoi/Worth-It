@@ -8,6 +8,12 @@ internal val BluePrimaryLight = Color(0xFF2563EB)
 internal val BluePrimaryDark = Color(0xFF60A5FA)
 internal val OnPrimaryDark = Color(0xFF0F172A)
 
+internal val PrimaryContainerLight = Color(0xFFDBEAFE)
+internal val OnPrimaryContainerLight = Color(0xFF1E3A8A)
+
+internal val PrimaryContainerDark = Color(0xFF253E6B)
+internal val OnPrimaryContainerDark = Color(0xFFDBEAFE)
+
 internal val BackgroundLight = Color(0xFFECF3FA)
 internal val BackgroundDark = Color(0xFF0F172A)
 
