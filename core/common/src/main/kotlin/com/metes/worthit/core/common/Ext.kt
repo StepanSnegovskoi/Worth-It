@@ -1,5 +1,6 @@
 package com.metes.worthit.core.common
 
+import java.math.BigDecimal
 import java.math.RoundingMode
 import java.text.NumberFormat
 import java.time.Instant
@@ -15,9 +16,3 @@ fun LocalDate.toUtcEpochMilli() = this
 fun Long.toLocalDateFromUtc(): LocalDate =
     Instant.ofEpochMilli(this).atZone(ZoneOffset.UTC).toLocalDate()
 
-fun Double.toAmountString(): String {
-    val format = NumberFormat.getNumberInstance(Locale.getDefault()).apply {
-        roundingMode = RoundingMode.HALF_UP
-    }
-    return format.format(this)
-}

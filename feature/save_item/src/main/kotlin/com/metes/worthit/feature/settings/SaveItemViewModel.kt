@@ -8,7 +8,6 @@ import androidx.core.net.toUri
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.metes.worthit.core.common.toAmountString
 import com.metes.worthit.core.common.toLocalDateFromUtc
 import com.metes.worthit.core.common.toUtcEpochMilli
 import com.metes.worthit.core.domain.entity.Currency
@@ -296,17 +295,17 @@ sealed interface SaveItemUiState {
 
         val pricesPerTimeUnits: List<PricePerTimeUnitModel>
             get() {
-                val priceDouble = price.toDoubleOrNull() ?: return emptyList()
+                val priceBigDecimal = price.toBigDecimalOrNull() ?: return emptyList()
                 val dateOfPurchase = dateOfPurchaseMillis.toLocalDateFromUtc()
 
                 return TimeUnit.entries.map { timeUnit ->
                     PricePerTimeUnitModel(
                         timeUnit = timeUnit,
                         amount = timeUnit.calculatePrice(
-                            price = priceDouble,
+                            price = priceBigDecimal,
                             currentDate = currentDate,
                             dateOfPurchase = dateOfPurchase,
-                        ).toAmountString()
+                        ).toString()
                     )
                 }
             }
