@@ -5,6 +5,7 @@ import java.time.Clock
 import java.time.LocalDate
 import javax.inject.Inject
 import com.metes.worthit.core.domain.utils.Result
+import java.math.BigDecimal
 
 class ItemValidator @Inject constructor(
     private val clock: Clock,
@@ -31,7 +32,7 @@ class ItemValidator @Inject constructor(
     }
 
 
-    fun validatePrice(priceInput: String): Result<Double?, List<BusinessError>> {
+    fun validatePrice(priceInput: String): Result<BigDecimal?, List<BusinessError>> {
         val trimmedPriceInput = priceInput.trim()
         if (trimmedPriceInput.isBlank()) {
             return Result.Success(null)
@@ -39,12 +40,12 @@ class ItemValidator @Inject constructor(
 
         val errors = mutableListOf<BusinessError>()
 
-        val priceDouble = normalizePriceInput(trimmedPriceInput).toDoubleOrNull()
+        val priceBigDecimal = normalizePriceInput(trimmedPriceInput).toBigDecimalOrNull()
 
-        if (priceDouble == null) {
+        if (priceBigDecimal == null) {
             errors.add(BusinessError.ItemPriceCanContainOnlyNumbers)
         } else {
-            if (priceDouble < 0.0) {
+            if (priceBigDecimal < BigDecimal.ZERO) {
                 errors.add(BusinessError.ItemPriceCantBeNegative)
             }
         }
@@ -53,7 +54,7 @@ class ItemValidator @Inject constructor(
             return Result.Error(errors)
         }
 
-        return Result.Success(priceDouble)
+        return Result.Success(priceBigDecimal)
     }
 
     fun validateAll(
@@ -99,5 +100,5 @@ data class ValidatedFields(
     val name: String,
     val description: String?,
     val dateOfPurchase: LocalDate,
-    val price: Double?
+    val price: BigDecimal?
 )

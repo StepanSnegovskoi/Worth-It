@@ -1,4 +1,4 @@
-import androidx.room.gradle.RoomExtension
+import androidx.room3.gradle.RoomExtension
 import com.metes.worthit.convention.libs
 import org.gradle.api.Plugin
 import org.gradle.api.Project
@@ -6,10 +6,10 @@ import org.gradle.kotlin.dsl.apply
 import org.gradle.kotlin.dsl.configure
 import org.gradle.kotlin.dsl.dependencies
 
-class AndroidRoomConventionPlugin : Plugin<Project> {
+class AndroidRoom3ConventionPlugin : Plugin<Project> {
     override fun apply(target: Project) {
         with(target) {
-            apply(plugin = "androidx.room")
+            apply(plugin = "androidx.room3")
             apply(plugin = "com.google.devtools.ksp")
 
             extensions.configure<RoomExtension> {
@@ -17,9 +17,9 @@ class AndroidRoomConventionPlugin : Plugin<Project> {
             }
 
             dependencies {
-                "ksp"(libs.findLibrary("room.compiler").get())
-                "implementation"(libs.findLibrary("room.runtime").get())
-                "implementation"(libs.findLibrary("room.ktx").get())
+                "ksp"(libs.findLibrary("room3.compiler").get())
+                "implementation"(libs.findLibrary("room3.runtime").get())
+                "androidTestImplementation"(libs.findLibrary("room3.testing").get())
             }
         }
     }

@@ -1,16 +1,16 @@
 package com.metes.worthit.core.database.converter
 
-import androidx.room.TypeConverter
+import androidx.room3.ColumnTypeConverter
 import java.time.LocalDate
 
 class LocalDateConverter {
 
-    @TypeConverter
+    @ColumnTypeConverter
     fun localDateToEpochDay(date: LocalDate): Long {
         return date.toEpochDay()
     }
 
-    @TypeConverter
+    @ColumnTypeConverter
     fun epochDayToLocalDate(epochDay: Long): LocalDate {
         return LocalDate.ofEpochDay(epochDay)
     }

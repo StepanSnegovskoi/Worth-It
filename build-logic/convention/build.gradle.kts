@@ -21,7 +21,7 @@ dependencies {
     compileOnly(libs.android.gradlePlugin)
     compileOnly(libs.kotlin.gradlePlugin)
     compileOnly(libs.compose.gradlePlugin)
-    compileOnly(libs.room.gradlePlugin)
+    compileOnly(libs.room3.gradlePlugin)
 }
 
 gradlePlugin {
@@ -55,8 +55,8 @@ gradlePlugin {
             implementationClass = "JvmLibraryConventionPlugin"
         }
         register("androidRoom") {
-            id = libs.plugins.worthit.android.room.get().pluginId
-            implementationClass = "AndroidRoomConventionPlugin"
+            id = libs.plugins.worthit.android.room3.get().pluginId
+            implementationClass = "AndroidRoom3ConventionPlugin"
         }
     }
 }

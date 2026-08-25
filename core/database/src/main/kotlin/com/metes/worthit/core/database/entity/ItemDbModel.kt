@@ -1,10 +1,11 @@
 package com.metes.worthit.core.database.entity
 
-import androidx.room.ColumnInfo
-import androidx.room.Entity
-import androidx.room.PrimaryKey
+import androidx.room3.ColumnInfo
+import androidx.room3.Entity
+import androidx.room3.PrimaryKey
 import com.metes.worthit.core.domain.entity.Currency
 import com.metes.worthit.core.domain.entity.Item
+import java.math.BigDecimal
 import java.time.Instant
 import java.time.LocalDate
 
@@ -16,7 +17,7 @@ data class ItemDbModel(
     @ColumnInfo(name = "name")
     val name: String,
     @ColumnInfo(name = "price")
-    val price: Double?,
+    val price: BigDecimal?,
     @ColumnInfo(name = "currency_name")
     val currencyName: String?,
     @ColumnInfo(name = "created_at")

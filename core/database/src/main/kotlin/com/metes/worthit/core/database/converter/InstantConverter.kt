@@ -1,16 +1,16 @@
 package com.metes.worthit.core.database.converter
 
-import androidx.room.TypeConverter
+import androidx.room3.ColumnTypeConverter
 import java.time.Instant
 
 class InstantConverter {
 
-    @TypeConverter
+    @ColumnTypeConverter
     fun instantToEpochMilli(instant: Instant): Long {
         return instant.toEpochMilli()
     }
 
-    @TypeConverter
+    @ColumnTypeConverter
     fun epochMilliToInstant(epochMilli: Long): Instant {
         return Instant.ofEpochMilli(epochMilli)
     }
