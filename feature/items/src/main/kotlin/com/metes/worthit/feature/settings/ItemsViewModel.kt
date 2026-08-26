@@ -89,6 +89,10 @@ class ItemsViewModel @Inject constructor(
                     }
                 }
             }
+
+            ItemsCommand.UnselectItems -> {
+                selectedItemIds.value = emptySet()
+            }
         }
     }
 
@@ -114,6 +118,7 @@ sealed interface ItemsCommand {
     data class ClickItem(val itemId: Int) : ItemsCommand
     data class LongClickItem(val itemId: Int) : ItemsCommand
     data class DeleteItems(val itemIds: Set<Int>) : ItemsCommand
+    data object UnselectItems : ItemsCommand
 }
 
 sealed interface ItemsEvent {

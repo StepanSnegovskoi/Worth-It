@@ -4,4 +4,5 @@
     <string name="the_list_of_items_is_empty">The list of items is empty</string>
     <string name="let_s_add_something">Let\'s add something!</string>
     <string name="cd_delete_selected_items">Delete selected items</string>
+    <string name="cd_unselect_items">Unselect items</string>
 </resources>

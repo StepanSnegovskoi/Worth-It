@@ -4,4 +4,5 @@
     <string name="the_list_of_items_is_empty">Список предметов пуст</string>
     <string name="let_s_add_something">Давай добавим что-то!</string>
     <string name="cd_delete_selected_items">Удалить выбранные предметы</string>
+    <string name="cd_unselect_items">Отменить выбор предметов</string>
 </resources>
