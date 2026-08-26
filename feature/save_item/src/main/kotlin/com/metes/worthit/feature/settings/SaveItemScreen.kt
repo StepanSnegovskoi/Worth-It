@@ -196,7 +196,7 @@ fun SaveItemScreen(
     CurrenciesDialog(
         show = showCurrencies.value,
         onDismissRequest = { showCurrencies.value = false },
-        contentPadding = PaddingValues(vertical = WorthItCardDefaults.elevation() * 2),
+        contentPadding = PaddingValues(vertical = WorthItCardDefaults.elevation * 2),
         onCurrencyClick = {
             showCurrencies.value = false
             onCurrencyChange(it)

@@ -27,10 +27,7 @@ object WorthItCardDefaults {
         disabledContentColor = disabledContentColor,
     )
 
-    @Composable
-    @ReadOnlyComposable
-    fun shape(): Shape = RoundedCornerShape(16.dp)
+    val shape: Shape = RoundedCornerShape(16.dp)
 
-    @Composable
-    fun elevation(): Dp = 8.dp
+    val elevation: Dp = 8.dp
 }
