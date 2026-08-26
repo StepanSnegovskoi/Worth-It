@@ -14,6 +14,7 @@ fun Error.toUiText(): UiText {
         BusinessError.ItemPurchaseDateInTheFuture -> UiText.StringResource(R.string.item_purchase_date_in_the_future)
         BusinessError.ItemImageFailedToSave -> UiText.StringResource(R.string.failed_to_save_image)
         BusinessError.ItemFailedToDelete -> UiText.StringResource(R.string.item_failed_to_delete)
+        BusinessError.ItemsFailedToDelete -> UiText.StringResource(R.string.an_error_occurred_while_deleting_items)
         BusinessError.ItemPriceCanContainOnlyNumbers -> UiText.StringResource(R.string.item_price_can_contain_only_numbers)
         BusinessError.ItemPriceCantBeNegative -> UiText.StringResource(R.string.item_price_cant_be_negative)
 

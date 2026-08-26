@@ -18,6 +18,9 @@ interface ItemsDao {
     @Query("DELETE FROM items WHERE id = :itemId")
     suspend fun deleteItem(itemId: Int): Int
 
+    @Query("DELETE FROM items WHERE id IN (:itemIds)")
+    suspend fun deleteItems(itemIds: List<Int>): Int
+
     @Query("SELECT * FROM items WHERE id = :itemId LIMIT 1")
     suspend fun getItemById(itemId: Int): ItemDbModel
 }

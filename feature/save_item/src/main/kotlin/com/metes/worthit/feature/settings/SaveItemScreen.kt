@@ -56,6 +56,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.metes.worthit.core.common.toLocalDateFromUtc
 import com.metes.worthit.core.common.toUtcEpochMilli
 import com.metes.worthit.core.designsystem.component.defaults.WorthItCardDefaults
+import com.metes.worthit.core.designsystem.component.defaults.WorthItFloatingActionButtonDefaults
 import com.metes.worthit.core.designsystem.component.other.ItemImage
 import com.metes.worthit.core.designsystem.component.other.LoadingScreen
 import com.metes.worthit.core.designsystem.component.other.WorthItAnimatedVisibility
@@ -82,10 +83,6 @@ import com.metes.worthit.feature.settings.component.time_unit.PricePerTimeUnitFi
 import kotlinx.coroutines.launch
 import java.time.Instant
 import com.metes.worthit.core.designsystem.R as DesignR
-
-private val FabHeight = 56.dp
-private val FabSpaceAround = 16.dp
-private val ScrollableFabClearance = FabHeight + FabSpaceAround
 
 @Composable
 fun SaveItemRoute(
@@ -306,7 +303,7 @@ fun SaveItemScreen(
                     .fillMaxSize()
                     .padding(paddingValues)
                     .verticalScroll(rememberScrollState())
-                    .padding(bottom = ScrollableFabClearance)
+                    .padding(bottom = WorthItFloatingActionButtonDefaults.scrollableFabClearance)
                     .padding(start = 16.dp, end = 16.dp, top = 16.dp),
             ) {
                 ItemImage(
@@ -372,12 +369,15 @@ fun SaveItemScreen(
                 }
             }
 
+            val bottomSnackbarPadding = with(WorthItFloatingActionButtonDefaults) {
+                fabHeight - fabSpaceAround
+            }
             SnackbarHost(
                 hostState = snackbarHostState,
                 modifier = Modifier
                     .align(Alignment.BottomCenter)
-                    .padding(bottom = (FabHeight - FabSpaceAround) / 2)
-                    .padding(end = FabHeight + 32.dp, start = 32.dp)
+                    .padding(bottom = bottomSnackbarPadding)
+                    .padding(end = WorthItFloatingActionButtonDefaults.fabHeight + 32.dp, start = 32.dp)
             ) { data ->
                 val visuals = data.visuals
                 val customVisuals = (visuals as? CustomSnackbarVisuals) ?: return@SnackbarHost

@@ -7,5 +7,6 @@ interface ItemsRepository {
     suspend fun saveItem(item: Item): Boolean
     fun observeItems(): Flow<List<Item>>
     suspend fun deleteItem(itemId: Int): Boolean
+    suspend fun deleteItems(itemIds: List<Int>)
     suspend fun getItemById(itemId: Int): Item
 }

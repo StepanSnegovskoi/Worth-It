@@ -37,6 +37,10 @@ internal class ItemsRepositoryImpl @Inject constructor(
         return@withContext id > 0
     }
 
+    override suspend fun deleteItems(itemIds: List<Int>)= withContext<Unit>(ioDispatcher) {
+        dao.deleteItems(itemIds)
+    }
+
     override suspend fun getItemById(itemId: Int): Item = withContext(ioDispatcher) {
         val item = dao.getItemById(itemId)
         return@withContext item.toEntity()

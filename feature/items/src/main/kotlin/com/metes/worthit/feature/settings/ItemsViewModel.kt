@@ -1,9 +1,12 @@
 package com.metes.worthit.feature.settings
 
+import android.util.Log
 import androidx.compose.runtime.Immutable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.metes.worthit.core.common.continueIfInstance
 import com.metes.worthit.core.domain.usecase.DeleteItemUseCase
+import com.metes.worthit.core.domain.usecase.DeleteItemsUseCase
 import com.metes.worthit.core.domain.usecase.ObserveItemsUseCase
 import com.metes.worthit.feature.settings.mapper.toUiModels
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -20,6 +23,7 @@ import javax.inject.Inject
 @HiltViewModel
 class ItemsViewModel @Inject constructor(
     private val deleteItemUseCase: DeleteItemUseCase,
+    private val deleteItemsUseCase: DeleteItemsUseCase,
     observeItemsUseCase: ObserveItemsUseCase,
 ) : ViewModel() {
 
@@ -45,26 +49,45 @@ class ItemsViewModel @Inject constructor(
             is ItemsCommand.DeleteItem -> {
                 viewModelScope.launch {
                     deleteItemUseCase(command.itemId, command.itemLocalImagePath)
+                    selectedItemIds.value -= command.itemId
                 }
             }
 
             is ItemsCommand.ClickItem -> {
-                val currentState = uiState.value as? ItemsUiState.Success ?: return
-
-                if (currentState.selectedItemIds.isEmpty()) {
-                    navigateToSaveItem(command.itemId)
-                } else {
-                    changeSelectedStatus(command.itemId)
+                uiState.value.continueIfInstance<ItemsUiState.Success> { currentState ->
+                    if (currentState.selectedItemIds.isEmpty()) {
+                        navigateToSaveItem(command.itemId)
+                    } else {
+                        changeSelectedStatus(command.itemId)
+                    }
                 }
             }
 
             is ItemsCommand.LongClickItem -> {
-                val currentState = uiState.value as? ItemsUiState.Success ?: return
+                uiState.value.continueIfInstance<ItemsUiState.Success> { currentState ->
+                    if (currentState.selectedItemIds.isNotEmpty()) {
+                        navigateToSaveItem(command.itemId)
+                    } else {
+                        changeSelectedStatus(command.itemId)
+                    }
+                }
+            }
 
-                if (currentState.selectedItemIds.isNotEmpty()) {
-                    navigateToSaveItem(command.itemId)
-                } else {
-                    changeSelectedStatus(command.itemId)
+            is ItemsCommand.DeleteItems -> {
+                uiState.value.continueIfInstance<ItemsUiState.Success> { currentState ->
+                    val selectedItemsLocalPaths = with(currentState) {
+                        items.filter { it.id in command.itemIds }
+                            .map { it.localImagePath }
+                            .toSet()
+                    }
+
+                    viewModelScope.launch {
+                        deleteItemsUseCase(
+                            itemIds = command.itemIds.toList(),
+                            itemLocalImagePaths = selectedItemsLocalPaths
+                        )
+                        selectedItemIds.value -= command.itemIds
+                    }
                 }
             }
         }
@@ -91,6 +114,7 @@ sealed interface ItemsCommand {
     data class DeleteItem(val itemId: Int, val itemLocalImagePath: String?) : ItemsCommand
     data class ClickItem(val itemId: Int) : ItemsCommand
     data class LongClickItem(val itemId: Int) : ItemsCommand
+    data class DeleteItems(val itemIds: Set<Int>) : ItemsCommand
 }
 
 sealed interface ItemsEvent {

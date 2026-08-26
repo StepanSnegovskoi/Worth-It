@@ -35,6 +35,11 @@ internal fun AppNavDisplay(
         entryProvider = entryProvider {
             entry<Screen.Items> {
                 ItemsRoute(
+                    modifier = Modifier
+                        .padding(bottom = scaffoldPadding.calculateBottomPadding())
+                        .consumeWindowInsets(
+                            PaddingValues(bottom = scaffoldPadding.calculateBottomPadding())
+                        ),
                     scaffoldPadding = scaffoldPadding,
                     onNavigateToEditingItem = { itemId ->
                         backStack.add(Screen.SaveItem(itemId = itemId))

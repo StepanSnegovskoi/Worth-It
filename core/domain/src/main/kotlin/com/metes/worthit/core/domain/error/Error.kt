@@ -9,6 +9,7 @@ sealed interface BusinessError : Error {
     data object ItemNotFound : BusinessError
     data object ItemFailedToSave : BusinessError
     data object ItemFailedToDelete : BusinessError
+    data object ItemsFailedToDelete : BusinessError
     data object ItemImageFailedToSave : BusinessError
     data object ItemPurchaseDateInTheFuture : BusinessError
     data object ItemPriceCanContainOnlyNumbers : BusinessError

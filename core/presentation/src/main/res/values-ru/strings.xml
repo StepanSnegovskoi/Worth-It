@@ -23,4 +23,5 @@
     <string name="time_unit_month">Месяц</string>
     <string name="time_unit_year">Год</string>
     <string name="item_price_cant_be_negative">Цена предмета не может быть отрицательной</string>
+    <string name="an_error_occurred_while_deleting_items">Произошла ошибка при удалении предметов</string>
 </resources>
