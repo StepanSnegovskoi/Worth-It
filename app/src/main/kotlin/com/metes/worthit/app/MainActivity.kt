@@ -25,10 +25,15 @@ import com.metes.worthit.core.designsystem.theme.AppTheme
 import com.metes.worthit.core.navigation.NavigationManager
 import com.metes.worthit.core.navigation.Screen
 import com.metes.worthit.core.navigation.rememberMyAppNavBackStack
+import com.metes.worthit.feature.settings.ItemsUiState
+import com.metes.worthit.feature.settings.ItemsViewModel
 import com.metes.worthit.intent.IntentParser
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import kotlin.time.Duration.Companion.milliseconds
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -39,13 +44,26 @@ class MainActivity : ComponentActivity() {
     @Inject
     lateinit var intentParser: IntentParser
 
-    private val viewModel: MainActivityViewModel by viewModels()
+    private val mainViewModel: MainActivityViewModel by viewModels()
+
+    // for keep splash screen while items loading
+    private val itemsViewModel: ItemsViewModel by viewModels()
+
+    private val keepSplashScreen = MutableStateFlow(true)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         val splashScreen = installSplashScreen()
         super.onCreate(savedInstanceState)
 
-        splashScreen.setKeepOnScreenCondition { viewModel.state.value is MainState.Loading }
+        lifecycleScope.launch {
+            delay(1000.milliseconds)
+            keepSplashScreen.value = false
+        }
+
+        splashScreen.setKeepOnScreenCondition {
+            itemsViewModel.uiState.value !is ItemsUiState.Success &&
+                    keepSplashScreen.value
+        }
 
         processCurrentIntent(intent)
 
@@ -85,6 +103,7 @@ class MainActivity : ComponentActivity() {
                 AppNavigation(
                     backStack = backStack,
                     bottomNavItems = bottomNavItems,
+                    itemsViewModel = itemsViewModel,
                     modifier = Modifier
                         .fillMaxSize(),
                 )
@@ -103,7 +122,7 @@ class MainActivity : ComponentActivity() {
             if (isHandled) return
 
             val event = intentParser.parse(currentIntent)
-            viewModel.processEvent(event)
+            mainViewModel.processEvent(event)
 
             currentIntent.putExtra(EXTRA_INTENT_HANDLED, true)
             intent = currentIntent

@@ -14,6 +14,7 @@ import androidx.navigation3.ui.NavDisplay
 import com.metes.worthit.core.navigation.Screen
 import com.metes.worthit.core.navigation.safeNavigateBack
 import com.metes.worthit.feature.settings.ItemsRoute
+import com.metes.worthit.feature.settings.ItemsViewModel
 import com.metes.worthit.feature.settings.SaveItemRoute
 import com.metes.worthit.feature.settings.SaveItemViewModel
 import com.metes.worthit.feature.settings.SettingsScreen
@@ -22,6 +23,7 @@ import com.metes.worthit.feature.settings.SettingsScreen
 internal fun AppNavDisplay(
     backStack: NavBackStack<Screen>,
     scaffoldPadding: PaddingValues,
+    itemsViewModel: ItemsViewModel,
     modifier: Modifier = Modifier,
 ) {
     NavDisplay(
@@ -35,12 +37,13 @@ internal fun AppNavDisplay(
         entryProvider = entryProvider {
             entry<Screen.Items> {
                 ItemsRoute(
+                    scaffoldPadding = scaffoldPadding,
                     modifier = Modifier
                         .padding(bottom = scaffoldPadding.calculateBottomPadding())
                         .consumeWindowInsets(
                             PaddingValues(bottom = scaffoldPadding.calculateBottomPadding())
                         ),
-                    scaffoldPadding = scaffoldPadding,
+                    viewModel = itemsViewModel,
                     onNavigateToEditingItem = { itemId ->
                         backStack.add(Screen.SaveItem(itemId = itemId))
                     },

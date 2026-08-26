@@ -14,12 +14,8 @@ import javax.inject.Inject
 internal class MainActivityViewModel @Inject constructor(
     private val navigationManager: NavigationManager,
 ) : ViewModel() {
-    private val _state = MutableStateFlow<MainState>(MainState.Loading)
-    val state = _state.asStateFlow()
 
     fun processEvent(event: AppIntentEvent) {
-        _state.update { MainState.Idle }
-
         when(event) {
             AppIntentEvent.Ignored -> return
 
@@ -28,9 +24,4 @@ internal class MainActivityViewModel @Inject constructor(
             }
         }
     }
-}
-
-internal sealed interface MainState {
-    data object Idle : MainState
-    data object Loading : MainState
 }

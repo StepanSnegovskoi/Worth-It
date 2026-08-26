@@ -8,11 +8,13 @@ import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.navigation3.runtime.NavBackStack
 import com.metes.worthit.core.designsystem.theme.AppTheme
 import com.metes.worthit.core.navigation.Screen
+import com.metes.worthit.feature.settings.ItemsViewModel
 
 @Composable
 internal fun AppNavigation(
     backStack: NavBackStack<Screen>,
     bottomNavItems: List<BottomNavItem>,
+    itemsViewModel: ItemsViewModel,
     modifier: Modifier = Modifier,
 ) {
     val keyboardController = LocalSoftwareKeyboardController.current
@@ -38,6 +40,7 @@ internal fun AppNavigation(
         AppNavDisplay(
             backStack = backStack,
             scaffoldPadding = contentPadding,
+            itemsViewModel = itemsViewModel,
             modifier = Modifier
                 .fillMaxSize(),
         )
