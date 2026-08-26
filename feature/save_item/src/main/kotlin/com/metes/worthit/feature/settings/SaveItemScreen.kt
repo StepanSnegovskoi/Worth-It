@@ -29,8 +29,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SnackbarHost
-import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarColors
 import androidx.compose.material3.TopAppBarDefaults
@@ -46,7 +44,6 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
@@ -62,13 +59,10 @@ import com.metes.worthit.core.designsystem.component.other.LoadingScreen
 import com.metes.worthit.core.designsystem.component.other.WorthItAnimatedVisibility
 import com.metes.worthit.core.designsystem.component.other.WorthItIcon
 import com.metes.worthit.core.designsystem.component.other.WorthItIconButton
-import com.metes.worthit.core.designsystem.component.snackbar.CustomSnackbarVisuals
-import com.metes.worthit.core.designsystem.component.snackbar.WorthItSnackbar
 import com.metes.worthit.core.designsystem.theme.AppTheme
 import com.metes.worthit.core.designsystem.util.rememberDateFormatter
 import com.metes.worthit.core.domain.entity.Currency
 import com.metes.worthit.core.presentation.ObserveAsEvents
-import com.metes.worthit.core.presentation.asCombinedString
 import com.metes.worthit.feature.save_item.R
 import com.metes.worthit.feature.settings.component.button.SaveItemFloatingActionButton
 import com.metes.worthit.feature.settings.component.button.SaveItemTopBarButton
@@ -80,7 +74,6 @@ import com.metes.worthit.feature.settings.component.input_field.NameTextField
 import com.metes.worthit.feature.settings.component.input_field.PriceField
 import com.metes.worthit.feature.settings.component.other.TitleText
 import com.metes.worthit.feature.settings.component.time_unit.PricePerTimeUnitField
-import kotlinx.coroutines.launch
 import java.time.Instant
 import com.metes.worthit.core.designsystem.R as DesignR
 
@@ -91,7 +84,6 @@ fun SaveItemRoute(
     onNavigateToItems: () -> Unit,
     onBackClick: () -> Unit,
 ) {
-    val context = LocalContext.current
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val nameFocusRequester = remember { FocusRequester() }
     val priceFocusRequester = remember { FocusRequester() }
@@ -103,8 +95,6 @@ fun SaveItemRoute(
             }
         }
 
-    val snackbarHostState = remember { SnackbarHostState() }
-
     ObserveAsEvents(viewModel.events) { event ->
         when (event) {
             SaveItemEvent.NavigateToItems -> onNavigateToItems()
@@ -113,22 +103,11 @@ fun SaveItemRoute(
                 val currentState = uiState
 
                 if (currentState is SaveItemUiState.Success) {
-                    if (!currentState.isValidName) {
+                    if (currentState.nameError != null) {
                         nameFocusRequester.requestFocus()
-                    } else if (!currentState.isValidPrice) {
+                    } else if (currentState.priceError != null) {
                         priceFocusRequester.requestFocus()
                     }
-                }
-
-                snackbarHostState.currentSnackbarData?.dismiss()
-                launch {
-                    snackbarHostState
-                        .showSnackbar(
-                            CustomSnackbarVisuals(
-                                message = event.errors.asCombinedString(context = context),
-                                isError = true
-                            )
-                        )
                 }
             }
         }
@@ -139,7 +118,6 @@ fun SaveItemRoute(
 
         is SaveItemUiState.Success -> SaveItemScreen(
             uiState = currentState,
-            snackbarHostState = snackbarHostState,
             nameFocusRequester = nameFocusRequester,
             priceFocusRequester = priceFocusRequester,
             modifier = modifier,
@@ -164,7 +142,6 @@ fun SaveItemRoute(
 @Composable
 fun SaveItemScreen(
     uiState: SaveItemUiState.Success,
-    snackbarHostState: SnackbarHostState,
     nameFocusRequester: FocusRequester,
     priceFocusRequester: FocusRequester,
     modifier: Modifier = Modifier,
@@ -323,7 +300,7 @@ fun SaveItemScreen(
 
                 NameTextField(
                     name = uiState.name,
-                    isError = !uiState.isValidName,
+                    nameError = uiState.nameError,
                     modifier = Modifier.focusRequester(nameFocusRequester),
                     onRemoveNameClick = onRemoveNameClick,
                     onNameChange = onNameChange
@@ -337,7 +314,7 @@ fun SaveItemScreen(
 
                 Row(
                     modifier = Modifier.fillMaxWidth(),
-                    verticalAlignment = Alignment.CenterVertically,
+//                    verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.spacedBy(16.dp)
                 ) {
                     DateField(
@@ -349,7 +326,7 @@ fun SaveItemScreen(
                     PriceField(
                         price = uiState.price,
                         currency = uiState.currency,
-                        isError = !uiState.isValidPrice,
+                        priceError = uiState.priceError,
                         modifier = Modifier
                             .weight(1f)
                             .focusRequester(priceFocusRequester),
@@ -367,27 +344,6 @@ fun SaveItemScreen(
                             .fillMaxWidth(),
                     )
                 }
-            }
-
-            val bottomSnackbarPadding = with(WorthItFloatingActionButtonDefaults) {
-                fabHeight - fabSpaceAround
-            }
-            SnackbarHost(
-                hostState = snackbarHostState,
-                modifier = Modifier
-                    .align(Alignment.BottomCenter)
-                    .padding(bottom = bottomSnackbarPadding)
-                    .padding(end = WorthItFloatingActionButtonDefaults.fabHeight + 32.dp, start = 32.dp)
-            ) { data ->
-                val visuals = data.visuals
-                val customVisuals = (visuals as? CustomSnackbarVisuals) ?: return@SnackbarHost
-
-                WorthItSnackbar(
-                    snackbarData = data,
-                    isError = customVisuals.isError,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                )
             }
         }
     }

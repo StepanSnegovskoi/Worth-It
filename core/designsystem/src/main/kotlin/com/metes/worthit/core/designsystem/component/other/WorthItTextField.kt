@@ -19,7 +19,6 @@ fun WorthItTextField(
     maxLines: Int = 1,
     readOnly: Boolean = false,
     singleLine: Boolean = true,
-    isError: Boolean = false,
     errorMessage: String? = null,
     colors: TextFieldColors = WorthItTextFieldDefaults.colors(),
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
@@ -35,7 +34,7 @@ fun WorthItTextField(
         maxLines = maxLines,
         readOnly = readOnly,
         singleLine = singleLine,
-        isError = isError,
+        isError = errorMessage != null,
         onValueChange = onValueChange,
         keyboardOptions = keyboardOptions,
         colors = colors,
@@ -43,7 +42,7 @@ fun WorthItTextField(
         placeholder = placeholder,
         trailingIcon = trailingIcon,
         supportingText = {
-            if (isError && errorMessage != null) {
+            if (errorMessage != null) {
                 Text(text = errorMessage, color = MaterialTheme.colorScheme.error)
             }
         }

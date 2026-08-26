@@ -13,3 +13,13 @@ inline fun <S, E> Result<S, E>.onSuccess(onSuccess: (S) -> Unit): Result<S, E> {
     }
     return this
 }
+
+inline fun <S, E, R> Result<S, E>.onResult(onSuccess: (S) -> R, onError: (E) -> R): R {
+    if (this is Result.Success) {
+        return onSuccess(this.data)
+    }
+    if (this is Result.Error) {
+        return onError(this.data)
+    }
+    error("Unexpected Result type $this")
+}

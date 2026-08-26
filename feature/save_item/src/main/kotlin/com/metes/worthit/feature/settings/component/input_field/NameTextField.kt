@@ -10,13 +10,14 @@ import com.metes.worthit.core.designsystem.component.other.WorthItIcon
 import com.metes.worthit.core.designsystem.component.other.WorthItIconButton
 import com.metes.worthit.core.designsystem.component.other.WorthItText
 import com.metes.worthit.core.designsystem.component.other.WorthItTextField
+import com.metes.worthit.core.presentation.UiText
 import com.metes.worthit.feature.save_item.R
 import com.metes.worthit.core.designsystem.R as DesignR
 
 @Composable
 internal fun NameTextField(
     name: String,
-    isError: Boolean,
+    nameError: UiText?,
     modifier: Modifier = Modifier,
     onRemoveNameClick: () -> Unit,
     onNameChange: (String) -> Unit,
@@ -26,8 +27,7 @@ internal fun NameTextField(
         value = name,
         keyboardOptions = KeyboardOptions.Default.copy(capitalization = KeyboardCapitalization.Sentences),
         onValueChange = onNameChange,
-        isError = isError,
-        errorMessage = stringResource(R.string.enter_name),
+        errorMessage = nameError?.asString(),
         label = { WorthItText(text = stringResource(R.string.name_hint)) },
         trailingIcon = {
             if (name.isNotEmpty()) {

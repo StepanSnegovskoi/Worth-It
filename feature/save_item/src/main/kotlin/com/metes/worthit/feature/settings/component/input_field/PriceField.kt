@@ -11,6 +11,7 @@ import com.metes.worthit.core.designsystem.component.other.WorthItIconButton
 import com.metes.worthit.core.designsystem.component.other.WorthItText
 import com.metes.worthit.core.designsystem.component.other.WorthItTextField
 import com.metes.worthit.core.domain.entity.Currency
+import com.metes.worthit.core.presentation.UiText
 import com.metes.worthit.core.presentation.iconResId
 import com.metes.worthit.feature.save_item.R
 
@@ -18,7 +19,7 @@ import com.metes.worthit.feature.save_item.R
 internal fun PriceField(
     price: String,
     currency: Currency,
-    isError: Boolean,
+    priceError: UiText?,
     modifier: Modifier = Modifier,
     onIconClick: () -> Unit,
     onPriceChange: (String) -> Unit,
@@ -27,7 +28,7 @@ internal fun PriceField(
         modifier = modifier,
         value = price,
         onValueChange = onPriceChange,
-        isError = isError,
+        errorMessage = priceError?.asString(),
         keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
         label = { Text(text = stringResource(R.string.price_hint)) },
         trailingIcon = {

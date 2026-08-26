@@ -48,6 +48,9 @@ class ItemValidator @Inject constructor(
             if (priceBigDecimal < BigDecimal.ZERO) {
                 errors.add(BusinessError.ItemPriceCantBeNegative)
             }
+            if (priceBigDecimal > MAX_PRICE) {
+                errors.add(BusinessError.ItemPriceCantBeMoreThan(MAX_PRICE.toString(), MAX_COUNT_OF_DIGITS_IN_INTEGER_PART_OF_PRICE))
+            }
         }
 
         if (errors.isNotEmpty()) {
@@ -93,6 +96,15 @@ class ItemValidator @Inject constructor(
         val normalized = price.replace(',', '.')
 
         return normalized
+    }
+
+    companion object {
+        private const val MAX_COUNT_OF_DIGITS_IN_INTEGER_PART_OF_PRICE = 13
+        private val MAX_PRICE = buildString {
+            repeat(MAX_COUNT_OF_DIGITS_IN_INTEGER_PART_OF_PRICE) {
+                append("9")
+            }
+        }.toBigDecimal()
     }
 }
 

@@ -23,8 +23,11 @@ import com.metes.worthit.core.domain.utils.DateProvider
 import com.metes.worthit.core.domain.utils.Result
 import com.metes.worthit.core.domain.utils.UserSettings
 import com.metes.worthit.core.domain.utils.onError
+import com.metes.worthit.core.domain.utils.onResult
 import com.metes.worthit.core.domain.utils.onSuccess
 import com.metes.worthit.core.domain.validator.ItemValidator
+import com.metes.worthit.core.presentation.UiText
+import com.metes.worthit.core.presentation.toUiText
 import com.metes.worthit.feature.settings.SaveItemEvent.NavigateToItems
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
@@ -101,11 +104,27 @@ class SaveItemViewModel @AssistedInject constructor(
     )
 
     private val formStateFlow = combine(userInputFlow, metaDataFlow) { userInput, metadata ->
-        val isValidName =
-            itemValidator.validateName(userInput.name) is Result.Success || !metadata.hasAttemptedSave
+        val nameError = itemValidator.validateName(userInput.name).onResult(
+            onSuccess = { null },
+            onError = {
+                if (!metadata.hasAttemptedSave) {
+                    null
+                } else {
+                    it.first().toUiText()
+                }
+            }
+        )
 
-        val isValidPrice =
-            itemValidator.validatePrice(userInput.price) is Result.Success || !metadata.hasAttemptedSave
+        val priceError = itemValidator.validatePrice(userInput.price).onResult(
+            onSuccess = { null },
+            onError = {
+                if (!metadata.hasAttemptedSave) {
+                    null
+                } else {
+                    it.first().toUiText()
+                }
+            }
+        )
 
         SaveItemUiState.Success(
             name = userInput.name,
@@ -115,8 +134,8 @@ class SaveItemViewModel @AssistedInject constructor(
             currency = metadata.currency,
             dateOfPurchaseMillis = metadata.dateOfPurchaseMillis,
             currentDate = metadata.currentDate,
-            isValidName = isValidName,
-            isValidPrice = isValidPrice,
+            nameError = nameError,
+            priceError = priceError,
             isEditingMode = isEditingMode,
         )
     }
@@ -286,8 +305,8 @@ sealed interface SaveItemUiState {
         val currency: Currency,
         val dateOfPurchaseMillis: Long,
         val currentDate: LocalDate,
-        val isValidName: Boolean,
-        val isValidPrice: Boolean,
+        val nameError: UiText?,
+        val priceError: UiText?,
         val isEditingMode: Boolean,
     ) : SaveItemUiState {
 
