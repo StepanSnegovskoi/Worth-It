@@ -11,7 +11,6 @@ import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
@@ -24,11 +23,11 @@ class ItemsViewModel @Inject constructor(
     observeItemsUseCase: ObserveItemsUseCase,
 ) : ViewModel() {
 
-    private val _selectedItemIds = MutableStateFlow<Set<Int>>(emptySet())
+    private val selectedItemIds = MutableStateFlow<Set<Int>>(emptySet())
 
     val uiState = combine(
         observeItemsUseCase(),
-        _selectedItemIds,
+        selectedItemIds,
     ) { items, selectedItemIds ->
         val uiItems = items.toUiModels()
         ItemsUiState.Success(items = uiItems, selectedItemIds = selectedItemIds)
@@ -50,20 +49,40 @@ class ItemsViewModel @Inject constructor(
             }
 
             is ItemsCommand.ClickItem -> {
-                viewModelScope.launch {
-                    _events.send(ItemsEvent.NavigateToSaveItem(command.itemId))
+                val currentState = uiState.value as? ItemsUiState.Success ?: return
+
+                if (currentState.selectedItemIds.isEmpty()) {
+                    navigateToSaveItem(command.itemId)
+                } else {
+                    changeSelectedStatus(command.itemId)
                 }
             }
 
             is ItemsCommand.LongClickItem -> {
                 val currentState = uiState.value as? ItemsUiState.Success ?: return
 
-                if (command.itemId in currentState.selectedItemIds) {
-                    _selectedItemIds.value -= command.itemId
+                if (currentState.selectedItemIds.isNotEmpty()) {
+                    navigateToSaveItem(command.itemId)
                 } else {
-                    _selectedItemIds.value += command.itemId
+                    changeSelectedStatus(command.itemId)
                 }
             }
+        }
+    }
+
+    private fun changeSelectedStatus(itemId: Int) {
+        val currentState = uiState.value as? ItemsUiState.Success ?: return
+
+        if (itemId in currentState.selectedItemIds) {
+            selectedItemIds.value -= itemId
+        } else {
+            selectedItemIds.value += itemId
+        }
+    }
+
+    private fun navigateToSaveItem(itemId: Int) {
+        viewModelScope.launch {
+            _events.send(ItemsEvent.NavigateToSaveItem(itemId))
         }
     }
 }
