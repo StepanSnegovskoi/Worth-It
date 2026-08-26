@@ -11,4 +11,3 @@ fun LocalDate.toUtcEpochMilli() = this
 
 fun Long.toLocalDateFromUtc(): LocalDate =
     Instant.ofEpochMilli(this).atZone(ZoneOffset.UTC).toLocalDate()
-
