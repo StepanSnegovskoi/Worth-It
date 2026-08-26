@@ -3,7 +3,6 @@ package com.metes.worthit.feature.settings
 import androidx.compose.runtime.Immutable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.metes.worthit.core.common.continueIfInstance
 import com.metes.worthit.core.domain.usecase.DeleteItemUseCase
 import com.metes.worthit.core.domain.usecase.DeleteItemsUseCase
 import com.metes.worthit.core.domain.usecase.ObserveItemsUseCase
@@ -44,6 +43,9 @@ class ItemsViewModel @Inject constructor(
     val events = _events.receiveAsFlow()
 
     fun processCommand(command: ItemsCommand) {
+        val currentState = uiState.value
+        if (currentState !is ItemsUiState.Success) return
+
         when (command) {
             is ItemsCommand.DeleteItem -> {
                 viewModelScope.launch {
@@ -53,40 +55,34 @@ class ItemsViewModel @Inject constructor(
             }
 
             is ItemsCommand.ClickItem -> {
-                uiState.value.continueIfInstance<ItemsUiState.Success> { currentState ->
-                    if (currentState.selectedItemIds.isEmpty()) {
-                        navigateToSaveItem(command.itemId)
-                    } else {
-                        changeSelectedStatus(command.itemId)
-                    }
+                if (currentState.selectedItemIds.isEmpty()) {
+                    navigateToSaveItem(command.itemId)
+                } else {
+                    changeSelectedStatus(command.itemId)
                 }
             }
 
             is ItemsCommand.LongClickItem -> {
-                uiState.value.continueIfInstance<ItemsUiState.Success> { currentState ->
-                    if (currentState.selectedItemIds.isNotEmpty()) {
-                        navigateToSaveItem(command.itemId)
-                    } else {
-                        changeSelectedStatus(command.itemId)
-                    }
+                if (currentState.selectedItemIds.isNotEmpty()) {
+                    navigateToSaveItem(command.itemId)
+                } else {
+                    changeSelectedStatus(command.itemId)
                 }
             }
 
             is ItemsCommand.DeleteItems -> {
-                uiState.value.continueIfInstance<ItemsUiState.Success> { currentState ->
-                    val selectedItemsLocalPaths = with(currentState) {
-                        items.filter { it.id in command.itemIds }
-                            .map { it.localImagePath }
-                            .toSet()
-                    }
+                val selectedItemsLocalPaths = with(currentState) {
+                    items.filter { it.id in command.itemIds }
+                        .map { it.localImagePath }
+                        .toSet()
+                }
 
-                    viewModelScope.launch {
-                        deleteItemsUseCase(
-                            itemIds = command.itemIds.toList(),
-                            itemLocalImagePaths = selectedItemsLocalPaths
-                        )
-                        selectedItemIds.value -= command.itemIds
-                    }
+                viewModelScope.launch {
+                    deleteItemsUseCase(
+                        itemIds = command.itemIds.toList(),
+                        itemLocalImagePaths = selectedItemsLocalPaths
+                    )
+                    selectedItemIds.value -= command.itemIds
                 }
             }
 
