@@ -1,9 +1,6 @@
 package com.metes.worthit.feature.share
 
 import android.content.Intent
-import android.util.Log
-import com.metes.worthit.core.navigation.NavigationManager
-import com.metes.worthit.core.navigation.Screen
 import com.metes.worthit.intent.AppIntentEvent
 import com.metes.worthit.intent.IntentProcessor
 import com.metes.worthit.intent.getImageUriOrNull

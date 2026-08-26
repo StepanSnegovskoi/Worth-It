@@ -62,8 +62,8 @@ import com.metes.worthit.core.designsystem.component.other.LoadingScreen
 import com.metes.worthit.core.designsystem.component.other.WorthItAnimatedVisibility
 import com.metes.worthit.core.designsystem.component.other.WorthItIcon
 import com.metes.worthit.core.designsystem.component.other.WorthItIconButton
-import com.metes.worthit.core.designsystem.component.snackbar.WorthItSnackbar
 import com.metes.worthit.core.designsystem.component.snackbar.CustomSnackbarVisuals
+import com.metes.worthit.core.designsystem.component.snackbar.WorthItSnackbar
 import com.metes.worthit.core.designsystem.theme.AppTheme
 import com.metes.worthit.core.designsystem.util.rememberDateFormatter
 import com.metes.worthit.core.domain.entity.Currency

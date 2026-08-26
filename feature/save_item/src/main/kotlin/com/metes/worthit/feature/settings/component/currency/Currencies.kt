@@ -7,8 +7,6 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.metes.worthit.core.designsystem.component.defaults.WorthItCardDefaults
-import com.metes.worthit.core.designsystem.theme.AppTheme
 import com.metes.worthit.core.domain.entity.Currency
 
 @Composable

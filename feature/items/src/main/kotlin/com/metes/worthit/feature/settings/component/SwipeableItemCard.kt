@@ -17,10 +17,9 @@ import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import com.metes.worthit.core.designsystem.component.other.WorthItIcon
 import com.metes.worthit.core.designsystem.component.other.WorthItIconButton
-import com.metes.worthit.feature.settings.ItemUiModel
 import com.metes.worthit.feature.items.R
+import com.metes.worthit.feature.settings.ItemUiModel
 import kotlin.math.roundToInt
-import kotlin.random.Random
 
 private enum class State {
     CLOSED, OPEN

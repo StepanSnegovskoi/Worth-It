@@ -5,7 +5,6 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Shape
-import androidx.compose.ui.res.stringResource
 import com.metes.worthit.core.designsystem.component.defaults.WorthItButtonDefaults
 import com.metes.worthit.core.designsystem.theme.AppTheme
 

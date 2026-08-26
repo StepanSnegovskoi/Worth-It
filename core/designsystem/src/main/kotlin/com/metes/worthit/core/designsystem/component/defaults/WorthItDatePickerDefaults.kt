@@ -1,7 +1,6 @@
 package com.metes.worthit.core.designsystem.component.defaults
 
 import androidx.compose.material3.DatePickerColors
-import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import com.metes.worthit.core.designsystem.theme.AppTheme

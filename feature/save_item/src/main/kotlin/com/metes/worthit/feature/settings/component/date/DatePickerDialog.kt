@@ -12,7 +12,6 @@ import androidx.compose.ui.res.stringResource
 import com.metes.worthit.core.common.toLocalDateFromUtc
 import com.metes.worthit.core.designsystem.component.defaults.WorthItDatePickerDefaults
 import com.metes.worthit.core.designsystem.component.other.WorthItTextButton
-import com.metes.worthit.core.designsystem.theme.AppTheme
 import com.metes.worthit.feature.save_item.R
 import java.time.LocalDate
 

@@ -6,7 +6,6 @@ import androidx.datastore.preferences.core.PreferenceDataStoreFactory
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStoreFile
 import com.metes.worthit.core.datastore.DefaultUserSettings
-import com.metes.worthit.core.domain.utils.DateProvider
 import com.metes.worthit.core.domain.utils.UserSettings
 import dagger.Binds
 import dagger.Module

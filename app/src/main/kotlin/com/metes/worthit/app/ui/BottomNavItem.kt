@@ -3,9 +3,8 @@ package com.metes.worthit.app.ui
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import com.metes.worthit.R
-import com.metes.worthit.core.designsystem.R as DesignR
 import com.metes.worthit.core.navigation.Screen
-import kotlin.reflect.KClass
+import com.metes.worthit.core.designsystem.R as DesignR
 
 internal data class BottomNavItem(
     val route: Screen,

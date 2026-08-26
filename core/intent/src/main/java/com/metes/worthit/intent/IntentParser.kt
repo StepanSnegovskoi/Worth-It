@@ -1,7 +1,6 @@
 package com.metes.worthit.intent
 
 import android.content.Intent
-import android.util.Log
 import javax.inject.Inject
 import javax.inject.Singleton
 

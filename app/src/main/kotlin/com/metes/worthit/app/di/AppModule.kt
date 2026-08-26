@@ -4,7 +4,6 @@ import com.metes.worthit.core.common.ApplicationScope
 import com.metes.worthit.core.common.DefaultDispatcher
 import com.metes.worthit.core.common.IoDispatcher
 import com.metes.worthit.core.common.MainDispatcher
-import dagger.Binds
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -14,7 +13,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import java.time.Clock
-import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
