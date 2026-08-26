@@ -8,6 +8,7 @@ import androidx.core.net.toUri
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.metes.worthit.core.common.continueIfInstance
 import com.metes.worthit.core.common.toLocalDateFromUtc
 import com.metes.worthit.core.common.toUtcEpochMilli
 import com.metes.worthit.core.domain.entity.Currency
@@ -142,9 +143,8 @@ class SaveItemViewModel @AssistedInject constructor(
         viewModelScope.launch {
             try {
                 if (itemId == null) return@launch
-                val result = getItemByIdUseCase(itemId)
 
-                result.onError { errors ->
+                getItemByIdUseCase(itemId).onError { errors ->
                     _events.send(SaveItemEvent.ShowErrors(errors))
                 }.onSuccess { item ->
                     savedStateHandle[KEY_NAME] = item.name
@@ -217,35 +217,32 @@ class SaveItemViewModel @AssistedInject constructor(
 
         if (isSavingFlow.value) return
 
-        val currentState = uiState.value
-        if (currentState !is SaveItemUiState.Success) return
+        uiState.value.continueIfInstance<SaveItemUiState.Success> { currentState ->
+            isSavingFlow.value = true
 
-        isSavingFlow.value = true
+            viewModelScope.launch {
+                try {
+                    val createdAt = Instant.now(clock)
+                    val dateOfPurchase = currentState.dateOfPurchaseMillis.toLocalDateFromUtc()
 
-        viewModelScope.launch {
-            try {
-                val createdAt = Instant.now(clock)
-                val dateOfPurchase = currentState.dateOfPurchaseMillis.toLocalDateFromUtc()
-
-                val result = saveItemUseCase(
-                    itemId = itemId,
-                    name = currentState.name,
-                    description = currentState.description,
-                    price = currentState.price,
-                    currency = currentState.currency,
-                    createdAt = createdAt,
-                    dateOfPurchase = dateOfPurchase,
-                    imageUriString = currentState.imageUri?.toString(),
-                    originalImageLocalPath = imagePath
-                )
-
-                result.onError { errors ->
-                    _events.send(SaveItemEvent.ShowErrors(errors))
-                }.onSuccess {
-                    _events.send(NavigateToItems)
+                    saveItemUseCase(
+                        itemId = itemId,
+                        name = currentState.name,
+                        description = currentState.description,
+                        price = currentState.price,
+                        currency = currentState.currency,
+                        createdAt = createdAt,
+                        dateOfPurchase = dateOfPurchase,
+                        imageUriString = currentState.imageUri?.toString(),
+                        originalImageLocalPath = imagePath
+                    ).onError { errors ->
+                        _events.send(SaveItemEvent.ShowErrors(errors))
+                    }.onSuccess {
+                        _events.send(NavigateToItems)
+                    }
+                } finally {
+                    isSavingFlow.value = false
                 }
-            } finally {
-                isSavingFlow.value = false
             }
         }
     }
