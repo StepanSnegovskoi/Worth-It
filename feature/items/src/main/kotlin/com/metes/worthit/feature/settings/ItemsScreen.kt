@@ -49,11 +49,7 @@ fun ItemsRoute(
     }
 
     when (val currentState = uiState) {
-        ItemsUiState.Loading -> LoadingScreen(
-            modifier = modifier
-                .fillMaxSize()
-                .padding(scaffoldPadding)
-        )
+        ItemsUiState.Loading -> LoadingScreen(modifier = modifier)
 
         is ItemsUiState.Success -> ItemsScreen(
             uiState = currentState,

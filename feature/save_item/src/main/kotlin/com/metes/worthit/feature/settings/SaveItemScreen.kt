@@ -114,7 +114,7 @@ fun SaveItemRoute(
     }
 
     when (val currentState = uiState) {
-        SaveItemUiState.Loading -> LoadingScreen()
+        SaveItemUiState.Loading -> LoadingScreen(modifier = modifier)
 
         is SaveItemUiState.Success -> SaveItemScreen(
             uiState = currentState,
