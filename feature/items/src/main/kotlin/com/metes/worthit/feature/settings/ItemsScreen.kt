@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.calculateEndPadding
 import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -18,6 +17,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.metes.worthit.core.designsystem.component.defaults.WorthItFloatingActionButtonDefaults
 import com.metes.worthit.core.designsystem.component.other.LoadingScreen
 import com.metes.worthit.core.designsystem.component.other.WorthItAnimatedVisibility
+import com.metes.worthit.core.designsystem.component.other.WorthItFloatingActionButton
 import com.metes.worthit.core.designsystem.component.other.WorthItIcon
 import com.metes.worthit.core.designsystem.theme.AppTheme
 import com.metes.worthit.core.presentation.ObserveAsEvents
@@ -94,8 +94,7 @@ fun ItemsScreen(
             .fillMaxSize(),
         floatingActionButton = {
             WorthItAnimatedVisibility(visible = uiState.selectedItemIds.isNotEmpty()) {
-                FloatingActionButton(
-                    containerColor = AppTheme.colorScheme.primary,
+                WorthItFloatingActionButton(
                     onClick = {
                         onItemsDeleteClick(uiState.selectedItemIds)
                     }
