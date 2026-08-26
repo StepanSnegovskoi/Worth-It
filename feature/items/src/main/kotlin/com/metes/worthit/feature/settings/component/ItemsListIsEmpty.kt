@@ -35,7 +35,7 @@ internal fun ItemsListIsEmpty(
                 maxLines = Int.MAX_VALUE,
                 color = AppTheme.colorScheme.onSurface,
             )
-            WorthItIcon(drawableRes = R.drawable.wind_36dp, tint = AppTheme.colorScheme.primary)
+            WorthItIcon(drawableRes = R.drawable.wind_40dp, tint = AppTheme.colorScheme.primary)
             WorthItText(
                 text = stringResource(R.string.let_s_add_something),
                 maxLines = Int.MAX_VALUE,
