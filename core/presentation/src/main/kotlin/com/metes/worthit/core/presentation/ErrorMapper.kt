@@ -5,7 +5,7 @@ import com.metes.worthit.core.domain.error.BusinessError
 import com.metes.worthit.core.domain.error.Error
 import com.metes.worthit.core.domain.error.FileError
 import com.metes.worthit.core.domain.error.UnexpectedError
-import com.metes.worthit.core.presentation.UiText.*
+import com.metes.worthit.core.presentation.UiText.StringResource
 
 fun Error.toUiText(): UiText {
     return when (this) {

@@ -5,9 +5,6 @@ import com.metes.worthit.core.navigation.NavigationManager
 import com.metes.worthit.core.navigation.Screen
 import com.metes.worthit.intent.AppIntentEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.update
 import javax.inject.Inject
 
 @HiltViewModel
