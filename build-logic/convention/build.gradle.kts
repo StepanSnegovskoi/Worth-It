@@ -58,5 +58,9 @@ gradlePlugin {
             id = libs.plugins.worthit.android.room3.get().pluginId
             implementationClass = "AndroidRoom3ConventionPlugin"
         }
+        register("countCodeLines") {
+            id = libs.plugins.worthit.count.code.lines.get().pluginId
+            implementationClass = "CountCodeLinesPlugin"
+        }
     }
 }

@@ -12,22 +12,10 @@ class AndroidApplicationConventionPlugin : Plugin<Project> {
     override fun apply(target: Project) {
         with(target) {
             apply(plugin = "com.android.application")
+            apply(plugin = "worthit.count.code.lines")
 
             extensions.configure<ApplicationExtension> {
                 configureKotlinAndroid(this)
-            }
-
-            tasks.register<CountCodeLinesTask>("countCodeLinesTask") {
-                sourceFiles.from(rootProject.layout.projectDirectory)
-
-                sourceFiles.include("**/*.kt")
-                sourceFiles.exclude("**/build/**")
-                sourceFiles.exclude("**/androidTest/**")
-                sourceFiles.exclude("**/test/**")
-            }
-
-            tasks.named("check") {
-                dependsOn("countCodeLinesTask")
             }
         }
     }

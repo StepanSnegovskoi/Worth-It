@@ -21,15 +21,15 @@ enum class SortType {
 @CacheableTask
 internal abstract class CountCodeLinesTask : DefaultTask() {
 
-    @get:Input
-    abstract val sortType: Property<SortType>
-
     @get:InputFiles
     @get:PathSensitive(PathSensitivity.RELATIVE)
     abstract val sourceFiles: ConfigurableFileTree
 
     @get:OutputFile
     abstract val outputFile: RegularFileProperty
+
+    @get:Input
+    abstract val sortType: Property<SortType>
 
     init {
         outputFile.convention(project.layout.buildDirectory.file("code_lines.md"))
@@ -59,25 +59,24 @@ internal abstract class CountCodeLinesTask : DefaultTask() {
     }
 
     private fun writeFilesInfoInTable(file: File) {
-        val sortType = sortType.get()
-
-        val sortedFiles = sourceFiles.sortedBy {
-            if (sortType == SortType.DESCENDING_ROWS) {
-                -it.readLines().count()
-            } else {
-                it.readLines().count()
-            }
+        val fileStats = sourceFiles.map { file ->
+            val lines = file.readLines().size
+            FileStat(file.name, lines)
         }
 
-        var i = 1
+        val sortedStats = when (sortType.get()) {
+            SortType.ASCENDING_ROWS -> fileStats.sortedBy { it.countLines }
+            SortType.DESCENDING_ROWS -> fileStats.sortedByDescending { it.countLines }
+        }
+
         var total = 0
-        val content = sortedFiles.joinToString("\n") { file ->
-            val codeLines = file.readLines().count()
-            total += codeLines
-            "|${i++}|${file.name}|$codeLines|"
+        sortedStats.forEachIndexed { index, fileStat ->
+            total += fileStat.countLines
+            file.appendText("|${index + 1}|${fileStat.name}|${fileStat.countLines}|\n")
         }
 
         file.appendText("|Total|Total|$total|\n")
-        file.appendText(content)
     }
+
+    private class FileStat(val name: String, val countLines: Int)
 }
