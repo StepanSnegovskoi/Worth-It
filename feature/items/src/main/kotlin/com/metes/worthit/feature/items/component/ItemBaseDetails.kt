@@ -1,4 +1,4 @@
-package com.metes.worthit.feature.settings.component
+package com.metes.worthit.feature.items.component
 
 import androidx.compose.foundation.basicMarquee
 import androidx.compose.foundation.layout.Arrangement
@@ -11,7 +11,7 @@ import androidx.compose.ui.unit.dp
 import com.metes.worthit.core.designsystem.component.other.ContentWrapper
 import com.metes.worthit.core.designsystem.component.other.WorthItText
 import com.metes.worthit.core.designsystem.util.rememberDateFormatter
-import com.metes.worthit.feature.settings.ItemUiModel
+import com.metes.worthit.feature.items.ItemUiModel
 
 @Composable
 internal fun ItemBaseDetails(

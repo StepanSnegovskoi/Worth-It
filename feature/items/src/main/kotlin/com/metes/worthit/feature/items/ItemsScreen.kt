@@ -1,4 +1,4 @@
-package com.metes.worthit.feature.settings
+package com.metes.worthit.feature.items
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Arrangement
@@ -26,8 +26,7 @@ import com.metes.worthit.core.designsystem.component.other.WorthItIcon
 import com.metes.worthit.core.designsystem.component.other.WorthItIconButton
 import com.metes.worthit.core.designsystem.theme.AppTheme
 import com.metes.worthit.core.presentation.ObserveAsEvents
-import com.metes.worthit.feature.items.R
-import com.metes.worthit.feature.settings.component.Items
+import com.metes.worthit.feature.items.component.Items
 
 private val bottomButtonSize = 48.dp
 

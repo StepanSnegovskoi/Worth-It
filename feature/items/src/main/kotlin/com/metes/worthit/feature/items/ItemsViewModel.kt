@@ -1,4 +1,4 @@
-package com.metes.worthit.feature.settings
+package com.metes.worthit.feature.items
 
 import androidx.compose.runtime.Immutable
 import androidx.lifecycle.ViewModel
@@ -6,7 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.metes.worthit.core.domain.usecase.DeleteItemUseCase
 import com.metes.worthit.core.domain.usecase.DeleteItemsUseCase
 import com.metes.worthit.core.domain.usecase.ObserveItemsUseCase
-import com.metes.worthit.feature.settings.mapper.toUiModels
+import com.metes.worthit.feature.items.mapper.toUiModels
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow

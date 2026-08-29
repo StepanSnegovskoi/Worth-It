@@ -1,4 +1,4 @@
-package com.metes.worthit.feature.settings.component
+package com.metes.worthit.feature.items.component
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column

@@ -1,4 +1,4 @@
-package com.metes.worthit.feature.settings.component
+package com.metes.worthit.feature.items.component
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -13,7 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import com.metes.worthit.core.designsystem.theme.AppTheme
-import com.metes.worthit.feature.settings.ItemUiModel
+import com.metes.worthit.feature.items.ItemUiModel
 
 @Composable
 internal fun Items(

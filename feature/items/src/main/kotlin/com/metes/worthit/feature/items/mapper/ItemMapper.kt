@@ -1,7 +1,7 @@
-package com.metes.worthit.feature.settings.mapper
+package com.metes.worthit.feature.items.mapper
 
 import com.metes.worthit.core.domain.entity.Item
-import com.metes.worthit.feature.settings.ItemUiModel
+import com.metes.worthit.feature.items.ItemUiModel
 
 internal fun Item.toUiModel(): ItemUiModel {
 

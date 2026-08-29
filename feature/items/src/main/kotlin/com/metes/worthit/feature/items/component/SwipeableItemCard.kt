@@ -1,4 +1,4 @@
-package com.metes.worthit.feature.settings.component
+package com.metes.worthit.feature.items.component
 
 import androidx.compose.foundation.gestures.AnchoredDraggableState
 import androidx.compose.foundation.gestures.DraggableAnchors
@@ -18,7 +18,7 @@ import androidx.compose.ui.unit.dp
 import com.metes.worthit.core.designsystem.component.other.WorthItIcon
 import com.metes.worthit.core.designsystem.component.other.WorthItIconButton
 import com.metes.worthit.feature.items.R
-import com.metes.worthit.feature.settings.ItemUiModel
+import com.metes.worthit.feature.items.ItemUiModel
 import kotlin.math.roundToInt
 
 private enum class State {

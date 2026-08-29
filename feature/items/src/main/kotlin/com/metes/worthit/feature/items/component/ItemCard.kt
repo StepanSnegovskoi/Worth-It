@@ -1,4 +1,4 @@
-package com.metes.worthit.feature.settings.component
+package com.metes.worthit.feature.items.component
 
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.animateFloatAsState
@@ -24,7 +24,7 @@ import com.metes.worthit.core.designsystem.component.other.WorthItCard
 import com.metes.worthit.core.designsystem.component.other.WorthItIcon
 import com.metes.worthit.core.designsystem.theme.AppTheme
 import com.metes.worthit.feature.items.R
-import com.metes.worthit.feature.settings.ItemUiModel
+import com.metes.worthit.feature.items.ItemUiModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
