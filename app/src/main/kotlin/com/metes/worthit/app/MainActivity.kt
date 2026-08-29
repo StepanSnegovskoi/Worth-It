@@ -31,6 +31,8 @@ import com.metes.worthit.intent.IntentParser
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 import kotlin.time.Duration.Companion.milliseconds
@@ -50,6 +52,14 @@ class MainActivity : ComponentActivity() {
     private val itemsViewModel: ItemsViewModel by viewModels()
 
     private val keepSplashScreen = MutableStateFlow(true)
+    private val isSystemInDarkThemeStateFlow by lazy {
+        isSystemInDarkTheme()
+            .stateIn(
+                scope = lifecycleScope,
+                started = SharingStarted.WhileSubscribed(5_000),
+                initialValue = resources.configuration.isSystemInDarkTheme
+            )
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         val splashScreen = installSplashScreen()
@@ -69,7 +79,7 @@ class MainActivity : ComponentActivity() {
 
         lifecycleScope.launch {
             lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                isSystemInDarkTheme().collect { isDarkTheme ->
+                isSystemInDarkThemeStateFlow.collect { isDarkTheme ->
                     enableEdgeToEdge(
                         statusBarStyle = SystemBarStyle.auto(
                             lightScrim = Color.TRANSPARENT,
@@ -89,7 +99,7 @@ class MainActivity : ComponentActivity() {
         }
 
         setContent {
-            val isDarkTheme by isSystemInDarkTheme().collectAsStateWithLifecycle(
+            val isDarkTheme by isSystemInDarkThemeStateFlow.collectAsStateWithLifecycle(
                 initialValue = resources.configuration.isSystemInDarkTheme
             )
             val backStack = rememberMyAppNavBackStack(Screen.Items)
