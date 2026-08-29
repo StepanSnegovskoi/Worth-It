@@ -9,40 +9,30 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.graphics.Color
 
-val lightColorsScheme = AppColorScheme(
-    background = BackgroundLight,
-    onBackground = TextLight,
-    primary = BluePrimaryLight,
-    onPrimary = White,
-    primaryContainer = PrimaryContainerLight,
-    onPrimaryContainer = OnPrimaryContainerLight,
-    secondary = SecondaryLight,
-    surface = White,
-    onSurface = TextLight,
-    error = Error,
-    correct = Correct,
-)
-
-val darkColorsScheme = AppColorScheme(
-    background = BackgroundDark,
-    onBackground = TextDark,
-    primary = BluePrimaryDark,
-    onPrimary = OnPrimaryDark,
-    primaryContainer = PrimaryContainerDark,
-    onPrimaryContainer = OnPrimaryContainerDark,
-    secondary = SecondaryDark,
-    surface = SurfaceDark,
-    onSurface = TextDark,
-    error = Error,
-    correct = Correct,
-)
-
 @Composable
 fun AppTheme(
     isDarkTheme: Boolean,
+    primaryThemeColor: PrimaryThemeColor,
     content: @Composable () -> Unit
 ) {
-    val theme = if (isDarkTheme) darkColorsScheme else lightColorsScheme
+    val theme = when (primaryThemeColor) {
+        PrimaryThemeColor.BLUE -> {
+            if (isDarkTheme) {
+                darkBlueColorsScheme
+            } else {
+                lightBlueColorsScheme
+            }
+        }
+
+        PrimaryThemeColor.PINK -> {
+            if (isDarkTheme) {
+                darkPinkColorsScheme
+            } else {
+                lightPinkColorsScheme
+            }
+        }
+    }
+
     val shape = AppShape()
     val alpha = AppAlpha()
     val rippleConfiguration = RippleConfiguration(color = theme.primary)

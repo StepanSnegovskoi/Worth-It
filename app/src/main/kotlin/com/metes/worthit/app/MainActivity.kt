@@ -21,21 +21,17 @@ import com.metes.worthit.app.ui.AppNavigation
 import com.metes.worthit.app.ui.GlobalNavigationEffect
 import com.metes.worthit.app.ui.bottomNavItems
 import com.metes.worthit.app.util.isSystemInDarkTheme
+import com.metes.worthit.app.util.toPrimaryThemeColor
 import com.metes.worthit.core.designsystem.theme.AppTheme
 import com.metes.worthit.core.navigation.NavigationManager
 import com.metes.worthit.core.navigation.Screen
 import com.metes.worthit.core.navigation.rememberMyAppNavBackStack
-import com.metes.worthit.feature.settings.ItemsUiState
-import com.metes.worthit.feature.settings.ItemsViewModel
 import com.metes.worthit.intent.IntentParser
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
-import kotlin.time.Duration.Companion.milliseconds
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -47,11 +43,6 @@ class MainActivity : ComponentActivity() {
     lateinit var intentParser: IntentParser
 
     private val mainViewModel: MainActivityViewModel by viewModels()
-
-    // for keep splash screen while items loading
-    private val itemsViewModel: ItemsViewModel by viewModels()
-
-    private val keepSplashScreen = MutableStateFlow(true)
     private val isSystemInDarkThemeStateFlow by lazy {
         isSystemInDarkTheme()
             .stateIn(
@@ -65,14 +56,8 @@ class MainActivity : ComponentActivity() {
         val splashScreen = installSplashScreen()
         super.onCreate(savedInstanceState)
 
-        lifecycleScope.launch {
-            delay(1000.milliseconds)
-            keepSplashScreen.value = false
-        }
-
         splashScreen.setKeepOnScreenCondition {
-            itemsViewModel.uiState.value !is ItemsUiState.Success &&
-                    keepSplashScreen.value
+            mainViewModel.uiState.value.isLoading
         }
 
         processCurrentIntent(intent)
@@ -102,6 +87,7 @@ class MainActivity : ComponentActivity() {
             val isDarkTheme by isSystemInDarkThemeStateFlow.collectAsStateWithLifecycle(
                 initialValue = resources.configuration.isSystemInDarkTheme
             )
+            val uiState by mainViewModel.uiState.collectAsStateWithLifecycle()
             val backStack = rememberMyAppNavBackStack(Screen.Items)
 
             GlobalNavigationEffect(
@@ -109,11 +95,13 @@ class MainActivity : ComponentActivity() {
                 navigationManager = navigationManager
             )
 
-            AppTheme(isDarkTheme = isDarkTheme) {
+            AppTheme(
+                isDarkTheme = isDarkTheme,
+                primaryThemeColor = uiState.themeColor.toPrimaryThemeColor(),
+            ) {
                 AppNavigation(
                     backStack = backStack,
                     bottomNavItems = bottomNavItems,
-                    itemsViewModel = itemsViewModel,
                     modifier = Modifier
                         .fillMaxSize(),
                 )

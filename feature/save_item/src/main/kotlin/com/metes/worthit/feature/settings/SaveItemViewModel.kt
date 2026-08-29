@@ -11,7 +11,6 @@ import androidx.lifecycle.viewModelScope
 import com.metes.worthit.core.common.toLocalDateFromUtc
 import com.metes.worthit.core.common.toUtcEpochMilli
 import com.metes.worthit.core.domain.entity.Currency
-import com.metes.worthit.core.domain.entity.Currency.Companion.fromNameOrDefault
 import com.metes.worthit.core.domain.entity.TimeUnit
 import com.metes.worthit.core.domain.entity.between
 import com.metes.worthit.core.domain.entity.calculatePrice
@@ -82,8 +81,9 @@ class SaveItemViewModel @AssistedInject constructor(
         initialValue = initialSelectedDateMillis
     )
 
-    private val currencyFlow = userSettings.getCurrencyName()
-        .map { currency -> fromNameOrDefault(currency) }
+    private val currencyFlow = userSettings.preferences.map {
+        Currency.fromNameOrDefault(it.currency.name)
+    }
 
     private val userInputFlow = combine(
         nameFlow,

@@ -3,6 +3,8 @@ package com.metes.worthit.app.util
 import android.content.res.Configuration
 import androidx.activity.ComponentActivity
 import androidx.core.util.Consumer
+import com.metes.worthit.core.designsystem.theme.PrimaryThemeColor
+import com.metes.worthit.core.domain.entity.ThemeColor
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.conflate
@@ -24,3 +26,8 @@ internal fun ComponentActivity.isSystemInDarkTheme() = callbackFlow {
 }
     .distinctUntilChanged()
     .conflate()
+
+fun ThemeColor.toPrimaryThemeColor(): PrimaryThemeColor = when (this) {
+    ThemeColor.BLUE -> PrimaryThemeColor.BLUE
+    ThemeColor.PINK -> PrimaryThemeColor.PINK
+}
