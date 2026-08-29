@@ -11,6 +11,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import com.metes.worthit.core.designsystem.component.defaults.WorthItNavigationBarDefaults
+import com.metes.worthit.core.designsystem.component.other.WorthItIcon
 import com.metes.worthit.core.designsystem.component.other.WorthItText
 import com.metes.worthit.core.designsystem.theme.AppTheme
 
@@ -18,7 +20,7 @@ import com.metes.worthit.core.designsystem.theme.AppTheme
 fun RowScope.WorthItBottomBarItem(
     selected: Boolean,
     modifier: Modifier = Modifier,
-    contentDescription: String? = null,
+    @StringRes contentDescriptionRes: Int? = null,
     @StringRes titleRes: Int,
     @DrawableRes iconRes: Int,
     onClick: () -> Unit,
@@ -28,20 +30,12 @@ fun RowScope.WorthItBottomBarItem(
         modifier = modifier,
         onClick = onClick,
         icon = {
-            Icon(
-                painter = painterResource(iconRes),
-                contentDescription = contentDescription
+            WorthItIcon(
+                drawableRes = iconRes,
+                contentDescriptionRes = contentDescriptionRes,
             )
         },
-        colors = NavigationBarItemColors(
-            selectedIconColor = AppTheme.colorScheme.primary,
-            selectedTextColor = AppTheme.colorScheme.primary,
-            unselectedIconColor = AppTheme.colorScheme.secondary,
-            unselectedTextColor = AppTheme.colorScheme.secondary,
-            selectedIndicatorColor = Color.Transparent,
-            disabledIconColor = Color.Unspecified,
-            disabledTextColor = Color.Unspecified,
-        ),
-        label = { WorthItText(stringResource(titleRes)) }
+        colors = WorthItNavigationBarDefaults.colors(),
+        label = { WorthItText(stringResource(titleRes)) },
     )
 }
