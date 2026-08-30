@@ -17,13 +17,16 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.isImeVisible
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -97,7 +100,7 @@ fun SaveItemRoute(
 
     ObserveAsEvents(viewModel.events) { event ->
         when (event) {
-            SaveItemEvent.NavigateToItems -> onNavigateToItems()
+            SaveItemEvent.NavigateToPreviousScreen -> onNavigateToItems()
 
             is SaveItemEvent.ShowErrors -> {
                 val currentState = uiState
@@ -132,6 +135,7 @@ fun SaveItemRoute(
             onCurrencyChange = { viewModel.processCommand(SaveItemCommand.ChangeCurrency(it)) },
             onRemoveImageClick = { viewModel.processCommand(SaveItemCommand.RemoveImage) },
             onRemoveNameClick = { viewModel.processCommand(SaveItemCommand.RemoveName) },
+            onRemoveItemClick = { viewModel.processCommand(SaveItemCommand.RemoveItem) },
             onRemoveDescriptionClick = { viewModel.processCommand(SaveItemCommand.RemoveDescription) },
             onSelectBoughtDate = { viewModel.processCommand(SaveItemCommand.SelectBoughtDate(it)) },
         )
@@ -153,6 +157,7 @@ fun SaveItemScreen(
     onImageClick: () -> Unit,
     onRemoveImageClick: () -> Unit,
     onRemoveNameClick: () -> Unit,
+    onRemoveItemClick: () -> Unit,
     onRemoveDescriptionClick: () -> Unit,
     onCurrencyChange: (Currency) -> Unit,
     onSelectBoughtDate: (Long) -> Unit,
@@ -249,6 +254,7 @@ fun SaveItemScreen(
                         ) {
                             WorthItAnimatedVisibility(
                                 visible = uiState.imageUri != null,
+                                modifier = Modifier.size(36.dp),
                                 enter = fadeIn() + expandHorizontally(),
                                 exit = fadeOut() + shrinkHorizontally(),
                             ) {
@@ -259,9 +265,10 @@ fun SaveItemScreen(
                                     )
                                 }
                             }
-
+                            Spacer(Modifier.width(8.dp))
                             WorthItAnimatedVisibility(
                                 visible = isImeVisible,
+                                modifier = Modifier.size(36.dp),
                                 enter = fadeIn() + expandHorizontally(),
                                 exit = fadeOut() + shrinkHorizontally(),
                             ) {
@@ -343,6 +350,25 @@ fun SaveItemScreen(
                         modifier = Modifier
                             .fillMaxWidth(),
                     )
+                }
+
+                if (uiState.isEditingMode) {
+                    Spacer(Modifier.height(16.dp))
+                    WorthItIconButton(
+                        onClick = {
+                            keyboardController?.hide()
+                            onRemoveItemClick()
+                        },
+                        modifier = Modifier
+                            .align(Alignment.CenterHorizontally)
+                            .size(56.dp),
+                    ) {
+                        WorthItIcon(
+                            modifier = Modifier.size(56.dp),
+                            drawableRes = DesignR.drawable.delete_48dp,
+                            contentDescriptionRes = R.string.cd_remove_image,
+                        )
+                    }
                 }
             }
         }

@@ -15,6 +15,7 @@ import com.metes.worthit.core.domain.entity.TimeUnit
 import com.metes.worthit.core.domain.entity.between
 import com.metes.worthit.core.domain.entity.calculatePrice
 import com.metes.worthit.core.domain.error.Error
+import com.metes.worthit.core.domain.usecase.DeleteItemUseCase
 import com.metes.worthit.core.domain.usecase.GetItemByIdUseCase
 import com.metes.worthit.core.domain.usecase.SaveItemUseCase
 import com.metes.worthit.core.domain.utils.DateProvider
@@ -25,7 +26,7 @@ import com.metes.worthit.core.domain.utils.onSuccess
 import com.metes.worthit.core.domain.validator.ItemValidator
 import com.metes.worthit.core.presentation.UiText
 import com.metes.worthit.core.presentation.toUiText
-import com.metes.worthit.feature.settings.SaveItemEvent.NavigateToItems
+import com.metes.worthit.feature.settings.SaveItemEvent.NavigateToPreviousScreen
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
@@ -56,6 +57,7 @@ private const val KEY_CURRENCY = "currency"
 class SaveItemViewModel @AssistedInject constructor(
     private val saveItemUseCase: SaveItemUseCase,
     private val getItemByIdUseCase: GetItemByIdUseCase,
+    private val deleteItemUseCase: DeleteItemUseCase,
     private val savedStateHandle: SavedStateHandle,
     private val userSettings: UserSettings,
     private val itemValidator: ItemValidator,
@@ -230,6 +232,15 @@ class SaveItemViewModel @AssistedInject constructor(
                 savedStateHandle[KEY_NAME] = ""
             }
 
+            SaveItemCommand.RemoveItem -> {
+                if (itemId == null) return
+
+                viewModelScope.launch {
+                    deleteItemUseCase(itemId, imagePath)
+                    _events.send(NavigateToPreviousScreen)
+                }
+            }
+
             SaveItemCommand.RemoveDescription -> {
                 savedStateHandle[KEY_DESCRIPTION] = ""
             }
@@ -267,7 +278,7 @@ class SaveItemViewModel @AssistedInject constructor(
                 ).onError { errors ->
                     _events.send(SaveItemEvent.ShowErrors(errors))
                 }.onSuccess {
-                    _events.send(NavigateToItems)
+                    _events.send(NavigateToPreviousScreen)
                 }
             } finally {
                 isSavingFlow.value = false
@@ -289,6 +300,7 @@ sealed interface SaveItemCommand {
     data object SaveItem : SaveItemCommand
     data class ChangeName(val name: String) : SaveItemCommand
     data object RemoveName : SaveItemCommand
+    data object RemoveItem : SaveItemCommand
     data class ChangePrice(val price: String) : SaveItemCommand
     data object RemoveDescription : SaveItemCommand
     data class ChangeDescription(val description: String) : SaveItemCommand
@@ -299,7 +311,7 @@ sealed interface SaveItemCommand {
 }
 
 sealed interface SaveItemEvent {
-    data object NavigateToItems : SaveItemEvent
+    data object NavigateToPreviousScreen : SaveItemEvent
     data class ShowErrors(val errors: List<Error>) : SaveItemEvent
 }
 

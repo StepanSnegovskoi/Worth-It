@@ -27,6 +27,7 @@ import com.metes.worthit.core.designsystem.component.other.WorthItIconButton
 import com.metes.worthit.core.designsystem.theme.AppTheme
 import com.metes.worthit.core.presentation.ObserveAsEvents
 import com.metes.worthit.feature.items.component.Items
+import com.metes.worthit.core.designsystem.R as DesignR
 
 private val bottomButtonSize = 48.dp
 
@@ -112,7 +113,7 @@ fun ItemsScreen(
                         }
                     ) {
                         WorthItIcon(
-                            drawableRes = R.drawable.delete_48dp,
+                            drawableRes = DesignR.drawable.delete_48dp,
                             contentDescriptionRes = R.string.cd_delete_selected_items,
                             tint = AppTheme.colorScheme.primary,
                         )

@@ -17,6 +17,7 @@ import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import com.metes.worthit.core.designsystem.component.other.WorthItIcon
 import com.metes.worthit.core.designsystem.component.other.WorthItIconButton
+import com.metes.worthit.core.designsystem.R as DesignR
 import com.metes.worthit.feature.items.R
 import com.metes.worthit.feature.items.ItemUiModel
 import kotlin.math.roundToInt
@@ -59,7 +60,7 @@ internal fun SwipeableItemCard(
             },
         ) {
             WorthItIcon(
-                drawableRes = R.drawable.delete_48dp,
+                drawableRes = DesignR.drawable.delete_48dp,
                 contentDescriptionRes = R.string.cd_delete,
             )
         }

@@ -32,7 +32,13 @@ class ItemsViewModel @Inject constructor(
         selectedItemIds,
     ) { items, selectedItemIds ->
         val uiItems = items.toUiModels()
-        ItemsUiState.Success(items = uiItems, selectedItemIds = selectedItemIds)
+        val realSelectedItemIds = selectedItemIds
+            .filter { it in items.map { item -> item.id } }.toSet()
+
+        ItemsUiState.Success(
+            items = uiItems,
+            selectedItemIds = realSelectedItemIds
+        )
     }.stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(stopTimeoutMillis = 5_000),
