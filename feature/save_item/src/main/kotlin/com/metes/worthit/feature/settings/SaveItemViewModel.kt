@@ -37,7 +37,6 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
@@ -51,6 +50,7 @@ private const val KEY_DESCRIPTION = "item_description"
 private const val KEY_IMAGE_PATH = "item_image_path"
 private const val KEY_BOUGHT_DATE_MILLIS = "item_bought_date"
 private const val KEY_HAS_ATTEMPTED_SAVE = "has_attempted_save"
+private const val KEY_CURRENCY = "currency"
 
 @HiltViewModel(assistedFactory = SaveItemViewModel.Factory::class)
 class SaveItemViewModel @AssistedInject constructor(
@@ -81,8 +81,15 @@ class SaveItemViewModel @AssistedInject constructor(
         initialValue = initialSelectedDateMillis
     )
 
-    private val currencyFlow = userSettings.preferences.map {
-        Currency.fromNameOrDefault(it.currency.name)
+    private val currencyFlow = combine(
+        savedStateHandle.getStateFlow<String?>(KEY_CURRENCY, null),
+        userSettings.preferences
+    ) { savedCurrencyName, preferences ->
+        if (savedCurrencyName == null) {
+            preferences.currency
+        } else {
+            Currency.fromNameOrDefault(savedCurrencyName)
+        }
     }
 
     private val userInputFlow = combine(
@@ -129,7 +136,7 @@ class SaveItemViewModel @AssistedInject constructor(
             price = userInput.price,
             description = userInput.description,
             imageUri = userInput.imageUri,
-            currency = metadata.currency,
+            currency = if (isEditingMode) metadata.currency else metadata.currency,
             dateOfPurchaseMillis = metadata.dateOfPurchaseMillis,
             currentDate = metadata.currentDate,
             nameError = nameError,
@@ -170,6 +177,8 @@ class SaveItemViewModel @AssistedInject constructor(
                     savedStateHandle[KEY_IMAGE_PATH] = item.imageLocalPath?.toUri()
                     savedStateHandle[KEY_BOUGHT_DATE_MILLIS] =
                         item.dateOfPurchase.toUtcEpochMilli()
+                    savedStateHandle[KEY_CURRENCY] =
+                        item.currency.name
                 }
 
             } finally {
@@ -203,6 +212,7 @@ class SaveItemViewModel @AssistedInject constructor(
             }
 
             is SaveItemCommand.ChangeCurrency -> {
+                savedStateHandle[KEY_CURRENCY] = command.currency.name
                 viewModelScope.launch {
                     userSettings.saveCurrency(command.currency)
                 }
