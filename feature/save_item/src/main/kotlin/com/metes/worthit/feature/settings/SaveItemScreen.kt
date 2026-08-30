@@ -33,7 +33,6 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarColors
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -57,6 +56,7 @@ import com.metes.worthit.core.common.toLocalDateFromUtc
 import com.metes.worthit.core.common.toUtcEpochMilli
 import com.metes.worthit.core.designsystem.component.defaults.WorthItCardDefaults
 import com.metes.worthit.core.designsystem.component.defaults.WorthItFloatingActionButtonDefaults
+import com.metes.worthit.core.designsystem.component.defaults.WorthItTopAppBarDefaults
 import com.metes.worthit.core.designsystem.component.other.ItemImage
 import com.metes.worthit.core.designsystem.component.other.LoadingScreen
 import com.metes.worthit.core.designsystem.component.other.WorthItAnimatedVisibility
@@ -226,14 +226,7 @@ fun SaveItemScreen(
                     title = {
                         TitleText(isEditingMode = uiState.isEditingMode)
                     },
-                    colors = TopAppBarColors(
-                        containerColor = AppTheme.colorScheme.background,
-                        scrolledContainerColor = AppTheme.colorScheme.background,
-                        navigationIconContentColor = AppTheme.colorScheme.primary,
-                        titleContentColor = AppTheme.colorScheme.onBackground,
-                        actionIconContentColor = AppTheme.colorScheme.primary,
-                        subtitleContentColor = AppTheme.colorScheme.primary
-                    ),
+                    colors = WorthItTopAppBarDefaults.colors(),
                     scrollBehavior = scrollBehavior,
                     navigationIcon = {
                         WorthItIconButton(onClick = {
