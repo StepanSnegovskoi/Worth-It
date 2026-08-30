@@ -13,7 +13,7 @@ internal val OnPrimaryContainerBlueLight = Color(0xFF1E3A8A)
 internal val PrimaryContainerBlueDark = Color(0xFF253E6B)
 internal val OnPrimaryContainerBlueDark = Color(0xFFDBEAFE)
 
-internal val BackgroundBlueLight = Color(0xFFECF3FA)
+internal val BackgroundBlueLight = Color(0xFFC9E1FF)
 internal val BackgroundBlueDark = Color(0xFF0F172A)
 
 internal val TextBlueLight = Color(0xFF0F172A)
@@ -22,7 +22,7 @@ internal val TextBlueDark = Color(0xFFF1F5F9)
 internal val SecondaryBlueLight = Color(0xFF3C4D62)
 internal val SecondaryBlueDark = Color(0xFF94A3B8)
 
-internal val SurfaceBlueLight= Color(0xFFC9E1FF)
+internal val SurfaceBlueLight = Color(0xFFECF3FA)
 internal val SurfaceBlueDark = Color(0xFF1E293B)
 
 internal val PinkPrimaryLight = Color(0xFFCD25EB)
@@ -36,7 +36,7 @@ internal val OnPrimaryContainerPinkLight = Color(0xFF7A1E8A)
 internal val PrimaryContainerPinkDark = Color(0xFF64256B)
 internal val OnPrimaryContainerPinkDark = Color(0xFFDBEAFE)
 
-internal val BackgroundPinkLight = Color(0xFFECF3FA)
+internal val BackgroundPinkLight = Color(0xFFF6E3FA)
 internal val BackgroundPinkDark = Color(0xFF1F141F)
 
 internal val TextPinkLight = Color(0xFF0F172A)
@@ -45,7 +45,7 @@ internal val TextPinkDark = Color(0xFFF1F5F9)
 internal val SecondaryPinkLight = Color(0xFF524454)
 internal val SecondaryPinkDark = Color(0xFF94A3B8)
 
-internal val SurfacePinkLight = Color(0xFFF6E3FA)
+internal val SurfacePinkLight = Color(0xFFECF3FA)
 internal val SurfacePinkDark = Color(0xFF361E3B)
 
 internal val Error = Color(0xFFA8203C)
