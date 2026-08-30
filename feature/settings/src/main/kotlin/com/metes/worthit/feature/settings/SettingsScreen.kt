@@ -1,37 +1,25 @@
 package com.metes.worthit.feature.settings
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.TileMode
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.util.fastForEach
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
-import androidx.lifecycle.viewmodel.compose.viewModel
-import com.metes.worthit.core.designsystem.component.defaults.WorthItCardDefaults
-import com.metes.worthit.core.designsystem.component.other.WorthItCard
-import com.metes.worthit.core.designsystem.component.other.WorthItText
-import com.metes.worthit.core.designsystem.component.other.WorthItTextButton
-import com.metes.worthit.core.designsystem.extensions.primaryColor
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.metes.worthit.core.designsystem.component.other.LoadingScreen
 import com.metes.worthit.core.designsystem.theme.AppTheme
-import com.metes.worthit.core.designsystem.theme.LocalIsDarkTheme
 import com.metes.worthit.core.domain.entity.ThemeColor
-import com.metes.worthit.core.presentation.toPrimaryThemeColor
+import com.metes.worthit.core.domain.entity.ThemeMode
+import com.metes.worthit.feature.settings.component.ThemeColors
+import com.metes.worthit.feature.settings.component.ThemeModes
 
 @Composable
 fun SettingsRoute(
@@ -39,21 +27,32 @@ fun SettingsRoute(
     modifier: Modifier = Modifier,
     viewModel: SettingsViewModel = hiltViewModel(),
 ) {
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    when (val currentUiState = uiState) {
+        SettingsUiState.Loading -> LoadingScreen(modifier = modifier.padding(scaffoldPadding))
 
-    SettingsScreen(
-        scaffoldPadding = scaffoldPadding,
-        modifier = modifier,
-        onSaveThemeColorClick = {
-            viewModel.processCommand(SettingsCommand.SelectThemeColor(it))
-        },
-    )
+        is SettingsUiState.Success -> SettingsScreen(
+            uiState = currentUiState,
+            scaffoldPadding = scaffoldPadding,
+            modifier = modifier,
+            onSaveThemeColorClick = {
+                viewModel.processCommand(SettingsCommand.SelectThemeColor(it))
+            },
+            onSaveThemeModeClick = {
+                viewModel.processCommand(SettingsCommand.SelectThemeMode(it))
+            },
+        )
+    }
+
 }
 
 @Composable
 fun SettingsScreen(
+    uiState: SettingsUiState.Success,
     scaffoldPadding: PaddingValues,
     modifier: Modifier = Modifier,
     onSaveThemeColorClick: (ThemeColor) -> Unit,
+    onSaveThemeModeClick: (ThemeMode) -> Unit,
 ) {
     Box(
         modifier = modifier
@@ -64,32 +63,21 @@ fun SettingsScreen(
     ) {
         Column(
             modifier = Modifier.fillMaxWidth(),
-            verticalArrangement = Arrangement.spacedBy(8.dp)
+            verticalArrangement = Arrangement.spacedBy(8.dp),
         ) {
-            WorthItText(text = "Settings Screen", color = AppTheme.colorScheme.onBackground)
-            WorthItText(text = "Theme", color = AppTheme.colorScheme.onBackground)
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(8.dp),
-            ) {
-                ThemeColor.entries.fastForEach {
-                    Box(
-                        modifier = Modifier
-                            .size(48.dp)
-                            .background(
-                                Brush.linearGradient(
-                                    0.0f to it.toPrimaryThemeColor().primaryColor(true),
-                                    0.5f to it.toPrimaryThemeColor().primaryColor(true),
-                                    0.5f to it.toPrimaryThemeColor().primaryColor(false),
-                                    1f to it.toPrimaryThemeColor().primaryColor(false),
-                                )
-                            )
-                            .clickable {
-                                onSaveThemeColorClick(it)
-                            }
-                    )
+            ThemeColors(
+                selectedThemeColor = uiState.preferences.themeColor,
+                isDarkTheme = AppTheme.isDarkTheme,
+                onClick = {
+                    onSaveThemeColorClick(it)
                 }
-            }
+            )
+            ThemeModes(
+                selectedThemeMode = uiState.preferences.themeMode,
+                onClick = {
+                    onSaveThemeModeClick(it)
+                }
+            )
         }
     }
 }

@@ -24,4 +24,9 @@
     <string name="item_price_cant_be_negative">Item price can\'t be negative</string>
     <string name="an_error_occurred_while_deleting_items">An error occurred while deleting items</string>
     <string name="item_price_cant_be_more_than">The price can\'t be more than %s (%d digits)</string>
+    <string name="dark">Dark</string>
+    <string name="light">Light</string>
+    <string name="system">System</string>
+    <string name="blue">Blue</string>
+    <string name="pink">Pink</string>
 </resources>

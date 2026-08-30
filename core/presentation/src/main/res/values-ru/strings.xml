@@ -25,4 +25,9 @@
     <string name="item_price_cant_be_negative">Цена предмета не может быть отрицательной</string>
     <string name="an_error_occurred_while_deleting_items">Произошла ошибка при удалении предметов</string>
     <string name="item_price_cant_be_more_than">Цена не может быть больше %s (%d цифр)</string>
+    <string name="dark">Тёмная</string>
+    <string name="light">Светлая</string>
+    <string name="system">Системная</string>
+    <string name="blue">Синий</string>
+    <string name="pink">Розовый</string>
 </resources>

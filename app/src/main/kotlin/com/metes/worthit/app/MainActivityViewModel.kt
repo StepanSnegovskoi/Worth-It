@@ -2,7 +2,10 @@ package com.metes.worthit.app
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.metes.worthit.core.domain.entity.Currency
 import com.metes.worthit.core.domain.entity.ThemeColor
+import com.metes.worthit.core.domain.entity.ThemeMode
+import com.metes.worthit.core.domain.entity.UserPreferences
 import com.metes.worthit.core.domain.utils.UserSettings
 import com.metes.worthit.core.navigation.NavigationManager
 import com.metes.worthit.core.navigation.Screen
@@ -16,12 +19,15 @@ import javax.inject.Inject
 @HiltViewModel
 internal class MainActivityViewModel @Inject constructor(
     private val navigationManager: NavigationManager,
-    private val userSettings: UserSettings,
+    userSettings: UserSettings,
 ) : ViewModel() {
 
     val uiState = userSettings.preferences
         .map { userPreferences ->
-            MainActivityUiState(themeColor = userPreferences.themeColor, isLoading = false)
+            MainActivityUiState(
+                userPreferences = userPreferences,
+                isLoading = false
+            )
         }.stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(5_000),
@@ -29,7 +35,7 @@ internal class MainActivityViewModel @Inject constructor(
         )
 
     fun processEvent(event: AppIntentEvent) {
-        when(event) {
+        when (event) {
             AppIntentEvent.Ignored -> return
 
             is AppIntentEvent.Image -> {
@@ -40,6 +46,10 @@ internal class MainActivityViewModel @Inject constructor(
 }
 
 data class MainActivityUiState(
-    val themeColor: ThemeColor = ThemeColor.BLUE,
+    val userPreferences: UserPreferences = UserPreferences(
+        currency = Currency.fromNameOrDefault(null),
+        themeColor = ThemeColor.fromNameOrDefault(null),
+        themeMode = ThemeMode.fromNameOrDefault(null)
+    ),
     val isLoading: Boolean = true
 )
