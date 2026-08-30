@@ -75,7 +75,7 @@ val LocalAppTheme = staticCompositionLocalOf {
         surface = Color.Unspecified,
         onSurface = Color.Unspecified,
         error = Color.Unspecified,
-        correct = Correct,
+        correct = Color.Unspecified,
     )
 }
 

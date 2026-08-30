@@ -2,11 +2,9 @@ package com.metes.worthit.core.designsystem.theme
 
 import androidx.compose.ui.graphics.Color
 
-internal val White = Color(0xFFFFFFFF)
-
 internal val BluePrimaryLight = Color(0xFF2563EB)
 internal val BluePrimaryDark = Color(0xFF60A5FA)
-internal val OnPrimaryBlueLight = Color(0xFF0F172A)
+internal val OnPrimaryBlueLight = Color(0xFFFFFFFF)
 internal val OnPrimaryBlueDark = Color(0xFF0F172A)
 
 internal val PrimaryContainerBlueLight = Color(0xFFB3D2FF)
@@ -39,7 +37,7 @@ internal val PrimaryContainerPinkDark = Color(0xFF64256B)
 internal val OnPrimaryContainerPinkDark = Color(0xFFDBEAFE)
 
 internal val BackgroundPinkLight = Color(0xFFECF3FA)
-internal val BackgroundPinkDark = Color(0xFF270F2A)
+internal val BackgroundPinkDark = Color(0xFF1F141F)
 
 internal val TextPinkLight = Color(0xFF0F172A)
 internal val TextPinkDark = Color(0xFFF1F5F9)
@@ -52,7 +50,8 @@ internal val SurfacePinkDark = Color(0xFF361E3B)
 
 internal val Error = Color(0xFFA8203C)
 
-internal val Correct = Color(0xFF2FEC36)
+internal val CorrectDark = Color(0xFF2FEC36)
+internal val CorrectLight = Color(0xFF16981B)
 
 enum class PrimaryThemeColor {
     BLUE, PINK
@@ -69,7 +68,7 @@ val lightBlueColorsScheme = AppColorScheme(
     surface = SurfaceBlueLight,
     onSurface = TextBlueLight,
     error = Error,
-    correct = Correct,
+    correct = CorrectLight,
 )
 
 val darkBlueColorsScheme = AppColorScheme(
@@ -83,7 +82,7 @@ val darkBlueColorsScheme = AppColorScheme(
     surface = SurfaceBlueDark,
     onSurface = TextBlueDark,
     error = Error,
-    correct = Correct,
+    correct = CorrectDark,
 )
 
 val darkPinkColorsScheme = AppColorScheme(
@@ -97,7 +96,7 @@ val darkPinkColorsScheme = AppColorScheme(
     surface = SurfacePinkDark,
     onSurface = TextPinkDark,
     error = Error,
-    correct = Correct,
+    correct = CorrectDark,
 )
 
 val lightPinkColorsScheme = AppColorScheme(
@@ -111,5 +110,5 @@ val lightPinkColorsScheme = AppColorScheme(
     surface = SurfacePinkLight,
     onSurface = TextPinkLight,
     error = Error,
-    correct = Correct,
+    correct = CorrectLight,
 )
