@@ -1,6 +1,7 @@
 package com.metes.worthit.feature.settings.component
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -33,6 +34,7 @@ fun OneSettingItem(
     textColor: Color = AppTheme.colorScheme.onBackground,
     shape: Shape = CircleShape,
     horizontalArrangement: Arrangement.Horizontal = Arrangement.spacedBy(16.dp),
+    borderColor: Color = Color.Transparent,
     onClick: () -> Unit,
 ) {
     Row(
@@ -46,6 +48,7 @@ fun OneSettingItem(
             modifier = Modifier
                 .size(32.dp)
                 .clip(shape)
+                .border(width = 1.dp, shape = shape, color = borderColor)
                 .background(brush),
         )
         WorthItText(text = text, color = textColor)

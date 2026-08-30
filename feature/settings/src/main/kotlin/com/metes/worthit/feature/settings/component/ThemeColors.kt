@@ -37,7 +37,11 @@ fun ThemeColors(
         modifier = Modifier.padding(start = innerPadding),
         color = AppTheme.colorScheme.onBackground,
     )
-    ContentWrapper(modifier = Modifier.fillMaxWidth()) {
+    ContentWrapper(
+        modifier = Modifier.fillMaxWidth(),
+        color = AppTheme.colorScheme.surface,
+        alpha = 1f,
+    ) {
         Column(
             modifier = modifier,
             verticalArrangement = verticalArrangement,
@@ -58,6 +62,7 @@ fun ThemeColors(
                     innerPadding = innerPadding,
                     modifier = Modifier.fillMaxWidth(),
                     textColor = textColor,
+                    borderColor = if (isDarkTheme) primaryLightColor else primaryDarkColor,
                     onClick = {
                         onClick(themeColor)
                     },
