@@ -1,5 +1,6 @@
 package com.metes.worthit.feature.settings
 
+import androidx.compose.runtime.Immutable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.metes.worthit.core.domain.entity.Currency
@@ -46,6 +47,7 @@ class SettingsViewModel @Inject constructor(
     }
 }
 
+@Immutable
 sealed interface SettingsUiState {
     data class Success(
         val preferences: UserPreferences = UserPreferences(
