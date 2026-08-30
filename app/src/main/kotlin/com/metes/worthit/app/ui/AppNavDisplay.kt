@@ -13,10 +13,10 @@ import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
 import androidx.navigation3.ui.NavDisplay
 import com.metes.worthit.core.navigation.Screen
 import com.metes.worthit.core.navigation.safeNavigateBack
-import com.metes.worthit.feature.settings.ItemsRoute
+import com.metes.worthit.feature.items.ItemsRoute
 import com.metes.worthit.feature.settings.SaveItemRoute
 import com.metes.worthit.feature.settings.SaveItemViewModel
-import com.metes.worthit.feature.settings.SettingsScreen
+import com.metes.worthit.feature.settings.SettingsRoute
 
 @Composable
 internal fun AppNavDisplay(
@@ -66,7 +66,7 @@ internal fun AppNavDisplay(
                 )
             }
             entry<Screen.Settings> {
-                SettingsScreen(
+                SettingsRoute(
                     scaffoldPadding = scaffoldPadding,
                 )
             }

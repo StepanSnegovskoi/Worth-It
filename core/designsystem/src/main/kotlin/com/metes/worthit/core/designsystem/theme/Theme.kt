@@ -44,6 +44,7 @@ fun AppTheme(
         LocalAppAlpha provides alpha,
         LocalRippleConfiguration provides rippleConfiguration,
         LocalIndication provides indication,
+        LocalIsDarkTheme provides isDarkTheme,
         content = content
     )
 }
@@ -57,6 +58,9 @@ object AppTheme {
 
     val alpha: AppAlpha
         @Composable get() = LocalAppAlpha.current
+
+    val isDarkTheme: Boolean
+        @Composable get() = LocalIsDarkTheme.current
 }
 
 val LocalAppTheme = staticCompositionLocalOf {
@@ -73,4 +77,8 @@ val LocalAppTheme = staticCompositionLocalOf {
         error = Color.Unspecified,
         correct = Correct,
     )
+}
+
+val LocalIsDarkTheme = staticCompositionLocalOf {
+    false
 }
