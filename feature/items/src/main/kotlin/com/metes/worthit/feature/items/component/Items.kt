@@ -3,6 +3,7 @@ package com.metes.worthit.feature.items.component
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -23,47 +24,31 @@ internal fun Items(
     modifier: Modifier = Modifier,
     onClick: (Int) -> Unit,
     onLongClick: (Int) -> Unit,
-    onEmptyListClick: () -> Unit,
     onDeleteClick: (Int, String?) -> Unit,
+    contentIfEmpty: @Composable (() -> Unit)? = null
 ) {
-    LazyColumn(
-        modifier = modifier,
-        contentPadding = contentPadding,
-        verticalArrangement = Arrangement.spacedBy(8.dp),
-    ) {
-        if (items.isEmpty()) {
-            item(
-                key = "EmptyList",
-                contentType = { "EmptyList" }
-            ) {
-                Box(
-                    modifier = Modifier
-                        .fillParentMaxSize()
-                        .padding(horizontal = 16.dp)
-                        .clip(AppTheme.shape.container),
-                    contentAlignment = Alignment.Center,
-                ) {
-                    ItemsListIsEmpty(
-                        modifier = Modifier
-                            .fillMaxWidth(),
-                        onClick = onEmptyListClick,
-                    )
-                }
+    if (items.isEmpty()) {
+        contentIfEmpty?.invoke()
+    } else {
+        LazyColumn(
+            modifier = modifier,
+            contentPadding = contentPadding,
+            verticalArrangement = Arrangement.spacedBy(8.dp),
+        ) {
+            items(
+                items = items,
+                key = { it.id },
+                contentType = { "ItemCard" },
+            ) { item ->
+                SwipeableItemCard(
+                    item = item,
+                    isSelected = item.id in selectedItemIds,
+                    modifier = Modifier.animateItem(),
+                    onClick = onClick,
+                    onLongClick = onLongClick,
+                    onDeleteClick = onDeleteClick,
+                )
             }
-        }
-        items(
-            items = items,
-            key = { it.id },
-            contentType = { "ItemCard" },
-        ) { item ->
-            SwipeableItemCard(
-                item = item,
-                isSelected = item.id in selectedItemIds,
-                modifier = Modifier.animateItem(),
-                onClick = onClick,
-                onLongClick = onLongClick,
-                onDeleteClick = onDeleteClick,
-            )
         }
     }
 }
