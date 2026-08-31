@@ -261,27 +261,24 @@ class SaveItemViewModel @AssistedInject constructor(
         if (currentState !is SaveItemUiState.Success) return
 
         viewModelScope.launch {
-            try {
-                val createdAt = Instant.now(clock)
-                val dateOfPurchase = currentState.dateOfPurchaseMillis.toLocalDateFromUtc()
+            val createdAt = Instant.now(clock)
+            val dateOfPurchase = currentState.dateOfPurchaseMillis.toLocalDateFromUtc()
 
-                saveItemUseCase(
-                    itemId = itemId,
-                    name = currentState.name,
-                    description = currentState.description,
-                    price = currentState.price,
-                    currency = currentState.currency,
-                    createdAt = createdAt,
-                    dateOfPurchase = dateOfPurchase,
-                    imageUriString = currentState.imageUri?.toString(),
-                    originalImageLocalPath = imagePath
-                ).onError { errors ->
-                    _events.send(SaveItemEvent.ShowErrors(errors))
-                }.onSuccess {
-                    _events.send(NavigateToPreviousScreen)
-                }
-            } finally {
+            saveItemUseCase(
+                itemId = itemId,
+                name = currentState.name,
+                description = currentState.description,
+                price = currentState.price,
+                currency = currentState.currency,
+                createdAt = createdAt,
+                dateOfPurchase = dateOfPurchase,
+                imageUriString = currentState.imageUri?.toString(),
+                originalImageLocalPath = imagePath
+            ).onError { errors ->
+                _events.send(SaveItemEvent.ShowErrors(errors))
                 isSavingFlow.value = false
+            }.onSuccess {
+                _events.send(NavigateToPreviousScreen)
             }
         }
     }
