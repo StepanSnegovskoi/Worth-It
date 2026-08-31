@@ -68,7 +68,10 @@ internal fun AppNavDisplay(
             }
             entry<Screen.Settings> {
                 SettingsRoute(
-                    scaffoldPadding = scaffoldPadding,
+                    modifier = Modifier
+                        .padding(scaffoldPadding)
+                        .consumeWindowInsets(scaffoldPadding),
+                    onBackClick = { backStack.safeNavigateBack() },
                 )
             }
         }

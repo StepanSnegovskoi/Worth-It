@@ -1,39 +1,46 @@
 package com.metes.worthit.feature.settings
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.metes.worthit.core.designsystem.component.defaults.WorthItTopAppBarDefaults
 import com.metes.worthit.core.designsystem.component.other.LoadingScreen
+import com.metes.worthit.core.designsystem.component.other.WorthItIcon
+import com.metes.worthit.core.designsystem.component.other.WorthItIconButton
+import com.metes.worthit.core.designsystem.component.other.WorthItText
 import com.metes.worthit.core.designsystem.theme.AppTheme
 import com.metes.worthit.core.domain.entity.ThemeColor
 import com.metes.worthit.core.domain.entity.ThemeMode
 import com.metes.worthit.feature.settings.component.ThemeColors
 import com.metes.worthit.feature.settings.component.ThemeModes
+import com.metes.worthit.core.designsystem.R as DesignR
 
 @Composable
 fun SettingsRoute(
-    scaffoldPadding: PaddingValues,
+    onBackClick: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: SettingsViewModel = hiltViewModel(),
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     when (val currentUiState = uiState) {
-        SettingsUiState.Loading -> LoadingScreen(modifier = modifier.padding(scaffoldPadding))
+        SettingsUiState.Loading -> LoadingScreen(modifier = modifier)
 
         is SettingsUiState.Success -> SettingsScreen(
             uiState = currentUiState,
-            scaffoldPadding = scaffoldPadding,
             modifier = modifier,
             onSaveThemeColorClick = {
                 viewModel.processCommand(SettingsCommand.SelectThemeColor(it))
@@ -41,28 +48,51 @@ fun SettingsRoute(
             onSaveThemeModeClick = {
                 viewModel.processCommand(SettingsCommand.SelectThemeMode(it))
             },
+            onBackClick = onBackClick,
         )
     }
-
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingsScreen(
     uiState: SettingsUiState.Success,
-    scaffoldPadding: PaddingValues,
     modifier: Modifier = Modifier,
     onSaveThemeColorClick: (ThemeColor) -> Unit,
     onSaveThemeModeClick: (ThemeMode) -> Unit,
+    onBackClick: () -> Unit,
 ) {
-    Box(
+    val keyboardController = LocalSoftwareKeyboardController.current
+    Scaffold(
         modifier = modifier
-            .fillMaxSize()
-            .background(AppTheme.colorScheme.background)
-            .padding(scaffoldPadding)
-            .padding(8.dp),
-    ) {
+            .fillMaxSize(),
+        containerColor = AppTheme.colorScheme.background,
+        topBar = {
+            TopAppBar(
+                title = {
+                    WorthItText(text = stringResource(R.string.settings))
+                },
+                colors = WorthItTopAppBarDefaults.colors(),
+                navigationIcon = {
+                    WorthItIconButton(onClick = {
+                        keyboardController?.hide()
+                        onBackClick()
+                    }) {
+                        WorthItIcon(
+                            drawableRes = DesignR.drawable.back_24dp,
+                            contentDescriptionRes = R.string.cd_back
+                        )
+                    }
+                },
+            )
+        }
+    ) { innerPadding ->
         Column(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(innerPadding)
+                .verticalScroll(rememberScrollState())
+                .padding(horizontal = 8.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp),
         ) {
             ThemeColors(

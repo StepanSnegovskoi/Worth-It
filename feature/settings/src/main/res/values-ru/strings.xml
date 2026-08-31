@@ -2,4 +2,6 @@
 <resources>
     <string name="color">Цвет</string>
     <string name="theme">Тема</string>
+    <string name="settings">Настройки</string>
+    <string name="cd_back">Вернуться</string>
 </resources>
