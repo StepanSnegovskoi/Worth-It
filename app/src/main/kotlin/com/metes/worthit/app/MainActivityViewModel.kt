@@ -15,6 +15,7 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import javax.inject.Inject
+import kotlin.uuid.Uuid
 
 @HiltViewModel
 internal class MainActivityViewModel @Inject constructor(
@@ -39,7 +40,7 @@ internal class MainActivityViewModel @Inject constructor(
             AppIntentEvent.Ignored -> return
 
             is AppIntentEvent.Image -> {
-                navigationManager.navigateTo(Screen.SaveItem(imagePath = event.imageUri))
+                navigationManager.navigateTo(Screen.SaveItem(imagePath = event.imageUri, sessionId = Uuid.random().toString()))
             }
         }
     }

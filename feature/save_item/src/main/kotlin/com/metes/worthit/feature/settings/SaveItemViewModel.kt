@@ -138,7 +138,7 @@ class SaveItemViewModel @AssistedInject constructor(
             price = userInput.price,
             description = userInput.description,
             imageUri = userInput.imageUri,
-            currency = if (isEditingMode) metadata.currency else metadata.currency,
+            currency = metadata.currency,
             dateOfPurchaseMillis = metadata.dateOfPurchaseMillis,
             currentDate = metadata.currentDate,
             nameError = nameError,
@@ -247,9 +247,6 @@ class SaveItemViewModel @AssistedInject constructor(
         }
     }
 
-    // bug, when user fast clicks at this screen in bottom bar after success saving
-    // the state of this screen is previous (viewmodel doesn't cleared because animation
-    // didn't finish)
     private fun saveItem() {
         savedStateHandle[KEY_HAS_ATTEMPTED_SAVE] = true
 
@@ -258,7 +255,11 @@ class SaveItemViewModel @AssistedInject constructor(
         isSavingFlow.value = true
 
         val currentState = uiState.value
-        if (currentState !is SaveItemUiState.Success) return
+
+        if (currentState !is SaveItemUiState.Success) {
+            isSavingFlow.value = false
+            return
+        }
 
         viewModelScope.launch {
             val createdAt = Instant.now(clock)

@@ -17,6 +17,7 @@ import com.metes.worthit.feature.items.ItemsRoute
 import com.metes.worthit.feature.settings.SaveItemRoute
 import com.metes.worthit.feature.settings.SaveItemViewModel
 import com.metes.worthit.feature.settings.SettingsRoute
+import kotlin.uuid.Uuid
 
 @Composable
 internal fun AppNavDisplay(
@@ -42,10 +43,10 @@ internal fun AppNavDisplay(
                             PaddingValues(bottom = scaffoldPadding.calculateBottomPadding())
                         ),
                     onNavigateToEditingItem = { itemId ->
-                        backStack.add(Screen.SaveItem(itemId = itemId))
+                        backStack.add(Screen.SaveItem(itemId = itemId, sessionId = Uuid.random().toString()))
                     },
                     onNavigateToAddingItem = {
-                        backStack.add(Screen.SaveItem())
+                        backStack.add(Screen.SaveItem(sessionId = Uuid.random().toString()))
                     }
                 )
             }

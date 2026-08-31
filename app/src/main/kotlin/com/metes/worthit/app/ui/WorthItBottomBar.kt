@@ -12,17 +12,17 @@ internal fun WorthItBottomBar(
     currentScreen: Screen,
     items: List<BottomNavItem>,
     modifier: Modifier = Modifier,
-    onNavigate: (Screen) -> Unit,
+    onNavigate: (BottomTab) -> Unit,
 ) {
     NavigationBar(
         modifier = modifier,
         containerColor = AppTheme.colorScheme.background
     ) {
         items.forEach { navItem ->
-            val isSelected = when (navItem.route) {
-                is Screen.Items -> currentScreen is Screen.Items
-                is Screen.SaveItem -> currentScreen is Screen.SaveItem
-                is Screen.Settings -> currentScreen is Screen.Settings
+            val isSelected = when (navItem.tab) {
+                BottomTab.Items -> currentScreen is Screen.Items
+                BottomTab.SaveItem -> currentScreen is Screen.SaveItem
+                BottomTab.Settings -> currentScreen is Screen.Settings
             }
 
             WorthItBottomBarItem(
@@ -31,7 +31,7 @@ internal fun WorthItBottomBar(
                 iconRes = navItem.iconResId,
                 onClick = {
                     if (!isSelected) {
-                        onNavigate(navItem.route)
+                        onNavigate(navItem.tab)
                     }
                 }
             )

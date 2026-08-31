@@ -8,6 +8,7 @@ import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.navigation3.runtime.NavBackStack
 import com.metes.worthit.core.designsystem.theme.AppTheme
 import com.metes.worthit.core.navigation.Screen
+import kotlin.uuid.Uuid
 
 @Composable
 internal fun AppNavigation(
@@ -26,11 +27,9 @@ internal fun AppNavigation(
             WorthItBottomBar(
                 currentScreen = currentScreen,
                 items = bottomNavItems,
-                onNavigate = { route ->
+                onNavigate = { tab ->
                     keyboardController?.hide()
-                    if (route != currentScreen) {
-                        navigateBottomBar(backStack, route)
-                    }
+                    navigateBottomBar(backStack, tab)
                 },
             )
         }
@@ -44,11 +43,21 @@ internal fun AppNavigation(
     }
 }
 
-private fun navigateBottomBar(backStack: NavBackStack<Screen>, route: Screen) {
-    if (route == Screen.Items) {
-        backStack.removeAll { it != Screen.Items }
-    } else {
-        backStack.removeAll { it == route }
-        backStack.add(route)
+private fun navigateBottomBar(backStack: NavBackStack<Screen>, tab: BottomTab) {
+    when(tab) {
+        BottomTab.Items -> {
+            backStack.removeAll { it != Screen.Items }
+        }
+
+        BottomTab.SaveItem -> {
+            backStack.removeAll { it is Screen.SaveItem }
+            backStack.add(Screen.SaveItem(sessionId = Uuid.random().toString()))
+
+        }
+
+        BottomTab.Settings -> {
+            backStack.removeAll { it is Screen.Settings }
+            backStack.add(Screen.Settings)
+        }
     }
 }

@@ -16,7 +16,8 @@ sealed interface Screen : NavKey {
     @Serializable
     data class SaveItem(
         val itemId: Int? = null,
-        val imagePath: String? = null
+        val imagePath: String? = null,
+        val sessionId: String,
     ) : Screen
 
     @Serializable
