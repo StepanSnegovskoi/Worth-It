@@ -32,7 +32,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -54,9 +53,9 @@ import androidx.compose.ui.util.fastForEach
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.metes.worthit.core.common.toLocalDateFromUtc
 import com.metes.worthit.core.common.toUtcEpochMilli
+import com.metes.worthit.core.designsystem.component.WorthItTopAppBar
 import com.metes.worthit.core.designsystem.component.defaults.WorthItCardDefaults
 import com.metes.worthit.core.designsystem.component.defaults.WorthItFloatingActionButtonDefaults
-import com.metes.worthit.core.designsystem.component.defaults.WorthItTopAppBarDefaults
 import com.metes.worthit.core.designsystem.component.other.ItemImage
 import com.metes.worthit.core.designsystem.component.other.LoadingScreen
 import com.metes.worthit.core.designsystem.component.other.WorthItAnimatedVisibility
@@ -75,7 +74,6 @@ import com.metes.worthit.feature.settings.component.date.PastOrPresentDatePicker
 import com.metes.worthit.feature.settings.component.input_field.DescriptionTextField
 import com.metes.worthit.feature.settings.component.input_field.NameTextField
 import com.metes.worthit.feature.settings.component.input_field.PriceField
-import com.metes.worthit.feature.settings.component.other.TitleText
 import com.metes.worthit.feature.settings.component.time_unit.PricePerTimeUnitField
 import java.time.Instant
 import com.metes.worthit.core.designsystem.R as DesignR
@@ -222,23 +220,10 @@ fun SaveItemScreen(
                 }
             },
             topBar = {
-                TopAppBar(
-                    title = {
-                        TitleText(isEditingMode = uiState.isEditingMode)
-                    },
-                    colors = WorthItTopAppBarDefaults.colors(),
+                WorthItTopAppBar(
+                    titleStringRes = if (uiState.isEditingMode) R.string.editing_item else R.string.adding_item,
+                    navigationIconRes = DesignR.drawable.back_24dp,
                     scrollBehavior = scrollBehavior,
-                    navigationIcon = {
-                        WorthItIconButton(onClick = {
-                            keyboardController?.hide()
-                            onBackClick()
-                        }) {
-                            WorthItIcon(
-                                drawableRes = DesignR.drawable.back_24dp,
-                                contentDescriptionRes = R.string.cd_back
-                            )
-                        }
-                    },
                     actions = {
                         Row(
                             modifier = Modifier,
@@ -271,7 +256,11 @@ fun SaveItemScreen(
                                 }
                             }
                         }
-                    }
+                    },
+                    onNavigationIconClick = {
+                        keyboardController?.hide()
+                        onBackClick()
+                    },
                 )
             },
         ) { paddingValues ->

@@ -17,6 +17,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.metes.worthit.core.designsystem.component.WorthItTopAppBar
 import com.metes.worthit.core.designsystem.component.defaults.WorthItTopAppBarDefaults
 import com.metes.worthit.core.designsystem.component.other.LoadingScreen
 import com.metes.worthit.core.designsystem.component.other.WorthItIcon
@@ -68,21 +69,13 @@ fun SettingsScreen(
             .fillMaxSize(),
         containerColor = AppTheme.colorScheme.background,
         topBar = {
-            TopAppBar(
-                title = {
-                    WorthItText(text = stringResource(R.string.settings))
-                },
-                colors = WorthItTopAppBarDefaults.colors(),
-                navigationIcon = {
-                    WorthItIconButton(onClick = {
-                        keyboardController?.hide()
-                        onBackClick()
-                    }) {
-                        WorthItIcon(
-                            drawableRes = DesignR.drawable.back_24dp,
-                            contentDescriptionRes = R.string.cd_back
-                        )
-                    }
+            WorthItTopAppBar(
+                titleStringRes = R.string.settings,
+                navigationIconRes = DesignR.drawable.back_24dp,
+                navigationIconContentDescriptionStringRes = R.string.cd_back,
+                onNavigationIconClick = {
+                    keyboardController?.hide()
+                    onBackClick()
                 },
             )
         }
