@@ -2,8 +2,8 @@ package com.metes.worthit.feature.settings.component.button
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import com.metes.worthit.core.designsystem.component.other.WorthItFloatingActionButton
-import com.metes.worthit.core.designsystem.component.other.WorthItIcon
+import com.metes.worthit.core.designsystem.component.button.WorthItFloatingActionButton
+import com.metes.worthit.core.designsystem.component.image.WorthItIcon
 import com.metes.worthit.core.designsystem.theme.AppTheme
 import com.metes.worthit.feature.save_item.R
 import com.metes.worthit.core.designsystem.R as DesignR

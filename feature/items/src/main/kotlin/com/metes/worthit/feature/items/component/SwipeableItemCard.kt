@@ -15,8 +15,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
-import com.metes.worthit.core.designsystem.component.other.WorthItIcon
-import com.metes.worthit.core.designsystem.component.other.WorthItIconButton
+import com.metes.worthit.core.designsystem.component.image.WorthItIcon
+import com.metes.worthit.core.designsystem.component.button.WorthItIconButton
 import com.metes.worthit.core.designsystem.R as DesignR
 import com.metes.worthit.feature.items.R
 import com.metes.worthit.feature.items.ItemUiModel

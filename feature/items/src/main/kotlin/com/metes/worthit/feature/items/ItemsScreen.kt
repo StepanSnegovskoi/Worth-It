@@ -23,10 +23,10 @@ import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.metes.worthit.core.designsystem.component.other.LoadingScreen
-import com.metes.worthit.core.designsystem.component.other.WorthItAnimatedVisibility
-import com.metes.worthit.core.designsystem.component.other.WorthItIcon
-import com.metes.worthit.core.designsystem.component.other.WorthItIconButton
+import com.metes.worthit.core.designsystem.component.progress.LoadingScreen
+import com.metes.worthit.core.designsystem.component.animation.WorthItAnimatedVisibility
+import com.metes.worthit.core.designsystem.component.image.WorthItIcon
+import com.metes.worthit.core.designsystem.component.button.WorthItIconButton
 import com.metes.worthit.core.designsystem.theme.AppTheme
 import com.metes.worthit.core.presentation.ObserveAsEvents
 import com.metes.worthit.feature.items.component.Items

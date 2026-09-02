@@ -6,8 +6,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.text.input.KeyboardType
-import com.metes.worthit.core.designsystem.component.other.WorthItText
-import com.metes.worthit.core.designsystem.component.other.WorthItTextField
+import com.metes.worthit.core.designsystem.component.text.WorthItText
+import com.metes.worthit.core.designsystem.component.input.WorthItTextField
 import com.metes.worthit.core.domain.entity.TimeUnit
 import com.metes.worthit.core.presentation.namePluralRes
 import com.metes.worthit.core.presentation.pricePerPluralRes

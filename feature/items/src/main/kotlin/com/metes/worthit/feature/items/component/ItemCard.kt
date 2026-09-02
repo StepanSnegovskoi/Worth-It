@@ -19,9 +19,9 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import com.metes.worthit.core.designsystem.component.defaults.WorthItCardDefaults
-import com.metes.worthit.core.designsystem.component.other.ItemImage
-import com.metes.worthit.core.designsystem.component.other.WorthItCard
-import com.metes.worthit.core.designsystem.component.other.WorthItIcon
+import com.metes.worthit.core.designsystem.component.image.WorthItImage
+import com.metes.worthit.core.designsystem.component.surface.WorthItCard
+import com.metes.worthit.core.designsystem.component.image.WorthItIcon
 import com.metes.worthit.core.designsystem.theme.AppTheme
 import com.metes.worthit.feature.items.R
 import com.metes.worthit.feature.items.ItemUiModel
@@ -71,7 +71,7 @@ internal fun ItemCard(
                 .padding(8.dp),
             horizontalArrangement = Arrangement.spacedBy(16.dp),
         ) {
-            ItemImage(
+            WorthItImage(
                 modifier = Modifier
                     .size(96.dp)
                     .clip(RoundedCornerShape(12.dp)),

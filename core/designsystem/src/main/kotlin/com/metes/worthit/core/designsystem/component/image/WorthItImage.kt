@@ -1,4 +1,4 @@
-package com.metes.worthit.core.designsystem.component.other
+package com.metes.worthit.core.designsystem.component.image
 
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.Image
@@ -11,11 +11,12 @@ import coil3.compose.AsyncImage
 import com.metes.worthit.core.designsystem.theme.AppTheme
 
 @Composable
-fun ItemImage(
+fun WorthItImage(
     @DrawableRes defaultImageDrawableRes: Int,
     contentDescription: String?,
     contentScale: ContentScale,
     modifier: Modifier = Modifier,
+    colorFilter: ColorFilter = ColorFilter.tint(color = AppTheme.colorScheme.primary),
     model: Any? = null,
 ) {
     if (model != null) {
@@ -30,7 +31,7 @@ fun ItemImage(
             modifier = modifier,
             painter = painterResource(defaultImageDrawableRes),
             contentDescription = null,
-            colorFilter = ColorFilter.tint(color = AppTheme.colorScheme.primary),
+            colorFilter = colorFilter,
         )
     }
 }

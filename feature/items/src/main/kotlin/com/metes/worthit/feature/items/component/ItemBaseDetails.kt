@@ -8,8 +8,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.metes.worthit.core.designsystem.component.other.ContentWrapper
-import com.metes.worthit.core.designsystem.component.other.WorthItText
+import com.metes.worthit.core.designsystem.component.surface.ContentWrapper
+import com.metes.worthit.core.designsystem.component.text.WorthItText
 import com.metes.worthit.core.designsystem.util.rememberDateFormatter
 import com.metes.worthit.feature.items.ItemUiModel
 

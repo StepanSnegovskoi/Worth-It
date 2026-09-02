@@ -8,7 +8,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.metes.worthit.core.designsystem.component.other.WorthItBasicAlertDialog
+import com.metes.worthit.core.designsystem.component.dialog.WorthItBasicAlertDialog
 import com.metes.worthit.core.domain.entity.Currency
 
 @OptIn(ExperimentalMaterial3Api::class)

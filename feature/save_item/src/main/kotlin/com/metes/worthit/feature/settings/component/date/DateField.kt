@@ -4,9 +4,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import com.metes.worthit.core.designsystem.component.other.WorthItIcon
-import com.metes.worthit.core.designsystem.component.other.WorthItIconButton
-import com.metes.worthit.core.designsystem.component.other.WorthItTextField
+import com.metes.worthit.core.designsystem.component.image.WorthItIcon
+import com.metes.worthit.core.designsystem.component.button.WorthItIconButton
+import com.metes.worthit.core.designsystem.component.input.WorthItTextField
 import com.metes.worthit.feature.save_item.R
 
 @Composable

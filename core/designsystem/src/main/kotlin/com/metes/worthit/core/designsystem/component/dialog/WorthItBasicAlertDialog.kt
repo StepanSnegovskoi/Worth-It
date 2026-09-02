@@ -1,4 +1,4 @@
-package com.metes.worthit.core.designsystem.component.other
+package com.metes.worthit.core.designsystem.component.dialog
 
 import androidx.compose.foundation.background
 import androidx.compose.material3.BasicAlertDialog

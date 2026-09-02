@@ -53,14 +53,15 @@ import androidx.compose.ui.util.fastForEach
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.metes.worthit.core.common.toLocalDateFromUtc
 import com.metes.worthit.core.common.toUtcEpochMilli
-import com.metes.worthit.core.designsystem.component.WorthItTopAppBar
+import com.metes.worthit.core.designsystem.component.nav.WorthItTopAppBar
 import com.metes.worthit.core.designsystem.component.defaults.WorthItCardDefaults
 import com.metes.worthit.core.designsystem.component.defaults.WorthItFloatingActionButtonDefaults
-import com.metes.worthit.core.designsystem.component.other.ItemImage
-import com.metes.worthit.core.designsystem.component.other.LoadingScreen
-import com.metes.worthit.core.designsystem.component.other.WorthItAnimatedVisibility
-import com.metes.worthit.core.designsystem.component.other.WorthItIcon
-import com.metes.worthit.core.designsystem.component.other.WorthItIconButton
+import com.metes.worthit.core.designsystem.component.image.WorthItImage
+import com.metes.worthit.core.designsystem.component.progress.LoadingScreen
+import com.metes.worthit.core.designsystem.component.animation.WorthItAnimatedVisibility
+import com.metes.worthit.core.designsystem.component.image.WorthItIcon
+import com.metes.worthit.core.designsystem.component.button.WorthItIconButton
+import com.metes.worthit.core.designsystem.component.text.WorthItText
 import com.metes.worthit.core.designsystem.theme.AppTheme
 import com.metes.worthit.core.designsystem.util.rememberDateFormatter
 import com.metes.worthit.core.domain.entity.Currency
@@ -221,8 +222,20 @@ fun SaveItemScreen(
             },
             topBar = {
                 WorthItTopAppBar(
-                    titleStringRes = if (uiState.isEditingMode) R.string.editing_item else R.string.adding_item,
-                    navigationIconRes = DesignR.drawable.back_24dp,
+                    title = {
+                        WorthItText(text = stringResource(if (uiState.isEditingMode) R.string.editing_item else R.string.adding_item))
+                    },
+                    navigationIcon = {
+                        WorthItIconButton(
+                            onClick = {
+                                keyboardController?.hide()
+                                onBackClick()
+                            },
+                            content = {
+                                WorthItIcon(drawableRes = DesignR.drawable.back_24dp, contentDescriptionRes = R.string.cd_back)
+                            },
+                        )
+                    },
                     scrollBehavior = scrollBehavior,
                     actions = {
                         Row(
@@ -257,10 +270,6 @@ fun SaveItemScreen(
                             }
                         }
                     },
-                    onNavigationIconClick = {
-                        keyboardController?.hide()
-                        onBackClick()
-                    },
                 )
             },
         ) { paddingValues ->
@@ -272,7 +281,7 @@ fun SaveItemScreen(
                     .padding(bottom = WorthItFloatingActionButtonDefaults.scrollableFabClearance)
                     .padding(start = 16.dp, end = 16.dp, top = 16.dp),
             ) {
-                ItemImage(
+                WorthItImage(
                     modifier = Modifier
                         .align(Alignment.CenterHorizontally)
                         .padding(bottom = 8.dp)

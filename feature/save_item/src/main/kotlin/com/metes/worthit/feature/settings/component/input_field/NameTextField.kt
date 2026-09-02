@@ -6,10 +6,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardCapitalization
-import com.metes.worthit.core.designsystem.component.other.WorthItIcon
-import com.metes.worthit.core.designsystem.component.other.WorthItIconButton
-import com.metes.worthit.core.designsystem.component.other.WorthItText
-import com.metes.worthit.core.designsystem.component.other.WorthItTextField
+import com.metes.worthit.core.designsystem.component.image.WorthItIcon
+import com.metes.worthit.core.designsystem.component.button.WorthItIconButton
+import com.metes.worthit.core.designsystem.component.text.WorthItText
+import com.metes.worthit.core.designsystem.component.input.WorthItTextField
 import com.metes.worthit.core.presentation.UiText
 import com.metes.worthit.feature.save_item.R
 import com.metes.worthit.core.designsystem.R as DesignR

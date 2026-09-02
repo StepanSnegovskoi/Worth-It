@@ -1,4 +1,4 @@
-package com.metes.worthit.core.designsystem.component.other
+package com.metes.worthit.core.designsystem.component.animation
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.AnimatedVisibilityScope

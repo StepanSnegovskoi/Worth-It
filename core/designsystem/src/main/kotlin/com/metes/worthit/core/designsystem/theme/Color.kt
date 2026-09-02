@@ -34,7 +34,7 @@ internal val PrimaryContainerPinkLight = Color(0xFFF6CBFD)
 internal val OnPrimaryContainerPinkLight = Color(0xFF7A1E8A)
 
 internal val PrimaryContainerPinkDark = Color(0xFF64256B)
-internal val OnPrimaryContainerPinkDark = Color(0xFFDBEAFE)
+internal val OnPrimaryContainerPinkDark = Color(0xFFFCDBFE)
 
 internal val BackgroundPinkLight = Color(0xFFF6E3FA)
 internal val BackgroundPinkDark = Color(0xFF1F141F)
@@ -56,59 +56,3 @@ internal val CorrectLight = Color(0xFF16981B)
 enum class PrimaryThemeColor {
     BLUE, PINK
 }
-
-val lightBlueColorsScheme = AppColorScheme(
-    background = BackgroundBlueLight,
-    onBackground = TextBlueLight,
-    primary = BluePrimaryLight,
-    onPrimary = OnPrimaryBlueLight,
-    primaryContainer = PrimaryContainerBlueLight,
-    onPrimaryContainer = OnPrimaryContainerBlueLight,
-    secondary = SecondaryBlueLight,
-    surface = SurfaceBlueLight,
-    onSurface = TextBlueLight,
-    error = Error,
-    correct = CorrectLight,
-)
-
-val darkBlueColorsScheme = AppColorScheme(
-    background = BackgroundBlueDark,
-    onBackground = TextBlueDark,
-    primary = BluePrimaryDark,
-    onPrimary = OnPrimaryBlueDark,
-    primaryContainer = PrimaryContainerBlueDark,
-    onPrimaryContainer = OnPrimaryContainerBlueDark,
-    secondary = SecondaryBlueDark,
-    surface = SurfaceBlueDark,
-    onSurface = TextBlueDark,
-    error = Error,
-    correct = CorrectDark,
-)
-
-val darkPinkColorsScheme = AppColorScheme(
-    background = BackgroundPinkDark,
-    onBackground = TextPinkDark,
-    primary = PinkPrimaryDark,
-    onPrimary = OnPrimaryPinkDark,
-    primaryContainer = PrimaryContainerPinkDark,
-    onPrimaryContainer = OnPrimaryContainerPinkDark,
-    secondary = SecondaryPinkDark,
-    surface = SurfacePinkDark,
-    onSurface = TextPinkDark,
-    error = Error,
-    correct = CorrectDark,
-)
-
-val lightPinkColorsScheme = AppColorScheme(
-    background = BackgroundPinkLight,
-    onBackground = TextPinkLight,
-    primary = PinkPrimaryLight,
-    onPrimary = OnPrimaryPinkLight,
-    primaryContainer = PrimaryContainerPinkLight,
-    onPrimaryContainer = OnPrimaryContainerPinkLight,
-    secondary = SecondaryPinkLight,
-    surface = SurfacePinkLight,
-    onSurface = TextPinkLight,
-    error = Error,
-    correct = CorrectLight,
-)
