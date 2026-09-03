@@ -337,7 +337,7 @@ sealed interface SaveItemUiState {
                 return TimeUnit.entries.map { timeUnit ->
                     PricePerTimeUnitModel(
                         timeUnit = timeUnit,
-                        daysFromPurchase = timeUnit.between(dateOfPurchase, currentDate),
+                        timeUnitsFromPurchase = timeUnit.between(dateOfPurchase, currentDate),
                         amount = timeUnit.calculatePrice(
                             price = priceBigDecimal,
                             currentDate = currentDate,
@@ -365,6 +365,6 @@ private data class MetaData(
 
 data class PricePerTimeUnitModel(
     val timeUnit: TimeUnit,
-    val daysFromPurchase: Int,
+    val timeUnitsFromPurchase: Int,
     val amount: String = "",
 )
