@@ -48,6 +48,8 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.util.fastForEach
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -61,11 +63,16 @@ import com.metes.worthit.core.designsystem.component.progress.LoadingScreen
 import com.metes.worthit.core.designsystem.component.animation.WorthItAnimatedVisibility
 import com.metes.worthit.core.designsystem.component.image.WorthItIcon
 import com.metes.worthit.core.designsystem.component.button.WorthItIconButton
+import com.metes.worthit.core.designsystem.component.preview.PreviewBottomTab
+import com.metes.worthit.core.designsystem.component.preview.ThemePreviewConfig
+import com.metes.worthit.core.designsystem.component.preview.ThemePreviewParameter
+import com.metes.worthit.core.designsystem.component.preview.WorthItScreenPreview
 import com.metes.worthit.core.designsystem.component.text.WorthItText
 import com.metes.worthit.core.designsystem.theme.AppTheme
 import com.metes.worthit.core.designsystem.util.rememberDateFormatter
 import com.metes.worthit.core.domain.entity.Currency
 import com.metes.worthit.core.presentation.ObserveAsEvents
+import com.metes.worthit.core.presentation.UiText
 import com.metes.worthit.feature.save_item.R
 import com.metes.worthit.feature.settings.component.button.SaveItemFloatingActionButton
 import com.metes.worthit.feature.settings.component.button.SaveItemTopBarButton
@@ -77,6 +84,7 @@ import com.metes.worthit.feature.settings.component.input_field.NameTextField
 import com.metes.worthit.feature.settings.component.input_field.PriceField
 import com.metes.worthit.feature.settings.component.time_unit.PricePerTimeUnitField
 import java.time.Instant
+import java.time.LocalDate
 import com.metes.worthit.core.designsystem.R as DesignR
 
 @Composable
@@ -308,7 +316,7 @@ fun SaveItemScreen(
                     description = uiState.description,
                     onRemoveDescriptionClick = onRemoveDescriptionClick,
                     onDescriptionChange = onDescriptionChange
-                )
+,                )
 
                 Row(
                     modifier = Modifier.fillMaxWidth(),
@@ -337,7 +345,7 @@ fun SaveItemScreen(
                     PricePerTimeUnitField(
                         price = pricePerTimeUnit.amount,
                         timeUnit = pricePerTimeUnit.timeUnit,
-                        daysFromPurchase = pricePerTimeUnit.daysFromPurchase,
+                        timeUnitsFromPurchase = pricePerTimeUnit.daysFromPurchase,
                         modifier = Modifier
                             .fillMaxWidth(),
                     )
@@ -363,5 +371,49 @@ fun SaveItemScreen(
                 }
             }
         }
+    }
+}
+
+@Preview
+@Composable
+private fun SaveItemScreenPreview(
+    @PreviewParameter(ThemePreviewParameter::class) theme: ThemePreviewConfig
+) {
+    val nameFocusRequester = remember { FocusRequester() }
+    val priceFocusRequester = remember { FocusRequester() }
+
+    WorthItScreenPreview(
+        theme = theme,
+        selectedTab = PreviewBottomTab.SaveItem,
+    ) { _, modifier ->
+        SaveItemScreen(
+            uiState = SaveItemUiState.Success(
+                name = "Bike",
+                price = "1999",
+                description = "This is my first bike",
+                imageUri = null,
+                currency = Currency.EUR,
+                dateOfPurchaseMillis = LocalDate.now().toUtcEpochMilli(),
+                currentDate = LocalDate.now(),
+                nameError = UiText.StringResource(R.string.enter_name),
+                priceError = UiText.StringResource(R.string.price_must_be_a_number),
+                isEditingMode = true
+            ),
+            nameFocusRequester = nameFocusRequester,
+            priceFocusRequester = priceFocusRequester,
+            modifier = modifier,
+            onAddItemClick = { },
+            onNameChange = { },
+            onPriceChange = { },
+            onDescriptionChange = { },
+            onBackClick = { },
+            onImageClick = { },
+            onRemoveImageClick = { },
+            onRemoveNameClick = { },
+            onRemoveItemClick = { },
+            onRemoveDescriptionClick = { },
+            onCurrencyChange = { },
+            onSelectBoughtDate = { },
+        )
     }
 }

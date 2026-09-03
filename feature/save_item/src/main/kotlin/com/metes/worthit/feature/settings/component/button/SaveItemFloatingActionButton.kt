@@ -2,8 +2,12 @@ package com.metes.worthit.feature.settings.component.button
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewParameter
 import com.metes.worthit.core.designsystem.component.button.WorthItFloatingActionButton
 import com.metes.worthit.core.designsystem.component.image.WorthItIcon
+import com.metes.worthit.core.designsystem.component.preview.ThemePreviewConfig
+import com.metes.worthit.core.designsystem.component.preview.ThemePreviewParameter
 import com.metes.worthit.core.designsystem.theme.AppTheme
 import com.metes.worthit.feature.save_item.R
 import com.metes.worthit.core.designsystem.R as DesignR
@@ -27,6 +31,38 @@ internal fun SaveItemFloatingActionButton(
             drawableRes = iconRes,
             contentDescriptionRes = contentDescriptionRes,
             tint = AppTheme.colorScheme.onPrimary,
+        )
+    }
+}
+
+@Preview
+@Composable
+private fun SaveItemFloatingActionButtonPreviewEditingMode(
+    @PreviewParameter(ThemePreviewParameter::class) theme: ThemePreviewConfig
+) {
+    AppTheme(
+        isDarkTheme = theme.isDark,
+        primaryThemeColor = theme.color,
+    ) {
+        SaveItemFloatingActionButton(
+            isEditingMode = true,
+            onClick = { }
+        )
+    }
+}
+
+@Preview
+@Composable
+private fun SaveItemFloatingActionButtonPreviewAddingMode(
+    @PreviewParameter(ThemePreviewParameter::class) theme: ThemePreviewConfig
+) {
+    AppTheme(
+        isDarkTheme = theme.isDark,
+        primaryThemeColor = theme.color,
+    ) {
+        SaveItemFloatingActionButton(
+            isEditingMode = false,
+            onClick = { }
         )
     }
 }

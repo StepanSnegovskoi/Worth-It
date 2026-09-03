@@ -8,9 +8,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import com.metes.worthit.core.designsystem.component.surface.WorthItCard
 import com.metes.worthit.core.designsystem.component.image.WorthItIcon
+import com.metes.worthit.core.designsystem.component.preview.ThemePreviewConfig
+import com.metes.worthit.core.designsystem.component.preview.ThemePreviewParameter
 import com.metes.worthit.core.designsystem.component.text.WorthItText
 import com.metes.worthit.core.designsystem.theme.AppTheme
 import com.metes.worthit.core.domain.entity.Currency
@@ -43,5 +47,21 @@ internal fun Currency(
                 tint = AppTheme.colorScheme.primary
             )
         }
+    }
+}
+
+@Preview
+@Composable
+private fun CurrencyPreview(
+    @PreviewParameter(ThemePreviewParameter::class) theme: ThemePreviewConfig
+) {
+    AppTheme(
+        isDarkTheme = theme.isDark,
+        primaryThemeColor = theme.color,
+    ) {
+        Currency(
+            currency = Currency.EUR,
+            onClick = { },
+        )
     }
 }
