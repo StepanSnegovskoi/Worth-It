@@ -3,6 +3,7 @@ package com.metes.worthit.app.ui
 import androidx.compose.material3.NavigationBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import com.metes.worthit.core.designsystem.component.nav.WorthItBottomBarItem
 import com.metes.worthit.core.designsystem.theme.AppTheme
 import com.metes.worthit.core.navigation.Screen
@@ -27,7 +28,7 @@ internal fun WorthItBottomBar(
 
             WorthItBottomBarItem(
                 selected = isSelected,
-                titleRes = navItem.titleResId,
+                title = stringResource(navItem.titleResId),
                 iconRes = navItem.iconResId,
                 onClick = {
                     if (!isSelected) {

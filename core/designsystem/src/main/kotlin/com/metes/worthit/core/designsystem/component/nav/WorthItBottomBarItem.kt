@@ -8,7 +8,6 @@ import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import com.metes.worthit.core.designsystem.R
@@ -24,7 +23,7 @@ fun RowScope.WorthItBottomBarItem(
     selected: Boolean,
     modifier: Modifier = Modifier,
     @StringRes contentDescriptionRes: Int? = null,
-    @StringRes titleRes: Int,
+    title: String,
     @DrawableRes iconRes: Int,
     onClick: () -> Unit,
 ) {
@@ -39,7 +38,7 @@ fun RowScope.WorthItBottomBarItem(
             )
         },
         colors = WorthItNavigationBarDefaults.colors(),
-        label = { WorthItText(stringResource(titleRes)) },
+        label = { WorthItText(title) },
     )
 }
 
@@ -57,19 +56,19 @@ fun WorthItBottomBarItemPreview(
                 WorthItBottomBarItem(
                     selected = true,
                     onClick = {},
-                    titleRes = R.string.preview_items,
+                    title = "Items",
                     iconRes = R.drawable.items_24dp
                 )
                 WorthItBottomBarItem(
                     selected = true,
                     onClick = {},
-                    titleRes = R.string.preview_process_item,
+                    title = "Process Item",
                     iconRes = R.drawable.edit_24dp
                 )
                 WorthItBottomBarItem(
                     selected = true,
                     onClick = {},
-                    titleRes = R.string.preview_settings,
+                    title = "Settings",
                     iconRes = R.drawable.settings_24dp
                 )
             }
