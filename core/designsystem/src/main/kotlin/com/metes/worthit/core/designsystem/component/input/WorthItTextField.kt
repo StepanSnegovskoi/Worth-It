@@ -52,7 +52,11 @@ fun WorthItTextField(
         trailingIcon = trailingIcon,
         supportingText = {
             if (errorMessage != null) {
-                WorthItText(text = errorMessage, color = AppTheme.colorScheme.error)
+                WorthItText(
+                    text = errorMessage,
+                    color = AppTheme.colorScheme.error,
+                    maxLines = Int.MAX_VALUE,
+                )
             }
         }
     )
