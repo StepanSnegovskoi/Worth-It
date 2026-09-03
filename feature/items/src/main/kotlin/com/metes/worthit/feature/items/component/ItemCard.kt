@@ -17,14 +17,19 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import com.metes.worthit.core.designsystem.component.defaults.WorthItCardDefaults
 import com.metes.worthit.core.designsystem.component.image.WorthItImage
 import com.metes.worthit.core.designsystem.component.surface.WorthItCard
 import com.metes.worthit.core.designsystem.component.image.WorthItIcon
+import com.metes.worthit.core.designsystem.component.preview.ThemePreviewConfig
+import com.metes.worthit.core.designsystem.component.preview.ThemePreviewParameter
 import com.metes.worthit.core.designsystem.theme.AppTheme
 import com.metes.worthit.feature.items.R
 import com.metes.worthit.feature.items.ItemUiModel
+import java.time.LocalDate
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -33,7 +38,7 @@ internal fun ItemCard(
     isSelected: Boolean,
     modifier: Modifier = Modifier,
     onClick: (Int) -> Unit,
-    onSelectLongClick: (Int) -> Unit,
+    onLongClick: (Int) -> Unit,
 ) {
     val containerColor by animateColorAsState(
         targetValue = if (isSelected) {
@@ -62,7 +67,7 @@ internal fun ItemCard(
             onClick(item.id)
         },
         onLongClick = {
-            onSelectLongClick(item.id)
+            onLongClick(item.id)
         },
     ) {
         Row(
@@ -94,5 +99,51 @@ internal fun ItemCard(
                 tint = AppTheme.colorScheme.primary,
             )
         }
+    }
+}
+
+@Preview
+@Composable
+private fun ItemCardPreviewSelected(
+    @PreviewParameter(ThemePreviewParameter::class) theme: ThemePreviewConfig
+) {
+    AppTheme(
+        isDarkTheme = theme.isDark,
+        primaryThemeColor = theme.color,
+    ) {
+        ItemCard(
+            item = ItemUiModel(
+                id = 0,
+                name = "Car",
+                localImagePath = null,
+                dateOfPurchase = LocalDate.now(),
+            ),
+            isSelected = true,
+            onClick = { },
+            onLongClick = { },
+        )
+    }
+}
+
+@Preview
+@Composable
+private fun ItemCardPreviewNotSelected(
+    @PreviewParameter(ThemePreviewParameter::class) theme: ThemePreviewConfig
+) {
+    AppTheme(
+        isDarkTheme = theme.isDark,
+        primaryThemeColor = theme.color,
+    ) {
+        ItemCard(
+            item = ItemUiModel(
+                id = 0,
+                name = "Car",
+                localImagePath = null,
+                dateOfPurchase = LocalDate.now(),
+            ),
+            isSelected = false,
+            onClick = { },
+            onLongClick = { },
+        )
     }
 }

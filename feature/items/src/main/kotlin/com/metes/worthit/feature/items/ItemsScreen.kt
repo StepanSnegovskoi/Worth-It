@@ -20,17 +20,24 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalLayoutDirection
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.metes.worthit.core.designsystem.component.progress.LoadingScreen
 import com.metes.worthit.core.designsystem.component.animation.WorthItAnimatedVisibility
-import com.metes.worthit.core.designsystem.component.image.WorthItIcon
 import com.metes.worthit.core.designsystem.component.button.WorthItIconButton
+import com.metes.worthit.core.designsystem.component.image.WorthItIcon
+import com.metes.worthit.core.designsystem.component.preview.PreviewBottomTab
+import com.metes.worthit.core.designsystem.component.preview.ThemePreviewConfig
+import com.metes.worthit.core.designsystem.component.preview.ThemePreviewParameter
+import com.metes.worthit.core.designsystem.component.preview.WorthItScreenPreview
+import com.metes.worthit.core.designsystem.component.progress.LoadingScreen
 import com.metes.worthit.core.designsystem.theme.AppTheme
 import com.metes.worthit.core.presentation.ObserveAsEvents
 import com.metes.worthit.feature.items.component.Items
 import com.metes.worthit.feature.items.component.ItemsListIsEmpty
+import java.time.LocalDate
 import com.metes.worthit.core.designsystem.R as DesignR
 
 private val bottomButtonSize = 48.dp
@@ -99,7 +106,7 @@ fun ItemsScreen(
         end = scaffoldPadding.calculateEndPadding(layoutDirection) + 16.dp,
         bottom = bottomButtonSize + 16.dp * 2
     )
-
+    Modifier.padding(scaffoldPadding)
     Scaffold(
         modifier = modifier
             .fillMaxSize(),
@@ -167,6 +174,42 @@ fun ItemsScreen(
                     )
                 }
             }
+        )
+    }
+}
+
+@Preview
+@Composable
+private fun ItemsPreview(
+    @PreviewParameter(ThemePreviewParameter::class) theme: ThemePreviewConfig
+) {
+    WorthItScreenPreview(
+        theme = theme,
+        selectedTab = PreviewBottomTab.Items
+    ) { scaffoldPadding, modifier ->
+        ItemsScreen(
+            uiState = ItemsUiState.Success(
+                items = buildList {
+                    repeat(5) {
+                        val item = ItemUiModel(
+                            id = it,
+                            name = "Car",
+                            localImagePath = null,
+                            dateOfPurchase = LocalDate.now(),
+                        )
+                        add(item)
+                    }
+                },
+                selectedItemIds = setOf(2, 4)
+            ),
+            scaffoldPadding = scaffoldPadding,
+            modifier = modifier,
+            onItemDeleteClick = { _, _ -> },
+            onItemClick = {},
+            onItemLongClick = {},
+            onItemsDeleteClick = {},
+            onEmptyListClick = {},
+            onUnselectItemsClick = {}
         )
     }
 }
