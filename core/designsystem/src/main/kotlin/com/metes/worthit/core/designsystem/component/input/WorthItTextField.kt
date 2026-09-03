@@ -1,17 +1,22 @@
 package com.metes.worthit.core.designsystem.component.input
 
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.LocalTextStyle
+import androidx.compose.material3.Surface
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldColors
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewParameter
+import androidx.compose.ui.unit.dp
 import com.metes.worthit.core.designsystem.R
 import com.metes.worthit.core.designsystem.component.defaults.WorthItTextFieldDefaults
 import com.metes.worthit.core.designsystem.component.image.WorthItIcon
-import com.metes.worthit.core.designsystem.component.preview.BackgroundForPreview
+import com.metes.worthit.core.designsystem.component.preview.ThemePreviewConfig
+import com.metes.worthit.core.designsystem.component.preview.ThemePreviewParameter
 import com.metes.worthit.core.designsystem.component.text.WorthItText
 import com.metes.worthit.core.designsystem.theme.AppTheme
 
@@ -53,70 +58,142 @@ fun WorthItTextField(
     )
 }
 
-@Preview(name = "Base")
+// The current rendering only supports APIs up to 36.
+@Preview(apiLevel = 36)
 @Composable
-fun WorthItTextFieldPreview() {
-    BackgroundForPreview(
-        transparent = false
+fun WorthItTextFieldPreviewBase(
+    @PreviewParameter(ThemePreviewParameter::class) theme: ThemePreviewConfig
+) {
+    AppTheme(
+        isDarkTheme = theme.isDark,
+        primaryThemeColor = theme.color,
     ) {
-        WorthItTextField(
-            label = {
-                WorthItText(text = "Label")
-            },
-            value = "Hello World",
-            colors = WorthItTextFieldDefaults.colors(),
-            onValueChange = {}
-        )
+        Surface(color = AppTheme.colorScheme.background) {
+            WorthItTextField(
+                value = "Hello World",
+                modifier = Modifier.padding(8.dp),
+                onValueChange = { },
+            )
+        }
     }
 }
 
-@Preview(name = "Error")
+@Preview(apiLevel = 36)
 @Composable
-fun WorthItTextFieldPreviewError() {
-    BackgroundForPreview(
-        transparent = false
+fun WorthItTextFieldPreviewPlaceholder(
+    @PreviewParameter(ThemePreviewParameter::class) theme: ThemePreviewConfig
+) {
+    AppTheme(
+        isDarkTheme = theme.isDark,
+        primaryThemeColor = theme.color,
     ) {
-        WorthItTextField(
-            value = "Error",
-            colors = WorthItTextFieldDefaults.colors(),
-            errorMessage = "Error message",
-            onValueChange = {}
-        )
+        Surface(color = AppTheme.colorScheme.background) {
+            WorthItTextField(
+                value = "",
+                modifier = Modifier.padding(8.dp),
+                placeholder = {
+                    WorthItText(text = "Placeholder")
+                },
+                onValueChange = { },
+            )
+        }
     }
 }
 
-@Preview(name = "Placeholder")
+@Preview(apiLevel = 36)
 @Composable
-fun WorthItTextFieldPreviewPlaceholder() {
-    BackgroundForPreview(
-        transparent = false
+fun WorthItTextFieldPreviewTrailingIcon(
+    @PreviewParameter(ThemePreviewParameter::class) theme: ThemePreviewConfig
+) {
+    AppTheme(
+        isDarkTheme = theme.isDark,
+        primaryThemeColor = theme.color,
     ) {
-        WorthItTextField(
-            value = "",
-            placeholder = {
-                WorthItText(text = "Placeholder")
-            },
-            colors = WorthItTextFieldDefaults.colors(),
-            onValueChange = {}
-        )
+        Surface(color = AppTheme.colorScheme.background) {
+            WorthItTextField(
+                value = "Trailing Icon",
+                modifier = Modifier.padding(8.dp),
+                trailingIcon = {
+                    WorthItIcon(drawableRes = R.drawable.close_24dp)
+                },
+                onValueChange = { },
+            )
+        }
     }
 }
 
-@Preview(name = "TrailingIcon")
+@Preview(apiLevel = 36)
 @Composable
-fun WorthItTextFieldPreviewTrailingIcon() {
-    BackgroundForPreview(
-        transparent = false
+fun WorthItTextFieldPreviewLabel(
+    @PreviewParameter(ThemePreviewParameter::class) theme: ThemePreviewConfig
+) {
+    AppTheme(
+        isDarkTheme = theme.isDark,
+        primaryThemeColor = theme.color,
     ) {
-        WorthItTextField(
-            value = "TrailingIcon",
-            colors = WorthItTextFieldDefaults.colors(),
-            trailingIcon = {
-                WorthItIcon(
-                    drawableRes = R.drawable.close_24dp
-                )
-            },
-            onValueChange = {}
-        )
+        Surface(color = AppTheme.colorScheme.background) {
+            WorthItTextField(
+                value = "Label",
+                modifier = Modifier.padding(8.dp),
+                label = {
+                    WorthItText(text = "Label")
+                },
+                onValueChange = { },
+            )
+        }
+    }
+}
+
+@Preview(apiLevel = 36)
+@Composable
+fun WorthItTextFieldPreviewError(
+    @PreviewParameter(ThemePreviewParameter::class) theme: ThemePreviewConfig
+) {
+    AppTheme(
+        isDarkTheme = theme.isDark,
+        primaryThemeColor = theme.color,
+    ) {
+        Surface(color = AppTheme.colorScheme.background) {
+            WorthItTextField(
+                value = "",
+                modifier = Modifier.padding(8.dp),
+                errorMessage = "Enter Name",
+                label = {
+                    WorthItText(text = "Name")
+                },
+                placeholder = {
+                    WorthItText(text = "Name")
+                },
+                onValueChange = { },
+            )
+        }
+    }
+}
+
+@Preview(apiLevel = 36)
+@Composable
+fun WorthItTextFieldPreviewMultipleLines(
+    @PreviewParameter(ThemePreviewParameter::class) theme: ThemePreviewConfig
+) {
+    AppTheme(
+        isDarkTheme = theme.isDark,
+        primaryThemeColor = theme.color,
+    ) {
+        Surface(color = AppTheme.colorScheme.background) {
+            WorthItTextField(
+                value = """
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin tincidunt rutrum tempus. 
+                    Aliquam ut tempor ex, ac ultrices eros. Vivamus mollis facilisis vehicula. 
+                    Fusce at consequat risus. Ut maximus est non sapien egestas, id iaculis magna bibendum. Vivamus lectus urna, feugiat eget turpis sit amet, volutpat pulvinar dui. 
+                    Vivamus placerat ex aliquet, blandit metus non, faucibus tortor. 
+                    Maecenas convallis odio vel ipsum commodo commodo. In eu urna iaculis, gravida lacus sit amet, blandit mauris. Donec eu diam massa. Donec rutrum erat viverra justo scelerisque consectetur. 
+                    Aenean euismod ipsum sit amet elit elementum scelerisque. Ut ac mattis leo. Nullam est turpis, ultrices ac sodales at, pretium a eros.
+                """.trimIndent(),
+                modifier = Modifier.padding(8.dp),
+                maxLines = 16,
+                singleLine = false,
+                onValueChange = { },
+            )
+        }
     }
 }

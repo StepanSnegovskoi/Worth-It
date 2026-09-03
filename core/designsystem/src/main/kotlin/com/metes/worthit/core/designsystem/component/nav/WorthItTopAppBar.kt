@@ -9,12 +9,15 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewParameter
 import com.metes.worthit.core.designsystem.R
 import com.metes.worthit.core.designsystem.component.button.WorthItIconButton
 import com.metes.worthit.core.designsystem.component.defaults.WorthItTopAppBarDefaults
 import com.metes.worthit.core.designsystem.component.image.WorthItIcon
-import com.metes.worthit.core.designsystem.component.preview.BackgroundForPreview
+import com.metes.worthit.core.designsystem.component.preview.ThemePreviewConfig
+import com.metes.worthit.core.designsystem.component.preview.ThemePreviewParameter
 import com.metes.worthit.core.designsystem.component.text.WorthItText
+import com.metes.worthit.core.designsystem.theme.AppTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -38,8 +41,13 @@ fun WorthItTopAppBar(
 @OptIn(ExperimentalMaterial3Api::class)
 @Preview
 @Composable
-fun WorthItTopAppBarPreview() {
-    BackgroundForPreview(transparent = true) {
+fun WorthItTopAppBarPreview(
+    @PreviewParameter(ThemePreviewParameter::class) theme: ThemePreviewConfig
+) {
+    AppTheme(
+        isDarkTheme = theme.isDark,
+        primaryThemeColor = theme.color,
+    ) {
         WorthItTopAppBar(
             title = {
                 WorthItText(text = stringResource(R.string.preview_items))

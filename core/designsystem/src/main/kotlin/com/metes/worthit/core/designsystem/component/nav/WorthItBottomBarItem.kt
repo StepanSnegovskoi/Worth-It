@@ -5,15 +5,19 @@ import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewParameter
 import com.metes.worthit.core.designsystem.R
 import com.metes.worthit.core.designsystem.component.defaults.WorthItNavigationBarDefaults
-import com.metes.worthit.core.designsystem.component.preview.BackgroundForPreview
 import com.metes.worthit.core.designsystem.component.image.WorthItIcon
+import com.metes.worthit.core.designsystem.component.preview.ThemePreviewConfig
+import com.metes.worthit.core.designsystem.component.preview.ThemePreviewParameter
 import com.metes.worthit.core.designsystem.component.text.WorthItText
+import com.metes.worthit.core.designsystem.theme.AppTheme
 
 @Composable
 fun RowScope.WorthItBottomBarItem(
@@ -41,15 +45,34 @@ fun RowScope.WorthItBottomBarItem(
 
 @Preview
 @Composable
-fun WorthItBottomBarItemPreview() {
-    BackgroundForPreview(transparent = false) {
-        Row {
-            WorthItBottomBarItem(
-                selected = true,
-                onClick = {},
-                titleRes = R.string.preview_items,
-                iconRes = R.drawable.items_24dp
-            )
+fun WorthItBottomBarItemPreview(
+    @PreviewParameter(ThemePreviewParameter::class) theme: ThemePreviewConfig
+) {
+    AppTheme(
+        isDarkTheme = theme.isDark,
+        primaryThemeColor = theme.color,
+    ) {
+        Surface(color = AppTheme.colorScheme.background) {
+            Row {
+                WorthItBottomBarItem(
+                    selected = true,
+                    onClick = {},
+                    titleRes = R.string.preview_items,
+                    iconRes = R.drawable.items_24dp
+                )
+                WorthItBottomBarItem(
+                    selected = true,
+                    onClick = {},
+                    titleRes = R.string.preview_process_item,
+                    iconRes = R.drawable.edit_24dp
+                )
+                WorthItBottomBarItem(
+                    selected = true,
+                    onClick = {},
+                    titleRes = R.string.preview_settings,
+                    iconRes = R.drawable.settings_24dp
+                )
+            }
         }
     }
 }

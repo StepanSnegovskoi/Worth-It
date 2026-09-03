@@ -5,9 +5,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewParameter
 import com.metes.worthit.core.designsystem.R
 import com.metes.worthit.core.designsystem.component.image.WorthItIcon
-import com.metes.worthit.core.designsystem.component.preview.BackgroundForPreview
+import com.metes.worthit.core.designsystem.component.preview.ThemePreviewConfig
+import com.metes.worthit.core.designsystem.component.preview.ThemePreviewParameter
 import com.metes.worthit.core.designsystem.theme.AppTheme
 import com.metes.worthit.core.designsystem.theme.LocalAppTheme
 
@@ -28,8 +30,13 @@ fun WorthItFloatingActionButton(
 
 @Preview
 @Composable
-fun WorthItFloatingActionButtonPreview() {
-    BackgroundForPreview {
+fun WorthItFloatingActionButtonPreview(
+    @PreviewParameter(ThemePreviewParameter::class) theme: ThemePreviewConfig
+) {
+    AppTheme(
+        isDarkTheme = theme.isDark,
+        primaryThemeColor = theme.color,
+    ) {
         WorthItFloatingActionButton(
             onClick = {},
             content = {

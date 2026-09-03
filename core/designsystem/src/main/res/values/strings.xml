@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="preview_items">Items</string>
+    <string name="preview_process_item">Process item</string>
+    <string name="preview_settings">Settings</string>
 </resources>

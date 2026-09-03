@@ -6,17 +6,23 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
-import com.metes.worthit.core.designsystem.theme.LocalAppTheme
+import com.metes.worthit.core.designsystem.theme.AppTheme
 
 @Preview
 @Composable
-fun WorthItBackgroundPreview() {
-    BackgroundForPreview {
+fun WorthItBackgroundPreview(
+    @PreviewParameter(ThemePreviewParameter::class) theme: ThemePreviewConfig
+) {
+    AppTheme(
+        isDarkTheme = theme.isDark,
+        primaryThemeColor = theme.color,
+    ) {
         Box(
             modifier = Modifier
                 .size(128.dp)
-                .background(LocalAppTheme.current.background)
+                .background(AppTheme.colorScheme.background)
         )
     }
 }

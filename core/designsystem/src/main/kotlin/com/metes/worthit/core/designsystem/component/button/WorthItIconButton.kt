@@ -6,10 +6,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewParameter
 import com.metes.worthit.core.designsystem.R
 import com.metes.worthit.core.designsystem.component.defaults.WorthItIconButtonDefaults
 import com.metes.worthit.core.designsystem.component.image.WorthItIcon
-import com.metes.worthit.core.designsystem.component.preview.BackgroundForPreview
+import com.metes.worthit.core.designsystem.component.preview.ThemePreviewConfig
+import com.metes.worthit.core.designsystem.component.preview.ThemePreviewParameter
 import com.metes.worthit.core.designsystem.theme.AppTheme
 
 @Composable
@@ -34,8 +36,13 @@ fun WorthItIconButton(
 
 @Preview
 @Composable
-fun WorthItIconButtonPreview() {
-    BackgroundForPreview {
+fun WorthItIconButtonPreview(
+    @PreviewParameter(ThemePreviewParameter::class) theme: ThemePreviewConfig
+) {
+    AppTheme(
+        isDarkTheme = theme.isDark,
+        primaryThemeColor = theme.color,
+    ) {
         WorthItIconButton(
             onClick = {},
             content = {

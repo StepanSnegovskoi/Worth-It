@@ -9,7 +9,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
-import com.metes.worthit.core.designsystem.component.preview.BackgroundForPreview
+import androidx.compose.ui.tooling.preview.PreviewParameter
+import com.metes.worthit.core.designsystem.component.preview.ThemePreviewConfig
+import com.metes.worthit.core.designsystem.component.preview.ThemePreviewParameter
+import com.metes.worthit.core.designsystem.theme.AppTheme
 
 @Composable
 fun WorthItText(
@@ -32,8 +35,13 @@ fun WorthItText(
 
 @Preview
 @Composable
-fun WorthItTextPreview() {
-    BackgroundForPreview {
+fun WorthItTextPreview(
+    @PreviewParameter(ThemePreviewParameter::class) theme: ThemePreviewConfig
+) {
+    AppTheme(
+        isDarkTheme = theme.isDark,
+        primaryThemeColor = theme.color,
+    ) {
         WorthItText(
             text = "Hello World",
         )

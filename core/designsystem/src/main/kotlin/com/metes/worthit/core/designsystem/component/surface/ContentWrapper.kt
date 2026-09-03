@@ -1,8 +1,6 @@
 package com.metes.worthit.core.designsystem.component.surface
 
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -10,8 +8,11 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
-import com.metes.worthit.core.designsystem.component.preview.BackgroundForPreview
+import com.metes.worthit.core.designsystem.component.preview.ThemePreviewConfig
+import com.metes.worthit.core.designsystem.component.preview.ThemePreviewParameter
+import com.metes.worthit.core.designsystem.component.text.WorthItText
 import com.metes.worthit.core.designsystem.extensions.clickableIfNotNull
 import com.metes.worthit.core.designsystem.theme.AppTheme
 
@@ -36,10 +37,15 @@ fun ContentWrapper(
 
 @Preview
 @Composable
-fun ContentWrapperPreview() {
-    BackgroundForPreview(transparent = true) {
+fun ContentWrapperPreview(
+    @PreviewParameter(ThemePreviewParameter::class) theme: ThemePreviewConfig
+) {
+    AppTheme(
+        isDarkTheme = theme.isDark,
+        primaryThemeColor = theme.color,
+    ) {
         ContentWrapper {
-            Box(modifier = Modifier.width(128.dp).height(48.dp))
+            WorthItText(text = "Hello World", modifier = Modifier.padding(8.dp))
         }
     }
 }
