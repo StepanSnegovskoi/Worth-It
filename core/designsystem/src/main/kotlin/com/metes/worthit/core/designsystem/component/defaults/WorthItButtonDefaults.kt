@@ -7,7 +7,7 @@ import com.metes.worthit.core.designsystem.theme.AppTheme
 object WorthItButtonDefaults {
     @Composable
     fun colors(): ButtonColors = ButtonColors(
-        containerColor = AppTheme.colorScheme.surface,
+        containerColor = AppTheme.colorScheme.primaryContainer,
         contentColor = AppTheme.colorScheme.onBackground,
         disabledContainerColor = AppTheme.colorScheme.surface,
         disabledContentColor = AppTheme.colorScheme.secondary
