@@ -180,7 +180,7 @@ fun ItemsScreen(
 
 @Preview
 @Composable
-private fun ItemsPreview(
+private fun ItemsScreenPreview(
     @PreviewParameter(ThemePreviewParameter::class) theme: ThemePreviewConfig
 ) {
     WorthItScreenPreview(
@@ -205,11 +205,11 @@ private fun ItemsPreview(
             scaffoldPadding = scaffoldPadding,
             modifier = modifier,
             onItemDeleteClick = { _, _ -> },
-            onItemClick = {},
-            onItemLongClick = {},
-            onItemsDeleteClick = {},
-            onEmptyListClick = {},
-            onUnselectItemsClick = {}
+            onItemClick = { },
+            onItemLongClick = { },
+            onItemsDeleteClick = { },
+            onEmptyListClick = { },
+            onUnselectItemsClick = { },
         )
     }
 }
