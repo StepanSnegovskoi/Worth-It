@@ -1,5 +1,4 @@
 import com.metes.worthit.convention.configureKotlinJvm
-import com.metes.worthit.convention.libs
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.apply
@@ -15,7 +14,6 @@ class JvmLibraryConventionPlugin : Plugin<Project> {
 
             dependencies {
                 "testImplementation"(kotlin("test"))
-                "testImplementation"(libs.findLibrary("junit").get())
             }
         }
     }
