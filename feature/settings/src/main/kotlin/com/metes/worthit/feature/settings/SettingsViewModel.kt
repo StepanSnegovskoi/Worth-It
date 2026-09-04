@@ -9,7 +9,6 @@ import com.metes.worthit.core.domain.entity.ThemeMode
 import com.metes.worthit.core.domain.entity.UserPreferences
 import com.metes.worthit.core.domain.utils.UserSettings
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map
