@@ -4,14 +4,19 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.util.fastForEach
+import com.metes.worthit.core.designsystem.component.preview.ThemePreviewConfig
+import com.metes.worthit.core.designsystem.component.preview.ThemePreviewParameter
 import com.metes.worthit.core.designsystem.component.surface.ContentWrapper
 import com.metes.worthit.core.designsystem.component.text.WorthItText
 import com.metes.worthit.core.designsystem.extensions.primaryColor
@@ -19,6 +24,7 @@ import com.metes.worthit.core.designsystem.theme.AppTheme
 import com.metes.worthit.core.domain.entity.ThemeColor
 import com.metes.worthit.core.presentation.nameStringRes
 import com.metes.worthit.core.presentation.toPrimaryThemeColor
+import com.metes.worthit.core.presentation.toThemeColor
 import com.metes.worthit.feature.settings.R
 
 @Composable
@@ -68,6 +74,25 @@ fun ThemeColors(
                     },
                 )
             }
+        }
+    }
+}
+
+@Preview
+@Composable
+private fun ThemeColorsPreview(
+    @PreviewParameter(ThemePreviewParameter::class) theme: ThemePreviewConfig
+) {
+    AppTheme(
+        isDarkTheme = theme.isDark,
+        primaryThemeColor = theme.color,
+    ) {
+        Surface(color = AppTheme.colorScheme.surface) {
+            ThemeColors(
+                selectedThemeColor = theme.color.toThemeColor,
+                isDarkTheme = theme.isDark,
+                onClick = { },
+            )
         }
     }
 }
