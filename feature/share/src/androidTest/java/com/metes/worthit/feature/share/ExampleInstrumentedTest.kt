@@ -1,4 +1,4 @@
-package com.metes.worthit.intent
+package com.metes.worthit.feature.share
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
@@ -17,6 +17,6 @@ class ExampleInstrumentedTest {
     fun useAppContext() {
         // Context of the app under test.
         val appContext = InstrumentationRegistry.getInstrumentation().targetContext
-        assertEquals("com.metes.worthit.intent.test", appContext.packageName)
+        assertEquals("com.metes.worthit.feature.share.test", appContext.packageName)
     }
 }

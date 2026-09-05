@@ -1,4 +1,4 @@
-package com.metes.worthit.database
+package com.metes.worthit.feature.share
 
 import org.junit.Assert.assertEquals
 import org.junit.Test

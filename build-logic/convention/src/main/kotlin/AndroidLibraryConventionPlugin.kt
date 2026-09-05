@@ -6,7 +6,6 @@ import org.gradle.api.Project
 import org.gradle.kotlin.dsl.apply
 import org.gradle.kotlin.dsl.configure
 import org.gradle.kotlin.dsl.dependencies
-import org.gradle.kotlin.dsl.kotlin
 
 class AndroidLibraryConventionPlugin : Plugin<Project> {
     override fun apply(target: Project) {
@@ -19,7 +18,9 @@ class AndroidLibraryConventionPlugin : Plugin<Project> {
 
             dependencies {
                 "implementation"(libs.findLibrary("androidx-core-ktx").get())
-                "testImplementation"(kotlin("test"))
+                "testImplementation"(libs.findLibrary("kotlin-test").get())
+                "testImplementation"(libs.findLibrary("junit").get())
+                "androidTestImplementation"(libs.findLibrary("kotlin-test").get())
             }
         }
     }

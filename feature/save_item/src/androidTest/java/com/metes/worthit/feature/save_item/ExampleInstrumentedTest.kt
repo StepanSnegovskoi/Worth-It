@@ -1,4 +1,4 @@
-package com.metes.worthit.core.presentation
+package com.metes.worthit.feature.save_item
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
@@ -17,6 +17,6 @@ class ExampleInstrumentedTest {
     fun useAppContext() {
         // Context of the app under test.
         val appContext = InstrumentationRegistry.getInstrumentation().targetContext
-        assertEquals("com.metes.worthit.core.core_ui.test", appContext.packageName)
+        assertEquals("com.metes.worthit.feature.save_item.test", appContext.packageName)
     }
 }

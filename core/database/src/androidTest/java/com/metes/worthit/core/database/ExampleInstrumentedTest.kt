@@ -1,4 +1,4 @@
-package com.metes.worthit.data
+package com.metes.worthit.core.database
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
@@ -17,6 +17,6 @@ class ExampleInstrumentedTest {
     fun useAppContext() {
         // Context of the app under test.
         val appContext = InstrumentationRegistry.getInstrumentation().targetContext
-        assertEquals("com.metes.worthit.data.test", appContext.packageName)
+        assertEquals("com.metes.worthit.core.database.test", appContext.packageName)
     }
 }

@@ -52,4 +52,6 @@ dependencies {
     implementation(libs.androidx.core.splashscreen)
 
     androidTestImplementation(libs.androidx.junit)
+    testImplementation(libs.kotlin.test)
+    testImplementation(libs.junit)
 }

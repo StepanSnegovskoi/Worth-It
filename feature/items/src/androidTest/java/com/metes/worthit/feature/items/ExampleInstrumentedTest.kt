@@ -1,4 +1,4 @@
-package com.metes.worthit.feature.settings
+package com.metes.worthit.feature.items
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry

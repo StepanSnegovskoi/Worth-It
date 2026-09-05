@@ -17,6 +17,6 @@ class ExampleInstrumentedTest {
     fun useAppContext() {
         // Context of the app under test.
         val appContext = InstrumentationRegistry.getInstrumentation().targetContext
-        assertEquals("com.metes.worthit.core.core_ui.test", appContext.packageName)
+        assertEquals("com.metes.worthit.core.presentation.test", appContext.packageName)
     }
 }

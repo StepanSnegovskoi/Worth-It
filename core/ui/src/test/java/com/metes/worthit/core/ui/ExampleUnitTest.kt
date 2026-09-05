@@ -1,4 +1,4 @@
-package com.metes.worthit.data
+package com.metes.worthit.core.ui
 
 import org.junit.Assert.assertEquals
 import org.junit.Test
