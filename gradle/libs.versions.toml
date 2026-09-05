@@ -25,6 +25,8 @@ material = "1.14.0"
 nav3Core = "1.1.6"
 lifecycleViewmodelNav3 = "2.11.0"
 hiltNavigationCompose = "1.4.0"
+mockk = "1.14.11"
+turbine = "1.2.1"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -67,6 +69,9 @@ androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version
 javax-inject = { module = "javax.inject:javax.inject", version.ref = "javaxInject" }
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 kotlin-test = { group = "org.jetbrains.kotlin", name = "kotlin-test", version.ref = "kotlin" }
+mockk = { group = "io.mockk", name = "mockk", version.ref = "mockk" }
+kotlinx-coroutines-test = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version.ref = "coroutines" }
+turbine = { group = "app.cash.turbine", name = "turbine", version.ref = "turbine" }
 
 # Dependencies of the included build-logic
 android-gradlePlugin = { group = "com.android.tools.build", name = "gradle-api", version.ref = "agp" }

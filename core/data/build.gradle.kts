@@ -5,6 +5,10 @@ plugins {
 
 android {
     namespace = "com.metes.worthit.core.data"
+
+    testOptions {
+        unitTests.isReturnDefaultValues = true
+    }
 }
 
 dependencies {
@@ -13,5 +17,7 @@ dependencies {
     implementation(project(":core:database"))
 
     implementation(libs.androidx.exifinterface)
-    androidTestImplementation(libs.androidx.junit)
+    testImplementation(libs.mockk)
+    testImplementation(libs.kotlinx.coroutines.test)
+    testImplementation(libs.turbine)
 }
