@@ -8,6 +8,9 @@ android {
 
     testOptions {
         unitTests.isReturnDefaultValues = true
+        unitTests.all { testTask ->
+            testTask.maxHeapSize = "4G"
+        }
     }
 }
 
@@ -20,4 +23,5 @@ dependencies {
     testImplementation(libs.mockk)
     testImplementation(libs.kotlinx.coroutines.test)
     testImplementation(libs.turbine)
+    testImplementation(libs.robolectric)
 }
