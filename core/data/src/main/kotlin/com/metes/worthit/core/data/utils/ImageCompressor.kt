@@ -52,7 +52,7 @@ internal class ImageCompressor @Inject constructor(
             }
         } catch (c: CancellationException) {
             throw c
-        } catch (e: Exception) {
+        } catch (_: Exception) {
             return@withContext Result.Error(FileError.CompressionFailed)
         } finally {
             finalBitmap?.recycle()
@@ -90,7 +90,7 @@ internal class ImageCompressor @Inject constructor(
     }
 
 
-    fun calculateInSampleSize(
+    private fun calculateInSampleSize(
         options: BitmapFactory.Options,
         reqWidth: Int,
         reqHeight: Int
