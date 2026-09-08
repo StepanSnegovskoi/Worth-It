@@ -173,6 +173,8 @@ class SaveItemViewModel @AssistedInject constructor(
                 getItemByIdUseCase(itemId).onError { errors ->
                     _events.send(SaveItemEvent.ShowErrors(errors))
                 }.onSuccess { item ->
+                    item ?: return@launch
+
                     savedStateHandle[KEY_NAME] = item.name
                     savedStateHandle[KEY_DESCRIPTION] = item.description
                     savedStateHandle[KEY_PRICE] = item.price?.toString() ?: ""
