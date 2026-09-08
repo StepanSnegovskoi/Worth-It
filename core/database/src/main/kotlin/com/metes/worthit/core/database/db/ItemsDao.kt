@@ -22,5 +22,5 @@ interface ItemsDao {
     suspend fun deleteItems(itemIds: List<Int>): Int
 
     @Query("SELECT * FROM items WHERE id = :itemId LIMIT 1")
-    suspend fun getItemById(itemId: Int): ItemDbModel
+    suspend fun getItemById(itemId: Int): ItemDbModel?
 }

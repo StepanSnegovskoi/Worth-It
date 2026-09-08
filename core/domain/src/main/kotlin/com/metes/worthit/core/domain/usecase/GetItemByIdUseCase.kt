@@ -12,7 +12,7 @@ import javax.inject.Inject
 class GetItemByIdUseCase @Inject constructor(
     private val itemsRepository: ItemsRepository,
 ) {
-    suspend operator fun invoke(itemId: Int): Result<Item, List<Error>> {
+    suspend operator fun invoke(itemId: Int): Result<Item?, List<Error>> {
         return try {
             val item = itemsRepository.getItemById(itemId)
             Result.Success(item)

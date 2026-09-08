@@ -8,5 +8,5 @@ interface ItemsRepository {
     fun observeItems(): Flow<List<Item>>
     suspend fun deleteItem(itemId: Int): Boolean
     suspend fun deleteItems(itemIds: List<Int>)
-    suspend fun getItemById(itemId: Int): Item
+    suspend fun getItemById(itemId: Int): Item?
 }
