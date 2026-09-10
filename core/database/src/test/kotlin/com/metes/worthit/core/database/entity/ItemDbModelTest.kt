@@ -20,7 +20,7 @@ class ItemDbModelTest {
         createdAt = createdAt,
         dateOfPurchase = dateOfPurchase.toEpochMilli().toLocalDateFromUtc(),
         description = "This is my first bike",
-        imageLocalPath = "images/bike"
+        imageLocalPath = "images/bike",
     )
 
     private val item = Item(
@@ -31,7 +31,7 @@ class ItemDbModelTest {
         createdAt = createdAt,
         dateOfPurchase = dateOfPurchase.toEpochMilli().toLocalDateFromUtc(),
         description = "This is my first bike",
-        imageLocalPath = "images/bike"
+        imageLocalPath = "images/bike",
     )
 
     private val itemDbModelWithNulls = ItemDbModel(
@@ -42,7 +42,7 @@ class ItemDbModelTest {
         createdAt = createdAt,
         dateOfPurchase = dateOfPurchase.toEpochMilli().toLocalDateFromUtc(),
         description = null,
-        imageLocalPath = null
+        imageLocalPath = null,
     )
 
     private val itemWithNulls = Item(
@@ -53,7 +53,7 @@ class ItemDbModelTest {
         createdAt = createdAt,
         dateOfPurchase = dateOfPurchase.toEpochMilli().toLocalDateFromUtc(),
         description = null,
-        imageLocalPath = null
+        imageLocalPath = null,
     )
 
     private val itemDbModelWithNullableCurrencyName = ItemDbModel(
@@ -64,7 +64,7 @@ class ItemDbModelTest {
         createdAt = createdAt,
         dateOfPurchase = dateOfPurchase.toEpochMilli().toLocalDateFromUtc(),
         description = null,
-        imageLocalPath = null
+        imageLocalPath = null,
     )
 
     private val itemWithDefaultCurrency = Item(
@@ -76,7 +76,7 @@ class ItemDbModelTest {
         createdAt = createdAt,
         dateOfPurchase = dateOfPurchase.toEpochMilli().toLocalDateFromUtc(),
         description = null,
-        imageLocalPath = null
+        imageLocalPath = null,
     )
 
     @Test
