@@ -11,5 +11,8 @@ android {
 dependencies {
     implementation(project(":core:domain"))
     implementation(project(":core:common"))
-    androidTestImplementation(libs.androidx.junit)
+    testImplementation(libs.robolectric)
+    testImplementation(libs.kotlinx.coroutines.test)
+    testImplementation(libs.androidx.junit)
+    testImplementation(libs.turbine)
 }
