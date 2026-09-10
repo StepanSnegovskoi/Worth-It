@@ -13,7 +13,6 @@ class LocalDateExtensionTest {
     @Test
     fun `toUtcEpochMilli converts LocalDate to correct epoch milliseconds`() {
         val date = LocalDate.of(2026, Month.SEPTEMBER, 4)
-        println(date.toUtcEpochMilli())
         assertEquals(1_788_480_000_000L, date.toUtcEpochMilli())
     }
 
