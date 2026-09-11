@@ -12,5 +12,8 @@ dependencies {
     implementation(project(":core:common"))
 
     implementation(libs.datastore)
-    androidTestImplementation(libs.androidx.junit)
+    testImplementation(libs.robolectric)
+    testImplementation(libs.kotlinx.coroutines.test)
+    testImplementation(libs.turbine)
+    testImplementation(libs.androidx.junit)
 }
