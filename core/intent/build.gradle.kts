@@ -4,9 +4,13 @@ plugins {
 
 android {
     namespace = "com.metes.worthit.core.intent"
+
+    testOptions {
+        unitTests.isReturnDefaultValues = true
+    }
 }
 
 dependencies {
     implementation(libs.javax.inject)
-    androidTestImplementation(libs.androidx.junit)
+    testImplementation(libs.mockk)
 }
