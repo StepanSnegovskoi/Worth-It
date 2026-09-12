@@ -31,7 +31,6 @@ class ItemValidator @Inject constructor(
         }
     }
 
-
     fun validatePrice(priceInput: String): Result<BigDecimal?, List<BusinessError>> {
         val trimmedPriceInput = priceInput.trim()
         if (trimmedPriceInput.isBlank()) {
