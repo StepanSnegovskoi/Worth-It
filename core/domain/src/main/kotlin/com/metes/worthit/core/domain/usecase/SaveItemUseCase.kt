@@ -30,7 +30,7 @@ class SaveItemUseCase @Inject constructor(
         description: String,
         imageUriString: String?,
         originalImageLocalPath: String?,
-    ): Result<Unit, List<Error>> = try {
+    ): Result<Unit, List<Error>> {
         val validatorResult = itemValidator.validateAll(name, description, dateOfPurchase, price)
 
         if (validatorResult is Result.Error) {
@@ -41,45 +41,47 @@ class SaveItemUseCase @Inject constructor(
 
         var finalImagePath: String? = null
 
-        imageUriString?.let {
-            internalRepository.saveImage(imageUriString).onError { error ->
-                return Result.Error(listOf(error))
-            }.onSuccess { path ->
-                finalImagePath = path
+        if (imageUriString != null) {
+            val saveImageResult = internalRepository.saveImage(imageUriString)
+            if (saveImageResult is Result.Error) {
+                return Result.Error(listOf(saveImageResult.data))
             }
+            finalImagePath = (saveImageResult as Result.Success).data
         }
 
-        val item = Item(
-            id = itemId ?: Item.DEFAULT_ID,
-            name = validatedFields.name,
-            price = validatedFields.price,
-            currency = currency,
-            createdAt = createdAt,
-            dateOfPurchase = validatedFields.dateOfPurchase,
-            description = validatedFields.description,
-            imageLocalPath = finalImagePath
-        )
+        return try {
+            val item = Item(
+                id = itemId ?: Item.DEFAULT_ID,
+                name = validatedFields.name,
+                price = validatedFields.price,
+                currency = currency,
+                createdAt = createdAt,
+                dateOfPurchase = validatedFields.dateOfPurchase,
+                description = validatedFields.description,
+                imageLocalPath = finalImagePath
+            )
 
-        val saveResult = if (itemsRepository.saveItem(item)) {
-            Result.Success(Unit)
-        } else {
-            Result.Error(listOf(BusinessError.ItemFailedToSave))
-        }.also { saveResult ->
-            val isImageChanged = finalImagePath != originalImageLocalPath
-
-            if (isImageChanged) {
-                saveResult.onError {
-                    finalImagePath?.let { internalRepository.deleteFile(it) }
-                }.onSuccess {
+            val isSaved = itemsRepository.saveItem(item)
+            if (isSaved) {
+                if (finalImagePath != originalImageLocalPath) {
                     originalImageLocalPath?.let { internalRepository.deleteFile(it) }
                 }
+                Result.Success(Unit)
+            } else {
+                cleanupNewImage(finalImagePath, originalImageLocalPath)
+                Result.Error(listOf(BusinessError.ItemFailedToSave))
             }
+        } catch (c: CancellationException) {
+            throw c
+        } catch (_: Exception) {
+            cleanupNewImage(finalImagePath, originalImageLocalPath)
+            Result.Error(listOf(BusinessError.ItemFailedToSave))
         }
+    }
 
-        saveResult
-    } catch (c: CancellationException) {
-        throw c
-    } catch (_: Exception) {
-        Result.Error(listOf(BusinessError.ItemFailedToSave))
+    private suspend fun cleanupNewImage(finalImagePath: String?, originalPath: String?) {
+        if (finalImagePath != null && finalImagePath != originalPath) {
+            internalRepository.deleteFile(finalImagePath)
+        }
     }
 }
