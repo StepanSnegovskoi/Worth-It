@@ -10,7 +10,7 @@ class ResultExtTest {
     private val resultError = Result.Error<Exception>(IllegalArgumentException("Test exception"))
 
     @Test
-    fun `onSuccess called only when result is Success`() {
+    fun `onSuccess should invoke action when result is Success`() {
         var isSuccessCalled = false
 
         resultSuccess.onSuccess {
@@ -24,7 +24,7 @@ class ResultExtTest {
     }
 
     @Test
-    fun `onError called only when result is Error`() {
+    fun `onError should invoke action when result is Error`() {
         var isErrorCalled = false
 
         resultError.onError {
@@ -38,7 +38,7 @@ class ResultExtTest {
     }
 
     @Test
-    fun `onResult called onSuccess if result is Success`() {
+    fun `onResult should invoke onSuccess on Success and onFailure on Error`() {
         var isSuccessInvoked = false
 
         resultSuccess.onResult(
