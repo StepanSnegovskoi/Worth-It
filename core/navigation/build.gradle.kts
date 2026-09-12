@@ -9,13 +9,13 @@ android {
 }
 
 dependencies {
+    implementation(project(":core:common"))
+
     api(libs.androidx.navigation3.ui)
     api(libs.androidx.navigation3.runtime)
     api(libs.androidx.lifecycle.viewmodel.navigation3)
     api(libs.androidx.hilt.navigation.compose)
     implementation(libs.javax.inject)
-
-    implementation(project(":core:common"))
-
-    androidTestImplementation(libs.androidx.junit)
+    testImplementation(libs.kotlinx.coroutines.test)
+    testImplementation(libs.turbine)
 }
