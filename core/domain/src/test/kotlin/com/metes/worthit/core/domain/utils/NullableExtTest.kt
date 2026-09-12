@@ -4,7 +4,7 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
-class throwIfNullTest {
+class NullableExtTest {
 
     private val exception = IllegalArgumentException("Test exception")
     @Test
