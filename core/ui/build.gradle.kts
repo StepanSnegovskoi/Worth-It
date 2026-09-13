@@ -12,6 +12,7 @@ dependencies {
 
     implementation(libs.androidx.compose.runtime)
     implementation(libs.androidx.compose.ui)
+    implementation(libs.mockk)
 
     androidTestImplementation(libs.androidx.junit)
 }
