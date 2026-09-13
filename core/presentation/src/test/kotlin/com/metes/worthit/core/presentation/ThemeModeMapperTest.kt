@@ -9,7 +9,7 @@ import kotlin.test.assertEquals
 class ThemeModeMapperTest {
 
     @Test
-    fun `each theme mode entry has valid mapped name string resource `() {
+    fun `each theme mode entry has valid mapped name string resource`() {
         val expectedMappings = mapOf(
             ThemeMode.DARK to R.string.dark,
             ThemeMode.LIGHT to R.string.light,

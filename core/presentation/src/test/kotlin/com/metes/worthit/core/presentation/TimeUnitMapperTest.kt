@@ -7,7 +7,7 @@ import kotlin.test.assertEquals
 class TimeUnitMapperTest {
 
     @Test
-    fun `each time unit entry has valid mapped name string resource `() {
+    fun `each time unit entry has valid mapped name string resource`() {
         val expectedMappings = mapOf(
             TimeUnit.DAY to R.string.time_unit_day,
             TimeUnit.WEEK to R.string.time_unit_week,
