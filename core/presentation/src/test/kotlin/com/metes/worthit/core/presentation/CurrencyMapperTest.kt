@@ -27,4 +27,26 @@ class CurrencyMapperTest {
             assertEquals(expectedRes, currency.iconResId)
         }
     }
+
+    @Test
+    fun `each currency entry has valid mapped string resource`() {
+        val expectedMappings = mapOf(
+            Currency.EUR to R.string.currency_eur,
+            Currency.USD to R.string.currency_usd,
+            Currency.GBP to R.string.currency_gbp,
+            Currency.JPY to R.string.currency_jpy,
+            Currency.INR to R.string.currency_inr,
+            Currency.CNY to R.string.chinese_yuan,
+        )
+
+        assertEquals(
+            expectedMappings.size,
+            Currency.entries.size
+        )
+
+        Currency.entries.forEach { currency ->
+            val expectedRes = expectedMappings[currency]
+            assertEquals(expectedRes, currency.titleResId)
+        }
+    }
 }
