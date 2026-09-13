@@ -11,5 +11,4 @@ dependencies {
     implementation(project(":core:domain"))
     implementation(project(":core:ui"))
     implementation(project(":core:designsystem"))
-    androidTestImplementation(libs.androidx.junit)
 }
