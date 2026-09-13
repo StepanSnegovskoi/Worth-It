@@ -31,7 +31,3 @@ fun Error.toUiText(): UiText {
         is UnexpectedError -> StringResource(R.string.unexpected_error)
     }
 }
-
-fun List<Error>.asCombinedString(context: Context, separator: String = "\n"): String {
-    return joinToString(separator = separator) { it.toUiText().asString(context) }
-}
