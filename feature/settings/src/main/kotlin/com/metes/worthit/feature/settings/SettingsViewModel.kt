@@ -22,7 +22,7 @@ class SettingsViewModel @Inject constructor(
 ) : ViewModel() {
 
     val uiState: StateFlow<SettingsUiState> = userSettings.preferences.map { preferences ->
-        SettingsUiState.Success(preferences = preferences,)
+        SettingsUiState.Success(preferences = preferences)
     }.stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(5_000),
