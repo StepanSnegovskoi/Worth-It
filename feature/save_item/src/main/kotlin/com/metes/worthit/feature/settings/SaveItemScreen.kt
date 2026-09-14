@@ -9,6 +9,7 @@ import androidx.compose.animation.expandHorizontally
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.shrinkHorizontally
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
@@ -31,8 +32,8 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -47,6 +48,7 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.platform.SoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
@@ -55,18 +57,18 @@ import androidx.compose.ui.util.fastForEach
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.metes.worthit.core.common.toLocalDateFromUtc
 import com.metes.worthit.core.common.toUtcEpochMilli
-import com.metes.worthit.core.designsystem.component.nav.WorthItTopAppBar
+import com.metes.worthit.core.designsystem.component.animation.WorthItAnimatedVisibility
+import com.metes.worthit.core.designsystem.component.button.WorthItIconButton
 import com.metes.worthit.core.designsystem.component.defaults.WorthItCardDefaults
 import com.metes.worthit.core.designsystem.component.defaults.WorthItFloatingActionButtonDefaults
-import com.metes.worthit.core.designsystem.component.image.WorthItImage
-import com.metes.worthit.core.designsystem.component.progress.LoadingScreen
-import com.metes.worthit.core.designsystem.component.animation.WorthItAnimatedVisibility
 import com.metes.worthit.core.designsystem.component.image.WorthItIcon
-import com.metes.worthit.core.designsystem.component.button.WorthItIconButton
+import com.metes.worthit.core.designsystem.component.image.WorthItImage
+import com.metes.worthit.core.designsystem.component.nav.WorthItTopAppBar
 import com.metes.worthit.core.designsystem.component.preview.PreviewBottomTab
 import com.metes.worthit.core.designsystem.component.preview.ThemePreviewConfig
 import com.metes.worthit.core.designsystem.component.preview.ThemePreviewParameter
 import com.metes.worthit.core.designsystem.component.preview.WorthItScreenPreview
+import com.metes.worthit.core.designsystem.component.progress.LoadingScreen
 import com.metes.worthit.core.designsystem.component.text.WorthItText
 import com.metes.worthit.core.designsystem.theme.AppTheme
 import com.metes.worthit.core.designsystem.util.rememberDateFormatter
@@ -206,7 +208,9 @@ fun SaveItemScreen(
     Box(
         modifier = modifier
             .fillMaxSize()
-            // experimental
+            .background(AppTheme.colorScheme.background)
+            .imePadding()
+            .nestedScroll(scrollBehavior.nestedScrollConnection)
             .clickable(
                 interactionSource = remember { MutableInteractionSource() },
                 indication = null
@@ -214,80 +218,25 @@ fun SaveItemScreen(
                 focusManager.clearFocus()
             }
     ) {
-        Scaffold(
-            modifier = Modifier
-                .fillMaxSize()
-                .imePadding()
-                .nestedScroll(scrollBehavior.nestedScrollConnection),
-            containerColor = AppTheme.colorScheme.background,
-            floatingActionButton = {
-                WorthItAnimatedVisibility(visible = !isImeVisible) {
-                    SaveItemFloatingActionButton(isEditingMode = uiState.isEditingMode) {
-                        keyboardController?.hide()
-                        onAddItemClick()
-                    }
-                }
-            },
-            topBar = {
-                WorthItTopAppBar(
-                    title = {
-                        WorthItText(text = stringResource(if (uiState.isEditingMode) R.string.editing_item else R.string.adding_item))
-                    },
-                    navigationIcon = {
-                        WorthItIconButton(
-                            onClick = {
-                                keyboardController?.hide()
-                                onBackClick()
-                            },
-                            content = {
-                                WorthItIcon(drawableRes = DesignR.drawable.back_24dp, contentDescriptionRes = R.string.cd_back)
-                            },
-                        )
-                    },
-                    scrollBehavior = scrollBehavior,
-                    actions = {
-                        Row(
-                            modifier = Modifier,
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.End
-                        ) {
-                            WorthItAnimatedVisibility(
-                                visible = uiState.imageUri != null,
-                                modifier = Modifier.size(36.dp),
-                                enter = fadeIn() + expandHorizontally(),
-                                exit = fadeOut() + shrinkHorizontally(),
-                            ) {
-                                WorthItIconButton(onClick = onRemoveImageClick) {
-                                    WorthItIcon(
-                                        drawableRes = R.drawable.remove_image_36dp,
-                                        contentDescriptionRes = R.string.cd_remove_image,
-                                    )
-                                }
-                            }
-                            Spacer(Modifier.width(8.dp))
-                            WorthItAnimatedVisibility(
-                                visible = isImeVisible,
-                                modifier = Modifier.size(36.dp),
-                                enter = fadeIn() + expandHorizontally(),
-                                exit = fadeOut() + shrinkHorizontally(),
-                            ) {
-                                SaveItemTopBarButton(isEditingMode = uiState.isEditingMode) {
-                                    keyboardController?.hide()
-                                    onAddItemClick()
-                                }
-                            }
-                        }
-                    },
-                )
-            },
-        ) { paddingValues ->
+        // Column for TopBar with scroll behavior
+        Column(modifier = Modifier.fillMaxSize()) {
+            TopBar(
+                isEditingMode = uiState.isEditingMode,
+                isRemoveIconButtonVisible = uiState.imageUri != null,
+                keyboardController = keyboardController,
+                onBackClick = onBackClick,
+                scrollBehavior = scrollBehavior,
+                onRemoveImageClick = onRemoveImageClick,
+                isImeVisible = isImeVisible,
+                onAddItemClick = onAddItemClick,
+            )
+            // Column for content
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(paddingValues)
                     .verticalScroll(rememberScrollState())
                     .padding(bottom = WorthItFloatingActionButtonDefaults.scrollableFabClearance)
-                    .padding(start = 16.dp, end = 16.dp, top = 16.dp),
+                    .padding(top = 8.dp, start = 8.dp, end = 8.dp),
             ) {
                 WorthItImage(
                     modifier = Modifier
@@ -295,9 +244,7 @@ fun SaveItemScreen(
                         .padding(bottom = 8.dp)
                         .size(240.dp)
                         .clip(RoundedCornerShape(16.dp))
-                        .clickable(
-                            onClick = onImageClick,
-                        ),
+                        .clickable(onClick = onImageClick),
                     model = uiState.imageUri,
                     contentScale = ContentScale.Fit,
                     defaultImageDrawableRes = R.drawable.image_search_24dp,
@@ -309,14 +256,14 @@ fun SaveItemScreen(
                     nameError = uiState.nameError,
                     modifier = Modifier.focusRequester(nameFocusRequester),
                     onRemoveNameClick = onRemoveNameClick,
-                    onNameChange = onNameChange
+                    onNameChange = onNameChange,
                 )
 
                 DescriptionTextField(
                     description = uiState.description,
                     onRemoveDescriptionClick = onRemoveDescriptionClick,
-                    onDescriptionChange = onDescriptionChange
-,                )
+                    onDescriptionChange = onDescriptionChange,
+                )
 
                 Row(
                     modifier = Modifier.fillMaxWidth(),
@@ -371,7 +318,89 @@ fun SaveItemScreen(
                 }
             }
         }
+
+        WorthItAnimatedVisibility(
+            visible = !isImeVisible,
+            modifier = Modifier
+                .align(Alignment.BottomEnd)
+                .padding(
+                    end = WorthItFloatingActionButtonDefaults.fabSpaceAround,
+                    bottom = WorthItFloatingActionButtonDefaults.fabSpaceAround,
+                )
+        ) {
+            SaveItemFloatingActionButton(isEditingMode = uiState.isEditingMode) {
+                keyboardController?.hide()
+                onAddItemClick()
+            }
+        }
     }
+}
+
+@Composable
+@OptIn(ExperimentalMaterial3Api::class)
+private fun TopBar(
+    isEditingMode: Boolean,
+    isRemoveIconButtonVisible: Boolean,
+    keyboardController: SoftwareKeyboardController?,
+    onBackClick: () -> Unit,
+    scrollBehavior: TopAppBarScrollBehavior,
+    onRemoveImageClick: () -> Unit,
+    isImeVisible: Boolean,
+    onAddItemClick: () -> Unit
+) {
+    WorthItTopAppBar(
+        title = {
+            WorthItText(text = stringResource(if (isEditingMode) R.string.editing_item else R.string.adding_item))
+        },
+        navigationIcon = {
+            WorthItIconButton(
+                onClick = {
+                    keyboardController?.hide()
+                    onBackClick()
+                },
+                content = {
+                    WorthItIcon(
+                        drawableRes = DesignR.drawable.back_24dp,
+                        contentDescriptionRes = R.string.cd_back,
+                    )
+                },
+            )
+        },
+        scrollBehavior = scrollBehavior,
+        actions = {
+            Row(
+                modifier = Modifier,
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.End
+            ) {
+                WorthItAnimatedVisibility(
+                    visible = isRemoveIconButtonVisible,
+                    modifier = Modifier.size(36.dp),
+                    enter = fadeIn() + expandHorizontally(),
+                    exit = fadeOut() + shrinkHorizontally(),
+                ) {
+                    WorthItIconButton(onClick = onRemoveImageClick) {
+                        WorthItIcon(
+                            drawableRes = R.drawable.remove_image_36dp,
+                            contentDescriptionRes = R.string.cd_remove_image,
+                        )
+                    }
+                }
+                Spacer(Modifier.width(8.dp))
+                WorthItAnimatedVisibility(
+                    visible = isImeVisible,
+                    modifier = Modifier.size(36.dp),
+                    enter = fadeIn() + expandHorizontally(),
+                    exit = fadeOut() + shrinkHorizontally(),
+                ) {
+                    SaveItemTopBarButton(isEditingMode = isEditingMode) {
+                        keyboardController?.hide()
+                        onAddItemClick()
+                    }
+                }
+            }
+        },
+    )
 }
 
 @Preview
@@ -397,7 +426,7 @@ private fun SaveItemScreenPreview(
                 currentDate = LocalDate.now(),
                 nameError = UiText.StringResource(R.string.enter_name),
                 priceError = UiText.StringResource(R.string.price_must_be_a_number),
-                isEditingMode = true
+                isEditingMode = true,
             ),
             nameFocusRequester = nameFocusRequester,
             priceFocusRequester = priceFocusRequester,
