@@ -2,7 +2,8 @@ package com.metes.worthit.app
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.metes.worthit.core.domain.entity.Currency
+import com.metes.worthit.app.util.toPrimaryThemeColor
+import com.metes.worthit.core.designsystem.theme.PrimaryThemeColor
 import com.metes.worthit.core.domain.entity.ThemeColor
 import com.metes.worthit.core.domain.entity.ThemeMode
 import com.metes.worthit.core.domain.entity.UserPreferences
@@ -25,14 +26,11 @@ internal class MainActivityViewModel @Inject constructor(
 
     val uiState = userSettings.preferences
         .map { userPreferences ->
-            MainActivityUiState(
-                userPreferences = userPreferences,
-                isLoading = false
-            )
+            MainUiState.Loaded(userPreferences = userPreferences)
         }.stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(5_000),
-            initialValue = MainActivityUiState()
+            initialValue = MainUiState.Loading
         )
 
     fun processEvent(event: AppIntentEvent) {
@@ -46,11 +44,29 @@ internal class MainActivityViewModel @Inject constructor(
     }
 }
 
-data class MainActivityUiState(
-    val userPreferences: UserPreferences = UserPreferences(
-        currency = Currency.fromNameOrDefault(null),
-        themeColor = ThemeColor.fromNameOrDefault(null),
-        themeMode = ThemeMode.fromNameOrDefault(null)
-    ),
-    val isLoading: Boolean = true
-)
+sealed interface MainUiState {
+    data object Loading: MainUiState
+
+    data class Loaded(
+        val userPreferences: UserPreferences,
+    ): MainUiState {
+
+        override fun shouldShouldUseDarkTheme(isSystemInDarkTheme: Boolean): Boolean {
+            return when(userPreferences.themeMode) {
+                ThemeMode.DARK -> true
+                ThemeMode.LIGHT -> false
+                ThemeMode.SYSTEM -> isSystemInDarkTheme
+            }
+        }
+
+        override fun primaryThemeColor(): PrimaryThemeColor {
+            return userPreferences.themeColor.toPrimaryThemeColor()
+        }
+    }
+
+    fun shouldKeepSplashScreen() = this is Loading
+
+    fun shouldShouldUseDarkTheme(isSystemInDarkTheme: Boolean) = isSystemInDarkTheme
+
+    fun primaryThemeColor() = ThemeColor.fromNameOrDefault(null).toPrimaryThemeColor()
+}

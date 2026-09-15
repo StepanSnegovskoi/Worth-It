@@ -21,9 +21,7 @@ import com.metes.worthit.app.ui.AppNavigation
 import com.metes.worthit.app.ui.GlobalNavigationEffect
 import com.metes.worthit.app.ui.bottomNavItems
 import com.metes.worthit.app.util.isSystemInDarkTheme
-import com.metes.worthit.app.util.toPrimaryThemeColor
 import com.metes.worthit.core.designsystem.theme.AppTheme
-import com.metes.worthit.core.domain.entity.ThemeMode
 import com.metes.worthit.core.navigation.NavigationManager
 import com.metes.worthit.core.navigation.Screen
 import com.metes.worthit.core.navigation.rememberMyAppNavBackStack
@@ -50,11 +48,7 @@ class MainActivity : ComponentActivity() {
             mainViewModel.uiState,
             isSystemInDarkTheme()
         ) { uiState, isSystemDarkTheme ->
-            when(uiState.userPreferences.themeMode) {
-                ThemeMode.DARK -> true
-                ThemeMode.LIGHT -> false
-                ThemeMode.SYSTEM -> isSystemDarkTheme
-            }
+            uiState.shouldShouldUseDarkTheme(isSystemDarkTheme)
         }.stateIn(
             scope = lifecycleScope,
             started = SharingStarted.WhileSubscribed(5_000),
@@ -67,7 +61,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         splashScreen.setKeepOnScreenCondition {
-            mainViewModel.uiState.value.isLoading
+            mainViewModel.uiState.value.shouldKeepSplashScreen()
         }
 
         processCurrentIntent(intent)
@@ -94,10 +88,15 @@ class MainActivity : ComponentActivity() {
         }
 
         setContent {
+            val uiState by mainViewModel.uiState.collectAsStateWithLifecycle()
+
+            if (uiState.shouldKeepSplashScreen()) {
+                return@setContent
+            }
+
             val isDarkTheme by isSystemInDarkThemeStateFlow.collectAsStateWithLifecycle(
                 initialValue = resources.configuration.isSystemInDarkTheme
             )
-            val uiState by mainViewModel.uiState.collectAsStateWithLifecycle()
             val backStack = rememberMyAppNavBackStack(Screen.Items)
 
             GlobalNavigationEffect(
@@ -107,7 +106,7 @@ class MainActivity : ComponentActivity() {
 
             AppTheme(
                 isDarkTheme = isDarkTheme,
-                primaryThemeColor = uiState.userPreferences.themeColor.toPrimaryThemeColor(),
+                primaryThemeColor = uiState.primaryThemeColor(),
             ) {
                 AppNavigation(
                     backStack = backStack,
