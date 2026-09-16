@@ -29,7 +29,7 @@ import com.metes.worthit.feature.items.ItemUiModel
 import java.time.LocalDate
 import kotlin.math.roundToInt
 
-enum class State {
+internal enum class State {
     CLOSED, OPEN
 }
 
