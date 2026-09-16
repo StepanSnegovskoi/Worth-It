@@ -86,7 +86,7 @@ fun ItemsRoute(
 }
 
 @Composable
-fun ItemsScreen(
+internal fun ItemsScreen(
     uiState: ItemsUiState.Success,
     modifier: Modifier = Modifier,
     onItemDeleteClick: (Int, String?) -> Unit,
