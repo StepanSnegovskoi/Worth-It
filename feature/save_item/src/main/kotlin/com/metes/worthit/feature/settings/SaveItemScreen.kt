@@ -153,7 +153,7 @@ fun SaveItemRoute(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SaveItemScreen(
+internal fun SaveItemScreen(
     uiState: SaveItemUiState.Success,
     nameFocusRequester: FocusRequester,
     priceFocusRequester: FocusRequester,
