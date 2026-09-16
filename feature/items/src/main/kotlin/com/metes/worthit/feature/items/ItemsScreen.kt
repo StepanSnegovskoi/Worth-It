@@ -1,25 +1,25 @@
 package com.metes.worthit.feature.items
 
-import android.annotation.SuppressLint
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.calculateEndPadding
-import androidx.compose.foundation.layout.calculateStartPadding
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.width
-import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
@@ -41,10 +41,11 @@ import java.time.LocalDate
 import com.metes.worthit.core.designsystem.R as DesignR
 
 private val bottomButtonSize = 48.dp
+private val bottomButtonSpaceAround = 16.dp
+private val scrollableBottomButtonClearance = bottomButtonSize + bottomButtonSpaceAround * 2
 
 @Composable
 fun ItemsRoute(
-    scaffoldPadding: PaddingValues,
     modifier: Modifier = Modifier,
     viewModel: ItemsViewModel = hiltViewModel(),
     onNavigateToEditingItem: (Int) -> Unit,
@@ -63,7 +64,6 @@ fun ItemsRoute(
 
         is ItemsUiState.Success -> ItemsScreen(
             uiState = currentState,
-            scaffoldPadding = scaffoldPadding,
             modifier = modifier,
             onItemDeleteClick = { itemId: Int, itemLocalImagePath: String? ->
                 viewModel.processCommand(ItemsCommand.DeleteItem(itemId, itemLocalImagePath))
@@ -85,11 +85,9 @@ fun ItemsRoute(
     }
 }
 
-@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun ItemsScreen(
     uiState: ItemsUiState.Success,
-    scaffoldPadding: PaddingValues,
     modifier: Modifier = Modifier,
     onItemDeleteClick: (Int, String?) -> Unit,
     onItemClick: (Int) -> Unit,
@@ -98,63 +96,24 @@ fun ItemsScreen(
     onEmptyListClick: () -> Unit,
     onUnselectItemsClick: () -> Unit,
 ) {
-    val layoutDirection = LocalLayoutDirection.current
+    val statusBarsPaddingDp = WindowInsets.statusBars.asPaddingValues().calculateTopPadding()
 
-    val combinedContentPadding = PaddingValues(
-        start = scaffoldPadding.calculateStartPadding(layoutDirection) + 16.dp,
-        top = scaffoldPadding.calculateTopPadding() + 8.dp,
-        end = scaffoldPadding.calculateEndPadding(layoutDirection) + 16.dp,
-        bottom = bottomButtonSize + 16.dp * 2
-    )
-    Modifier.padding(scaffoldPadding)
-    Scaffold(
+    Box(
         modifier = modifier
-            .fillMaxSize(),
-        floatingActionButton = {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.End
-            ) {
-                WorthItAnimatedVisibility(visible = uiState.selectedItemIds.isNotEmpty()) {
-                    WorthItIconButton(
-                        modifier = Modifier.size(bottomButtonSize),
-                        onClick = {
-                            onItemsDeleteClick(uiState.selectedItemIds)
-                        }
-                    ) {
-                        WorthItIcon(
-                            drawableRes = DesignR.drawable.delete_48dp,
-                            contentDescriptionRes = R.string.cd_delete_selected_items,
-                            tint = AppTheme.colorScheme.primary,
-                        )
-                    }
-                }
-                Spacer(Modifier.width(8.dp))
-                WorthItAnimatedVisibility(visible = uiState.selectedItemIds.isNotEmpty()) {
-                    WorthItIconButton(
-                        modifier = Modifier.size(bottomButtonSize),
-                        onClick = {
-                            onUnselectItemsClick()
-                        }
-                    ) {
-                        WorthItIcon(
-                            drawableRes = R.drawable.hand_off_48dp,
-                            contentDescriptionRes = R.string.cd_unselect_items,
-                            tint = AppTheme.colorScheme.primary,
-                        )
-                    }
-                }
-            }
-        },
-        containerColor = AppTheme.colorScheme.background
+            .fillMaxSize()
+            .background(AppTheme.colorScheme.background),
     ) {
         Items(
             items = uiState.items,
             selectedItemIds = uiState.selectedItemIds,
-            contentPadding = combinedContentPadding,
             modifier = Modifier
-                .fillMaxSize(),
+                .fillMaxSize()
+                .padding(start = 8.dp, end = 8.dp)
+                .navigationBarsPadding(),
+            contentPadding = PaddingValues(
+                top = statusBarsPaddingDp + 8.dp,
+                bottom = scrollableBottomButtonClearance
+            ),
             onClick = onItemClick,
             onLongClick = onItemLongClick,
             onDeleteClick = onItemDeleteClick,
@@ -163,7 +122,6 @@ fun ItemsScreen(
                     modifier = Modifier
                         .fillMaxSize()
                         .padding(horizontal = 16.dp)
-                        .padding(top = scaffoldPadding.calculateTopPadding())
                         .clip(AppTheme.shape.container),
                     contentAlignment = Alignment.Center,
                 ) {
@@ -175,6 +133,66 @@ fun ItemsScreen(
                 }
             }
         )
+
+        ItemsFab(
+            visible = uiState.selectedItemIds.isNotEmpty(),
+            selectedItemIds = uiState.selectedItemIds,
+            modifier = Modifier
+                .fillMaxWidth()
+                .align(Alignment.BottomEnd)
+                .navigationBarsPadding()
+                .padding(
+                    bottom = bottomButtonSpaceAround,
+                    end = bottomButtonSpaceAround,
+                ),
+            onItemsDeleteClick = onItemsDeleteClick,
+            onUnselectItemsClick = onUnselectItemsClick,
+        )
+    }
+}
+
+@Composable
+private fun ItemsFab(
+    visible: Boolean,
+    selectedItemIds: Set<Int>,
+    modifier: Modifier = Modifier,
+    onItemsDeleteClick: (Set<Int>) -> Unit,
+    onUnselectItemsClick: () -> Unit,
+) {
+    Row(
+        modifier = modifier,
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.End
+    ) {
+        WorthItAnimatedVisibility(visible = visible) {
+            WorthItIconButton(
+                modifier = Modifier.size(bottomButtonSize),
+                onClick = {
+                    onItemsDeleteClick(selectedItemIds)
+                }
+            ) {
+                WorthItIcon(
+                    drawableRes = DesignR.drawable.delete_48dp,
+                    contentDescriptionRes = R.string.cd_delete_selected_items,
+                    tint = AppTheme.colorScheme.primary,
+                )
+            }
+        }
+        Spacer(Modifier.width(8.dp))
+        WorthItAnimatedVisibility(visible = visible) {
+            WorthItIconButton(
+                modifier = Modifier.size(bottomButtonSize),
+                onClick = {
+                    onUnselectItemsClick()
+                }
+            ) {
+                WorthItIcon(
+                    drawableRes = R.drawable.hand_off_48dp,
+                    contentDescriptionRes = R.string.cd_unselect_items,
+                    tint = AppTheme.colorScheme.primary,
+                )
+            }
+        }
     }
 }
 
@@ -186,7 +204,7 @@ private fun ItemsScreenPreview(
     WorthItScreenPreview(
         theme = theme,
         selectedTab = PreviewBottomTab.Items
-    ) { scaffoldPadding, modifier ->
+    ) { _, modifier ->
         ItemsScreen(
             uiState = ItemsUiState.Success(
                 items = buildList {
@@ -202,7 +220,6 @@ private fun ItemsScreenPreview(
                 },
                 selectedItemIds = setOf(2, 4)
             ),
-            scaffoldPadding = scaffoldPadding,
             modifier = modifier,
             onItemDeleteClick = { _, _ -> },
             onItemClick = { },

@@ -24,8 +24,8 @@ import java.time.LocalDate
 internal fun Items(
     items: List<ItemUiModel>,
     selectedItemIds: Set<Int>,
-    contentPadding: PaddingValues,
     modifier: Modifier = Modifier,
+    contentPadding: PaddingValues = PaddingValues.Zero,
     onClick: (Int) -> Unit,
     onLongClick: (Int) -> Unit,
     onDeleteClick: (Int, String?) -> Unit,
@@ -91,7 +91,6 @@ private fun ItemsPreview(
                     }
                 },
                 selectedItemIds = setOf(2, 4),
-                contentPadding = PaddingValues(8.dp),
                 onClick = { },
                 onLongClick = { },
                 onDeleteClick = { _, _ -> },
