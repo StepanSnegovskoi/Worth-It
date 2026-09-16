@@ -27,7 +27,7 @@ import com.metes.worthit.feature.settings.R
 @Composable
 fun ThemeModes(
     selectedThemeMode: ThemeMode,
-    modifier: Modifier = Modifier.Companion,
+    modifier: Modifier = Modifier,
     textColor: Color = AppTheme.colorScheme.onBackground,
     themeModes: List<ThemeMode> = ThemeMode.entries,
     verticalArrangement: Arrangement.Vertical = Arrangement.spacedBy(8.dp),
@@ -40,14 +40,11 @@ fun ThemeModes(
         color = AppTheme.colorScheme.onBackground,
     )
     ContentWrapper(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = modifier,
         color = AppTheme.colorScheme.surface,
         alpha = 1f,
     ) {
-        Column(
-            modifier = modifier,
-            verticalArrangement = verticalArrangement,
-        ) {
+        Column(verticalArrangement = verticalArrangement) {
             themeModes.fastForEach { themeMode ->
                 OneSettingItem(
                     text = stringResource(themeMode.nameStringRes),

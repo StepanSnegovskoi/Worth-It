@@ -44,14 +44,11 @@ fun ThemeColors(
         color = AppTheme.colorScheme.onBackground,
     )
     ContentWrapper(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = modifier,
         color = AppTheme.colorScheme.surface,
         alpha = 1f,
     ) {
-        Column(
-            modifier = modifier,
-            verticalArrangement = verticalArrangement,
-        ) {
+        Column(verticalArrangement = verticalArrangement){
             themeColors.fastForEach { themeColor ->
                 val primaryLightColor = themeColor.toPrimaryThemeColor().primaryColor(false)
                 val primaryDarkColor = themeColor.toPrimaryThemeColor().primaryColor(true)
