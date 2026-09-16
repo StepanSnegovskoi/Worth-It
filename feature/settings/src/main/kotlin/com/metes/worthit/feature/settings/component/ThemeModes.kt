@@ -25,7 +25,7 @@ import com.metes.worthit.core.presentation.nameStringRes
 import com.metes.worthit.feature.settings.R
 
 @Composable
-fun ThemeModes(
+internal fun ThemeModes(
     selectedThemeMode: ThemeMode,
     modifier: Modifier = Modifier,
     textColor: Color = AppTheme.colorScheme.onBackground,

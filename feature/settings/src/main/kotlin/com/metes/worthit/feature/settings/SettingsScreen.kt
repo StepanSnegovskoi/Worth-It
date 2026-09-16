@@ -64,7 +64,7 @@ fun SettingsRoute(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SettingsScreen(
+internal fun SettingsScreen(
     uiState: SettingsUiState.Success,
     modifier: Modifier = Modifier,
     onSaveThemeColorClick: (ThemeColor) -> Unit,

@@ -28,7 +28,7 @@ import com.metes.worthit.core.presentation.toThemeColor
 import com.metes.worthit.feature.settings.R
 
 @Composable
-fun ThemeColors(
+internal fun ThemeColors(
     selectedThemeColor: ThemeColor,
     isDarkTheme: Boolean,
     modifier: Modifier = Modifier,

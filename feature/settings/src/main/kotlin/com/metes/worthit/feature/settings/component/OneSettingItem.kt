@@ -35,7 +35,7 @@ import com.metes.worthit.core.presentation.nameStringRes
 import com.metes.worthit.core.designsystem.R as DesignR
 
 @Composable
-fun OneSettingItem(
+internal fun OneSettingItem(
     text: String,
     selected: Boolean,
     brush: Brush,
