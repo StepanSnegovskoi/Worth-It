@@ -1,5 +1,6 @@
 package com.metes.worthit.feature.settings
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -7,11 +8,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.platform.SoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
@@ -71,52 +72,65 @@ fun SettingsScreen(
     onBackClick: () -> Unit,
 ) {
     val keyboardController = LocalSoftwareKeyboardController.current
-    Scaffold(
+
+    Column(
         modifier = modifier
-            .fillMaxSize(),
-        containerColor = AppTheme.colorScheme.background,
-        topBar = {
-            WorthItTopAppBar(
-                title = {
-                    WorthItText(text = stringResource(R.string.settings))
+            .fillMaxSize()
+            .background(AppTheme.colorScheme.background)
+            .verticalScroll(rememberScrollState()),
+        verticalArrangement = Arrangement.spacedBy(8.dp),
+    ) {
+        SettingsTopBar(
+            keyboardController = keyboardController,
+            onBackClick = onBackClick,
+        )
+
+        ThemeColors(
+            selectedThemeColor = uiState.preferences.themeColor,
+            isDarkTheme = AppTheme.isDarkTheme,
+            modifier = Modifier.padding(horizontal = 8.dp),
+            onClick = {
+                onSaveThemeColorClick(it)
+            },
+        )
+
+        ThemeModes(
+            selectedThemeMode = uiState.preferences.themeMode,
+            modifier = Modifier.padding(horizontal = 8.dp),
+            onClick = {
+                onSaveThemeModeClick(it)
+            },
+        )
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun SettingsTopBar(
+    keyboardController: SoftwareKeyboardController?,
+    modifier: Modifier = Modifier,
+    onBackClick: () -> Unit,
+) {
+    WorthItTopAppBar(
+        title = {
+            WorthItText(text = stringResource(R.string.settings))
+        },
+        modifier = modifier,
+        navigationIcon = {
+            WorthItIconButton(
+                onClick = {
+                    keyboardController?.hide()
+                    onBackClick()
                 },
-                navigationIcon = {
-                    WorthItIconButton(
-                        onClick = {
-                            keyboardController?.hide()
-                            onBackClick()
-                        },
-                        content = {
-                            WorthItIcon(drawableRes = DesignR.drawable.back_24dp, contentDescriptionRes = R.string.cd_back)
-                        },
+                content = {
+                    WorthItIcon(
+                        drawableRes = DesignR.drawable.back_24dp,
+                        contentDescriptionRes = R.string.cd_back,
                     )
                 },
             )
-        }
-    ) { innerPadding ->
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(innerPadding)
-                .verticalScroll(rememberScrollState())
-                .padding(horizontal = 8.dp),
-            verticalArrangement = Arrangement.spacedBy(8.dp),
-        ) {
-            ThemeColors(
-                selectedThemeColor = uiState.preferences.themeColor,
-                isDarkTheme = AppTheme.isDarkTheme,
-                onClick = {
-                    onSaveThemeColorClick(it)
-                }
-            )
-            ThemeModes(
-                selectedThemeMode = uiState.preferences.themeMode,
-                onClick = {
-                    onSaveThemeModeClick(it)
-                }
-            )
-        }
-    }
+        },
+    )
 }
 
 @Preview
@@ -137,7 +151,7 @@ private fun SettingsScreenPreview(
                     preferences = UserPreferences(
                         currency = Currency.EUR,
                         themeColor = theme.color.toThemeColor,
-                        themeMode = ThemeMode.DARK
+                        themeMode = ThemeMode.DARK,
                     )
                 ),
                 modifier = modifier,
