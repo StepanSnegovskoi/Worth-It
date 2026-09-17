@@ -48,7 +48,7 @@ class MainActivity : ComponentActivity() {
             mainViewModel.uiState,
             isSystemInDarkTheme()
         ) { uiState, isSystemDarkTheme ->
-            uiState.shouldShouldUseDarkTheme(isSystemDarkTheme)
+            uiState.shouldUseDarkTheme(isSystemDarkTheme)
         }.stateIn(
             scope = lifecycleScope,
             started = SharingStarted.WhileSubscribed(5_000),

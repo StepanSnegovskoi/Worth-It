@@ -51,7 +51,7 @@ sealed interface MainUiState {
         val userPreferences: UserPreferences,
     ): MainUiState {
 
-        override fun shouldShouldUseDarkTheme(isSystemInDarkTheme: Boolean): Boolean {
+        override fun shouldUseDarkTheme(isSystemInDarkTheme: Boolean): Boolean {
             return when(userPreferences.themeMode) {
                 ThemeMode.DARK -> true
                 ThemeMode.LIGHT -> false
@@ -66,7 +66,7 @@ sealed interface MainUiState {
 
     fun shouldKeepSplashScreen() = this is Loading
 
-    fun shouldShouldUseDarkTheme(isSystemInDarkTheme: Boolean) = isSystemInDarkTheme
+    fun shouldUseDarkTheme(isSystemInDarkTheme: Boolean) = isSystemInDarkTheme
 
     fun primaryThemeColor() = ThemeColor.fromNameOrDefault(null).toPrimaryThemeColor()
 }
