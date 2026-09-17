@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="preview_items">Предметы</string>
+    <string name="preview_process_item">Обработать предмет</string>
+    <string name="preview_settings">Настройки</string>
+    <string name="cd_failed_to_load_image">Не удалось загрузить изображение</string>
+</resources>
