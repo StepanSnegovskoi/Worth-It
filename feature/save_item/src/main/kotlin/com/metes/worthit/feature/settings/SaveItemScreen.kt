@@ -63,6 +63,7 @@ import com.metes.worthit.core.designsystem.component.defaults.WorthItCardDefault
 import com.metes.worthit.core.designsystem.component.defaults.WorthItFloatingActionButtonDefaults
 import com.metes.worthit.core.designsystem.component.image.WorthItIcon
 import com.metes.worthit.core.designsystem.component.image.WorthItImage
+import com.metes.worthit.core.designsystem.component.image.WorthItSubcomposeImage
 import com.metes.worthit.core.designsystem.component.nav.WorthItTopAppBar
 import com.metes.worthit.core.designsystem.component.preview.PreviewBottomTab
 import com.metes.worthit.core.designsystem.component.preview.ThemePreviewConfig
@@ -238,7 +239,7 @@ internal fun SaveItemScreen(
                     .padding(bottom = WorthItFloatingActionButtonDefaults.scrollableFabClearance)
                     .padding(top = 8.dp, start = 8.dp, end = 8.dp),
             ) {
-                WorthItImage(
+                WorthItSubcomposeImage(
                     modifier = Modifier
                         .align(Alignment.CenterHorizontally)
                         .padding(bottom = 8.dp)
