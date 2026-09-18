@@ -16,7 +16,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusManager
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
@@ -130,47 +129,40 @@ internal fun ItemsScreen(
                 onCleanClick = onCleanClickSearchQuery
             )
 
-            Items(
-                state = itemsState,
-                items = uiState.filteredItemsByQuery,
-                selectedItemIds = uiState.selectedItemIds,
-                modifier = Modifier
-                    .fillMaxSize(),
-                contentPadding = PaddingValues(
-                    bottom = scrollableBottomButtonClearance,
-                    top = 8.dp,
-                ),
-                onClick = onItemClick,
-                onLongClick = onItemLongClick,
-                onDeleteClick = onItemDeleteClick,
-                contentIfEmpty = {
-                    Box(
+            if (uiState.filteredItemsByQuery.isEmpty()) {
+                if (uiState.items.isEmpty()) {
+                    Warning(
+                        text = stringResource(R.string.the_list_of_items_is_empty),
                         modifier = Modifier
-                            .fillMaxSize()
-                            .padding(horizontal = 16.dp)
-                            .clip(AppTheme.shape.container),
-                        contentAlignment = Alignment.Center,
-                    ) {
-                        if (uiState.items.isEmpty()) {
-                            Warning(
-                                text = stringResource(R.string.the_list_of_items_is_empty),
-                                modifier = Modifier
-                                    .fillMaxWidth(),
-                                actionText = stringResource(R.string.let_s_add_something),
-                                iconRes = R.drawable.wind_40dp,
-                                onClick = onEmptyListClick,
-                            )
-                        } else {
-                            Warning(
-                                text = stringResource(R.string.nothing_was_founded),
-                                modifier = Modifier
-                                    .fillMaxWidth(),
-                                iconRes = R.drawable.wind_40dp,
-                            )
-                        }
-                    }
+                            .fillMaxWidth(),
+                        actionText = stringResource(R.string.let_s_add_something),
+                        iconRes = R.drawable.wind_40dp,
+                        onClick = onEmptyListClick,
+                    )
+                } else {
+                    Warning(
+                        text = stringResource(R.string.nothing_was_founded),
+                        modifier = Modifier
+                            .fillMaxWidth(),
+                        iconRes = R.drawable.wind_40dp,
+                    )
                 }
-            )
+            } else {
+                Items(
+                    state = itemsState,
+                    items = uiState.filteredItemsByQuery,
+                    selectedItemIds = uiState.selectedItemIds,
+                    modifier = Modifier
+                        .fillMaxSize(),
+                    contentPadding = PaddingValues(
+                        bottom = scrollableBottomButtonClearance,
+                        top = 8.dp,
+                    ),
+                    onClick = onItemClick,
+                    onLongClick = onItemLongClick,
+                    onDeleteClick = onItemDeleteClick,
+                )
+            }
         }
 
         ItemsFloatingActionButton(

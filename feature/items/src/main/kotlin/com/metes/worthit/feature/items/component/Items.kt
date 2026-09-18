@@ -32,41 +32,36 @@ internal fun Items(
     onClick: (Int) -> Unit,
     onLongClick: (Int) -> Unit,
     onDeleteClick: (Int, String?) -> Unit,
-    contentIfEmpty: @Composable (() -> Unit)? = null,
 ) {
     val density = LocalDensity.current
 
-    if (items.isEmpty()) {
-        contentIfEmpty?.invoke()
-    } else {
-        LazyColumn(
-            state = state,
-            modifier = modifier,
-            contentPadding = contentPadding,
-            verticalArrangement = Arrangement.spacedBy(8.dp),
-        ) {
-            items(
-                items = items,
-                key = { it.id },
-            ) { item ->
-                SwipeableItemCard(
-                    item = item,
-                    isSelected = item.id in selectedItemIds,
-                    modifier = Modifier.animateItem(),
-                    state = remember(density) {
-                        AnchoredDraggableState(
-                            initialValue = State.CLOSED,
-                            anchors = DraggableAnchors {
-                                State.CLOSED at 0f
-                                State.OPEN at with(density) { 96.dp.toPx() }
-                            },
-                        )
-                    },
-                    onClick = onClick,
-                    onLongClick = onLongClick,
-                    onDeleteClick = onDeleteClick,
-                )
-            }
+    LazyColumn(
+        state = state,
+        modifier = modifier,
+        contentPadding = contentPadding,
+        verticalArrangement = Arrangement.spacedBy(8.dp),
+    ) {
+        items(
+            items = items,
+            key = { it.id },
+        ) { item ->
+            SwipeableItemCard(
+                item = item,
+                isSelected = item.id in selectedItemIds,
+                modifier = Modifier.animateItem(),
+                state = remember(density) {
+                    AnchoredDraggableState(
+                        initialValue = State.CLOSED,
+                        anchors = DraggableAnchors {
+                            State.CLOSED at 0f
+                            State.OPEN at with(density) { 96.dp.toPx() }
+                        },
+                    )
+                },
+                onClick = onClick,
+                onLongClick = onLongClick,
+                onDeleteClick = onDeleteClick,
+            )
         }
     }
 }
