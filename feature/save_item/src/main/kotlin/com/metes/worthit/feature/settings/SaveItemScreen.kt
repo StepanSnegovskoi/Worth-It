@@ -62,7 +62,6 @@ import com.metes.worthit.core.designsystem.component.button.WorthItIconButton
 import com.metes.worthit.core.designsystem.component.defaults.WorthItCardDefaults
 import com.metes.worthit.core.designsystem.component.defaults.WorthItFloatingActionButtonDefaults
 import com.metes.worthit.core.designsystem.component.image.WorthItIcon
-import com.metes.worthit.core.designsystem.component.image.WorthItImage
 import com.metes.worthit.core.designsystem.component.image.WorthItSubcomposeImage
 import com.metes.worthit.core.designsystem.component.nav.WorthItTopAppBar
 import com.metes.worthit.core.designsystem.component.preview.PreviewBottomTab
