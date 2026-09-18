@@ -169,7 +169,6 @@ internal fun ItemsScreen(
             visible = uiState.selectedItemIds.isNotEmpty(),
             selectedItemIds = uiState.selectedItemIds,
             modifier = Modifier
-                .fillMaxWidth()
                 .align(Alignment.BottomEnd)
                 .imePadding()
                 .navigationBarsPadding()
