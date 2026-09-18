@@ -5,4 +5,7 @@
     <string name="let_s_add_something">Давай добавим что-то!</string>
     <string name="cd_delete_selected_items">Удалить выбранные предметы</string>
     <string name="cd_unselect_items">Отменить выбор предметов</string>
+    <string name="cd_search">Search</string>
+    <string name="nothing_was_founded">Предметы не найдены</string>
+    <string name="search">Поиск</string>
 </resources>

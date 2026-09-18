@@ -5,4 +5,7 @@
     <string name="let_s_add_something">Let\'s add something!</string>
     <string name="cd_delete_selected_items">Delete selected items</string>
     <string name="cd_unselect_items">Unselect items</string>
+    <string name="cd_search">Search</string>
+    <string name="nothing_was_founded">Nothing was founded</string>
+    <string name="search">Search</string>
 </resources>

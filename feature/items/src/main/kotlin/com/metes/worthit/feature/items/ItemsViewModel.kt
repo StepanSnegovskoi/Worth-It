@@ -1,49 +1,69 @@
 package com.metes.worthit.feature.items
 
 import androidx.compose.runtime.Immutable
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.metes.worthit.core.common.DefaultDispatcher
 import com.metes.worthit.core.domain.usecase.DeleteItemUseCase
 import com.metes.worthit.core.domain.usecase.DeleteItemsUseCase
 import com.metes.worthit.core.domain.usecase.ObserveItemsUseCase
 import com.metes.worthit.feature.items.mapper.toUiModels
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 import javax.inject.Inject
 
+private const val KEY_SEARCH_QUERY = "seach_query"
+
 @HiltViewModel
 class ItemsViewModel @Inject constructor(
     private val deleteItemUseCase: DeleteItemUseCase,
     private val deleteItemsUseCase: DeleteItemsUseCase,
+    private val savedStateHandle: SavedStateHandle,
+    @DefaultDispatcher private val defaultDispatcher: CoroutineDispatcher,
     observeItemsUseCase: ObserveItemsUseCase,
 ) : ViewModel() {
 
     private val selectedItemIds = MutableStateFlow<Set<Int>>(emptySet())
+    private val searchQueryFlow = savedStateHandle.getStateFlow(KEY_SEARCH_QUERY, "")
 
     val uiState = combine(
         observeItemsUseCase(),
         selectedItemIds,
-    ) { items, selectedItemIds ->
+        searchQueryFlow,
+    ) { items, selectedItemIds, searchQuery ->
         val uiItems = items.toUiModels()
-        val realSelectedItemIds = selectedItemIds
-            .filter { it in items.map { item -> item.id } }.toSet()
+
+        val filteredItems = uiItems.filter {
+            it.name.startsWith(searchQuery, ignoreCase = true)
+        }
+
+        val filteredIds = filteredItems.map { it.id }.toSet()
+
+        val realSelectedIds = selectedItemIds.intersect(filteredIds)
 
         ItemsUiState.Success(
             items = uiItems,
-            selectedItemIds = realSelectedItemIds
+            filteredItemsByQuery = filteredItems,
+            selectedItemIds = realSelectedIds,
+            searchQuery = searchQuery,
         )
-    }.stateIn(
-        scope = viewModelScope,
-        started = SharingStarted.WhileSubscribed(stopTimeoutMillis = 5_000),
-        initialValue = ItemsUiState.Loading
-    )
+    }
+        .flowOn(defaultDispatcher)
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(stopTimeoutMillis = 5_000),
+            initialValue = ItemsUiState.Loading
+        )
 
     private val _events = Channel<ItemsEvent>()
     val events = _events.receiveAsFlow()
@@ -92,8 +112,16 @@ class ItemsViewModel @Inject constructor(
                 }
             }
 
+            is ItemsCommand.ChangeSearchQuery -> {
+                savedStateHandle[KEY_SEARCH_QUERY] = command.query
+            }
+
             ItemsCommand.UnselectItems -> {
                 selectedItemIds.value = emptySet()
+            }
+
+            ItemsCommand.CleanSearchQueryClick -> {
+                savedStateHandle[KEY_SEARCH_QUERY] = ""
             }
         }
     }
@@ -120,6 +148,8 @@ sealed interface ItemsCommand {
     data class ClickItem(val itemId: Int) : ItemsCommand
     data class LongClickItem(val itemId: Int) : ItemsCommand
     data class DeleteItems(val itemIds: Set<Int>) : ItemsCommand
+    data class ChangeSearchQuery(val query: String) : ItemsCommand
+    data object CleanSearchQueryClick : ItemsCommand
     data object UnselectItems : ItemsCommand
 }
 
@@ -133,7 +163,9 @@ sealed interface ItemsUiState {
 
     data class Success(
         val items: List<ItemUiModel>,
+        val filteredItemsByQuery: List<ItemUiModel>,
         val selectedItemIds: Set<Int>,
+        val searchQuery: String,
     ) : ItemsUiState
 }
 

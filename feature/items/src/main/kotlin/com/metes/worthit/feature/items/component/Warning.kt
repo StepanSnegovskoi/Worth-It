@@ -1,5 +1,6 @@
 package com.metes.worthit.feature.items.component
 
+import androidx.annotation.DrawableRes
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -24,9 +25,12 @@ import com.metes.worthit.core.designsystem.theme.AppTheme
 import com.metes.worthit.feature.items.R
 
 @Composable
-internal fun ItemsListIsEmpty(
+internal fun Warning(
+    text: String,
     modifier: Modifier = Modifier,
-    onClick: () -> Unit,
+    actionText: String? = null,
+    @DrawableRes iconRes: Int? = null,
+    onClick: (() -> Unit)? = null,
 ) {
     ContentWrapper(
         modifier = modifier,
@@ -40,23 +44,27 @@ internal fun ItemsListIsEmpty(
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             WorthItText(
-                text = stringResource(R.string.the_list_of_items_is_empty),
+                text = text,
                 maxLines = Int.MAX_VALUE,
                 color = AppTheme.colorScheme.onSurface,
             )
-            WorthItIcon(drawableRes = R.drawable.wind_40dp, tint = AppTheme.colorScheme.primary)
-            WorthItText(
-                text = stringResource(R.string.let_s_add_something),
-                maxLines = Int.MAX_VALUE,
-                color = AppTheme.colorScheme.onSurface,
-            )
+            if (iconRes != null) {
+                WorthItIcon(drawableRes = iconRes, tint = AppTheme.colorScheme.primary)
+            }
+            if (actionText != null) {
+                WorthItText(
+                    text = actionText,
+                    maxLines = Int.MAX_VALUE,
+                    color = AppTheme.colorScheme.onSurface,
+                )
+            }
         }
     }
 }
 
 @Preview
 @Composable
-private fun ItemsListIsEmptyPreview(
+private fun WarningPreviewAll(
     @PreviewParameter(ThemePreviewParameter::class) theme: ThemePreviewConfig
 ) {
     AppTheme(
@@ -70,7 +78,37 @@ private fun ItemsListIsEmptyPreview(
                 .height(320.dp),
             contentAlignment = Alignment.Center
         ) {
-            ItemsListIsEmpty(
+            Warning(
+                text = stringResource(R.string.the_list_of_items_is_empty),
+                actionText = stringResource(R.string.let_s_add_something),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp),
+                iconRes = R.drawable.wind_40dp,
+                onClick = { }
+            )
+        }
+    }
+}
+
+@Preview
+@Composable
+private fun WarningPreviewText(
+    @PreviewParameter(ThemePreviewParameter::class) theme: ThemePreviewConfig
+) {
+    AppTheme(
+        isDarkTheme = theme.isDark,
+        primaryThemeColor = theme.color,
+    ) {
+        Box(
+            modifier = Modifier
+                .background(AppTheme.colorScheme.background)
+                .width(240.dp)
+                .height(320.dp),
+            contentAlignment = Alignment.Center
+        ) {
+            Warning(
+                text = stringResource(R.string.the_list_of_items_is_empty),
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(16.dp),

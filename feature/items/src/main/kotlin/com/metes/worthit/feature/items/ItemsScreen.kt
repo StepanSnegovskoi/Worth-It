@@ -1,33 +1,30 @@
 package com.metes.worthit.feature.items
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.statusBars
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.systemBarsPadding
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.focus.FocusManager
+import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.metes.worthit.core.designsystem.component.animation.WorthItAnimatedVisibility
-import com.metes.worthit.core.designsystem.component.button.WorthItIconButton
-import com.metes.worthit.core.designsystem.component.image.WorthItIcon
 import com.metes.worthit.core.designsystem.component.preview.PreviewBottomTab
 import com.metes.worthit.core.designsystem.component.preview.ThemePreviewConfig
 import com.metes.worthit.core.designsystem.component.preview.ThemePreviewParameter
@@ -36,13 +33,13 @@ import com.metes.worthit.core.designsystem.component.progress.LoadingScreen
 import com.metes.worthit.core.designsystem.theme.AppTheme
 import com.metes.worthit.core.presentation.ObserveAsEvents
 import com.metes.worthit.feature.items.component.Items
-import com.metes.worthit.feature.items.component.ItemsListIsEmpty
+import com.metes.worthit.feature.items.component.ItemsFloatingActionButton
+import com.metes.worthit.feature.items.component.SearchBar
+import com.metes.worthit.feature.items.component.Warning
+import com.metes.worthit.feature.items.component.bottomButtonSpaceAround
+import com.metes.worthit.feature.items.component.scrollableBottomButtonClearance
 import java.time.LocalDate
-import com.metes.worthit.core.designsystem.R as DesignR
 
-private val bottomButtonSize = 48.dp
-private val bottomButtonSpaceAround = 16.dp
-private val scrollableBottomButtonClearance = bottomButtonSize + bottomButtonSpaceAround * 2
 
 @Composable
 fun ItemsRoute(
@@ -52,6 +49,7 @@ fun ItemsRoute(
     onNavigateToAddingItem: () -> Unit,
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val focusManager = LocalFocusManager.current
 
     ObserveAsEvents(viewModel.events) { event ->
         when (event) {
@@ -64,6 +62,7 @@ fun ItemsRoute(
 
         is ItemsUiState.Success -> ItemsScreen(
             uiState = currentState,
+            focusManager = focusManager,
             modifier = modifier,
             onItemDeleteClick = { itemId: Int, itemLocalImagePath: String? ->
                 viewModel.processCommand(ItemsCommand.DeleteItem(itemId, itemLocalImagePath))
@@ -81,6 +80,12 @@ fun ItemsRoute(
             onUnselectItemsClick = {
                 viewModel.processCommand(ItemsCommand.UnselectItems)
             },
+            onQueryChanged = {
+                viewModel.processCommand(ItemsCommand.ChangeSearchQuery(it))
+            },
+            onCleanClickSearchQuery = {
+                viewModel.processCommand(ItemsCommand.CleanSearchQueryClick)
+            }
         )
     }
 }
@@ -88,6 +93,7 @@ fun ItemsRoute(
 @Composable
 internal fun ItemsScreen(
     uiState: ItemsUiState.Success,
+    focusManager: FocusManager,
     modifier: Modifier = Modifier,
     onItemDeleteClick: (Int, String?) -> Unit,
     onItemClick: (Int) -> Unit,
@@ -95,51 +101,85 @@ internal fun ItemsScreen(
     onItemsDeleteClick: (Set<Int>) -> Unit,
     onEmptyListClick: () -> Unit,
     onUnselectItemsClick: () -> Unit,
+    onQueryChanged: (String) -> Unit,
+    onCleanClickSearchQuery: () -> Unit,
 ) {
-    val statusBarsPaddingDp = WindowInsets.statusBars.asPaddingValues().calculateTopPadding()
+    val itemsState = rememberLazyListState()
 
     Box(
         modifier = modifier
             .fillMaxSize()
-            .background(AppTheme.colorScheme.background),
+            .background(AppTheme.colorScheme.background)
+            .clickable(
+                interactionSource = null,
+                indication = null,
+                onClick = {
+                    focusManager.clearFocus()
+                },
+            )
+            .systemBarsPadding(),
     ) {
-        Items(
-            items = uiState.items,
-            selectedItemIds = uiState.selectedItemIds,
+        Column(
             modifier = Modifier
-                .fillMaxSize()
-                .padding(start = 8.dp, end = 8.dp)
-                .navigationBarsPadding(),
-            contentPadding = PaddingValues(
-                top = statusBarsPaddingDp + 8.dp,
-                bottom = scrollableBottomButtonClearance
-            ),
-            onClick = onItemClick,
-            onLongClick = onItemLongClick,
-            onDeleteClick = onItemDeleteClick,
-            contentIfEmpty = {
-                Box(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(horizontal = 16.dp)
-                        .clip(AppTheme.shape.container),
-                    contentAlignment = Alignment.Center,
-                ) {
-                    ItemsListIsEmpty(
-                        modifier = Modifier
-                            .fillMaxWidth(),
-                        onClick = onEmptyListClick,
-                    )
-                }
-            }
-        )
+                .imePadding()
+                .padding(horizontal = 8.dp)
+        ) {
+            SearchBar(
+                value = uiState.searchQuery,
+                onValueChange = onQueryChanged,
+                onCleanClick = onCleanClickSearchQuery
+            )
 
-        ItemsFab(
+            Items(
+                state = itemsState,
+                items = uiState.filteredItemsByQuery,
+                selectedItemIds = uiState.selectedItemIds,
+                modifier = Modifier
+                    .fillMaxSize(),
+                contentPadding = PaddingValues(
+                    bottom = scrollableBottomButtonClearance,
+                    top = 8.dp,
+                ),
+                onClick = onItemClick,
+                onLongClick = onItemLongClick,
+                onDeleteClick = onItemDeleteClick,
+                contentIfEmpty = {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(horizontal = 16.dp)
+                            .clip(AppTheme.shape.container),
+                        contentAlignment = Alignment.Center,
+                    ) {
+                        if (uiState.items.isEmpty()) {
+                            Warning(
+                                text = stringResource(R.string.the_list_of_items_is_empty),
+                                modifier = Modifier
+                                    .fillMaxWidth(),
+                                actionText = stringResource(R.string.let_s_add_something),
+                                iconRes = R.drawable.wind_40dp,
+                                onClick = onEmptyListClick,
+                            )
+                        } else {
+                            Warning(
+                                text = stringResource(R.string.nothing_was_founded),
+                                modifier = Modifier
+                                    .fillMaxWidth(),
+                                iconRes = R.drawable.wind_40dp,
+                            )
+                        }
+                    }
+                }
+            )
+        }
+
+        ItemsFloatingActionButton(
             visible = uiState.selectedItemIds.isNotEmpty(),
             selectedItemIds = uiState.selectedItemIds,
             modifier = Modifier
                 .fillMaxWidth()
                 .align(Alignment.BottomEnd)
+                .imePadding()
                 .navigationBarsPadding()
                 .padding(
                     bottom = bottomButtonSpaceAround,
@@ -148,51 +188,6 @@ internal fun ItemsScreen(
             onItemsDeleteClick = onItemsDeleteClick,
             onUnselectItemsClick = onUnselectItemsClick,
         )
-    }
-}
-
-@Composable
-private fun ItemsFab(
-    visible: Boolean,
-    selectedItemIds: Set<Int>,
-    modifier: Modifier = Modifier,
-    onItemsDeleteClick: (Set<Int>) -> Unit,
-    onUnselectItemsClick: () -> Unit,
-) {
-    Row(
-        modifier = modifier,
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.End
-    ) {
-        WorthItAnimatedVisibility(visible = visible) {
-            WorthItIconButton(
-                modifier = Modifier.size(bottomButtonSize),
-                onClick = {
-                    onItemsDeleteClick(selectedItemIds)
-                }
-            ) {
-                WorthItIcon(
-                    drawableRes = DesignR.drawable.delete_48dp,
-                    contentDescriptionRes = R.string.cd_delete_selected_items,
-                    tint = AppTheme.colorScheme.primary,
-                )
-            }
-        }
-        Spacer(Modifier.width(8.dp))
-        WorthItAnimatedVisibility(visible = visible) {
-            WorthItIconButton(
-                modifier = Modifier.size(bottomButtonSize),
-                onClick = {
-                    onUnselectItemsClick()
-                }
-            ) {
-                WorthItIcon(
-                    drawableRes = R.drawable.hand_off_48dp,
-                    contentDescriptionRes = R.string.cd_unselect_items,
-                    tint = AppTheme.colorScheme.primary,
-                )
-            }
-        }
     }
 }
 
@@ -218,8 +213,21 @@ private fun ItemsScreenPreview(
                         add(item)
                     }
                 },
-                selectedItemIds = setOf(2, 4)
+                selectedItemIds = setOf(2, 4),
+                searchQuery = "",
+                filteredItemsByQuery = buildList {
+                    repeat(5) {
+                        val item = ItemUiModel(
+                            id = it,
+                            name = "Car",
+                            localImagePath = null,
+                            dateOfPurchase = LocalDate.now(),
+                        )
+                        add(item)
+                    }
+                }
             ),
+            focusManager = LocalFocusManager.current,
             modifier = modifier,
             onItemDeleteClick = { _, _ -> },
             onItemClick = { },
@@ -227,6 +235,8 @@ private fun ItemsScreenPreview(
             onItemsDeleteClick = { },
             onEmptyListClick = { },
             onUnselectItemsClick = { },
+            onQueryChanged = { },
+            onCleanClickSearchQuery = { },
         )
     }
 }

@@ -5,7 +5,9 @@ import androidx.compose.foundation.gestures.DraggableAnchors
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
@@ -22,6 +24,7 @@ import java.time.LocalDate
 
 @Composable
 internal fun Items(
+    state: LazyListState,
     items: List<ItemUiModel>,
     selectedItemIds: Set<Int>,
     modifier: Modifier = Modifier,
@@ -29,7 +32,7 @@ internal fun Items(
     onClick: (Int) -> Unit,
     onLongClick: (Int) -> Unit,
     onDeleteClick: (Int, String?) -> Unit,
-    contentIfEmpty: @Composable (() -> Unit)? = null
+    contentIfEmpty: @Composable (() -> Unit)? = null,
 ) {
     val density = LocalDensity.current
 
@@ -37,6 +40,7 @@ internal fun Items(
         contentIfEmpty?.invoke()
     } else {
         LazyColumn(
+            state = state,
             modifier = modifier,
             contentPadding = contentPadding,
             verticalArrangement = Arrangement.spacedBy(8.dp),
@@ -44,7 +48,6 @@ internal fun Items(
             items(
                 items = items,
                 key = { it.id },
-                contentType = { "ItemCard" },
             ) { item ->
                 SwipeableItemCard(
                     item = item,
@@ -56,7 +59,7 @@ internal fun Items(
                             anchors = DraggableAnchors {
                                 State.CLOSED at 0f
                                 State.OPEN at with(density) { 96.dp.toPx() }
-                            }
+                            },
                         )
                     },
                     onClick = onClick,
@@ -79,6 +82,7 @@ private fun ItemsPreview(
     ) {
         Surface(color = AppTheme.colorScheme.background) {
             Items(
+                state = rememberLazyListState(),
                 items = buildList {
                     repeat(5) {
                         val item = ItemUiModel(
