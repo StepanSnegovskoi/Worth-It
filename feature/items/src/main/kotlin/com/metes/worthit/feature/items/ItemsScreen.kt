@@ -32,7 +32,7 @@ import com.metes.worthit.core.designsystem.component.progress.LoadingScreen
 import com.metes.worthit.core.designsystem.theme.AppTheme
 import com.metes.worthit.core.presentation.ObserveAsEvents
 import com.metes.worthit.feature.items.component.Items
-import com.metes.worthit.feature.items.component.ItemsFloatingActionButton
+import com.metes.worthit.feature.items.component.ItemsFloatingActionButtons
 import com.metes.worthit.feature.items.component.SearchBar
 import com.metes.worthit.feature.items.component.Warning
 import com.metes.worthit.feature.items.component.bottomButtonSpaceAround
@@ -165,7 +165,7 @@ internal fun ItemsScreen(
             }
         }
 
-        ItemsFloatingActionButton(
+        ItemsFloatingActionButtons(
             visible = uiState.selectedItemIds.isNotEmpty(),
             selectedItemIds = uiState.selectedItemIds,
             modifier = Modifier

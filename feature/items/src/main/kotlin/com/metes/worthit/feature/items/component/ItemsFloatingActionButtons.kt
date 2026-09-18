@@ -21,7 +21,7 @@ internal val bottomButtonSpaceAround = 16.dp
 internal val scrollableBottomButtonClearance = bottomButtonSize + bottomButtonSpaceAround * 2
 
 @Composable
-internal fun ItemsFloatingActionButton(
+internal fun ItemsFloatingActionButtons(
     visible: Boolean,
     selectedItemIds: Set<Int>,
     modifier: Modifier = Modifier,
