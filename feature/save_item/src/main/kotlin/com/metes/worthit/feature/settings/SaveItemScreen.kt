@@ -98,6 +98,10 @@ fun SaveItemRoute(
     onBackClick: () -> Unit,
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val name by viewModel.name.collectAsStateWithLifecycle()
+    val price by viewModel.price.collectAsStateWithLifecycle()
+    val description by viewModel.description.collectAsStateWithLifecycle()
+
     val nameFocusRequester = remember { FocusRequester() }
     val priceFocusRequester = remember { FocusRequester() }
 
@@ -131,6 +135,9 @@ fun SaveItemRoute(
 
         is SaveItemUiState.Success -> SaveItemScreen(
             uiState = currentState,
+            name = name,
+            description = description,
+            price = price,
             nameFocusRequester = nameFocusRequester,
             priceFocusRequester = priceFocusRequester,
             modifier = modifier,
@@ -156,6 +163,9 @@ fun SaveItemRoute(
 @Composable
 internal fun SaveItemScreen(
     uiState: SaveItemUiState.Success,
+    name: String,
+    description: String,
+    price: String,
     nameFocusRequester: FocusRequester,
     priceFocusRequester: FocusRequester,
     modifier: Modifier = Modifier,
@@ -253,7 +263,7 @@ internal fun SaveItemScreen(
                 )
 
                 NameTextField(
-                    name = uiState.name,
+                    name = name,
                     nameError = uiState.nameError,
                     modifier = Modifier.focusRequester(nameFocusRequester),
                     onRemoveNameClick = onRemoveNameClick,
@@ -261,7 +271,7 @@ internal fun SaveItemScreen(
                 )
 
                 DescriptionTextField(
-                    description = uiState.description,
+                    description = description,
                     onRemoveDescriptionClick = onRemoveDescriptionClick,
                     onDescriptionChange = onDescriptionChange,
                 )
@@ -278,7 +288,7 @@ internal fun SaveItemScreen(
                     )
 
                     PriceField(
-                        price = uiState.price,
+                        price = price,
                         currency = uiState.currency,
                         priceError = uiState.priceError,
                         modifier = Modifier
@@ -289,7 +299,7 @@ internal fun SaveItemScreen(
                     )
                 }
 
-                uiState.pricesPerTimeUnits.fastForEach { pricePerTimeUnit ->
+                uiState.getPricesPerTimeUnits(price).fastForEach { pricePerTimeUnit ->
                     PricePerTimeUnitField(
                         price = pricePerTimeUnit.amount,
                         timeUnit = pricePerTimeUnit.timeUnit,
@@ -418,9 +428,6 @@ private fun SaveItemScreenPreview(
     ) { _, modifier ->
         SaveItemScreen(
             uiState = SaveItemUiState.Success(
-                name = "Bike",
-                price = "1999",
-                description = "This is my first bike",
                 imageUri = null,
                 currency = Currency.EUR,
                 dateOfPurchaseMillis = LocalDate.now().toUtcEpochMilli(),
@@ -429,6 +436,9 @@ private fun SaveItemScreenPreview(
                 priceError = UiText.StringResource(R.string.price_must_be_a_number),
                 isEditingMode = true,
             ),
+            name = "Bike",
+            price = "1999",
+            description = "This is my first bike",
             nameFocusRequester = nameFocusRequester,
             priceFocusRequester = priceFocusRequester,
             modifier = modifier,

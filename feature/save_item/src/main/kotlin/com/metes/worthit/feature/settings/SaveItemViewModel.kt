@@ -74,9 +74,9 @@ class SaveItemViewModel @AssistedInject constructor(
     private val isSavingFlow = MutableStateFlow(false)
 
     private val hasAttemptedSaveFlow = savedStateHandle.getStateFlow(KEY_HAS_ATTEMPTED_SAVE, false)
-    private val nameFlow = savedStateHandle.getStateFlow(KEY_NAME, "")
-    private val priceFlow = savedStateHandle.getStateFlow(KEY_PRICE, "")
-    private val descriptionFlow = savedStateHandle.getStateFlow(KEY_DESCRIPTION, "")
+    val name = savedStateHandle.getStateFlow(KEY_NAME, "")
+    val price = savedStateHandle.getStateFlow(KEY_PRICE, "")
+    val description = savedStateHandle.getStateFlow(KEY_DESCRIPTION, "")
     private val imageUriFlow = savedStateHandle.getStateFlow(KEY_IMAGE_PATH, imagePath?.toUri())
     private val dateOfPurchaseMillisFlow = savedStateHandle.getStateFlow(
         key = KEY_BOUGHT_DATE_MILLIS,
@@ -95,9 +95,9 @@ class SaveItemViewModel @AssistedInject constructor(
     }
 
     private val userInputFlow = combine(
-        nameFlow,
-        priceFlow,
-        descriptionFlow,
+        name,
+        price,
+        description,
         imageUriFlow,
         ::UserInputData
     )
@@ -134,9 +134,6 @@ class SaveItemViewModel @AssistedInject constructor(
         )
 
         SaveItemUiState.Success(
-            name = userInput.name,
-            price = userInput.price,
-            description = userInput.description,
             imageUri = userInput.imageUri,
             currency = metadata.currency,
             dateOfPurchaseMillis = metadata.dateOfPurchaseMillis,
@@ -269,9 +266,9 @@ class SaveItemViewModel @AssistedInject constructor(
 
             saveItemUseCase(
                 itemId = itemId,
-                name = currentState.name,
-                description = currentState.description,
-                price = currentState.price,
+                name = name.value,
+                description = description.value,
+                price = price.value,
                 currency = currentState.currency,
                 createdAt = createdAt,
                 dateOfPurchase = dateOfPurchase,
@@ -319,9 +316,6 @@ sealed interface SaveItemEvent {
 sealed interface SaveItemUiState {
     data object Loading : SaveItemUiState
     data class Success(
-        val name: String,
-        val price: String,
-        val description: String,
         val imageUri: Uri?,
         val currency: Currency,
         val dateOfPurchaseMillis: Long,
@@ -331,23 +325,22 @@ sealed interface SaveItemUiState {
         val isEditingMode: Boolean,
     ) : SaveItemUiState {
 
-        val pricesPerTimeUnits: List<PricePerTimeUnitModel>
-            get() {
-                val priceBigDecimal = price.toBigDecimalOrNull() ?: return emptyList()
-                val dateOfPurchase = dateOfPurchaseMillis.toLocalDateFromUtc()
+        fun getPricesPerTimeUnits(price: String): List<PricePerTimeUnitModel> {
+            val priceBigDecimal = price.toBigDecimalOrNull() ?: return emptyList()
+            val dateOfPurchase = dateOfPurchaseMillis.toLocalDateFromUtc()
 
-                return TimeUnit.entries.map { timeUnit ->
-                    PricePerTimeUnitModel(
-                        timeUnit = timeUnit,
-                        timeUnitsFromPurchase = timeUnit.between(dateOfPurchase, currentDate),
-                        amount = timeUnit.calculatePrice(
-                            price = priceBigDecimal,
-                            currentDate = currentDate,
-                            dateOfPurchase = dateOfPurchase,
-                        ).toString()
-                    )
-                }
+            return TimeUnit.entries.map { timeUnit ->
+                PricePerTimeUnitModel(
+                    timeUnit = timeUnit,
+                    timeUnitsFromPurchase = timeUnit.between(dateOfPurchase, currentDate),
+                    amount = timeUnit.calculatePrice(
+                        price = priceBigDecimal,
+                        currentDate = currentDate,
+                        dateOfPurchase = dateOfPurchase,
+                    ).toString()
+                )
             }
+        }
     }
 }
 
