@@ -34,12 +34,12 @@ class ItemsViewModel @Inject constructor(
 ) : ViewModel() {
 
     private val selectedItemIds = MutableStateFlow<Set<Int>>(emptySet())
-    private val searchQueryFlow = savedStateHandle.getStateFlow(KEY_SEARCH_QUERY, "")
+    val searchQuery = savedStateHandle.getStateFlow(KEY_SEARCH_QUERY, "")
 
-    val uiState = combine(
+    val itemsUiState = combine(
         observeItemsUseCase(),
         selectedItemIds,
-        searchQueryFlow,
+        searchQuery,
     ) { items, selectedItemIds, searchQuery ->
         val uiItems = items.toUiModels()
 
@@ -55,7 +55,6 @@ class ItemsViewModel @Inject constructor(
             items = uiItems,
             filteredItemsByQuery = filteredItems,
             selectedItemIds = realSelectedIds,
-            searchQuery = searchQuery,
         )
     }
         .flowOn(defaultDispatcher)
@@ -69,7 +68,7 @@ class ItemsViewModel @Inject constructor(
     val events = _events.receiveAsFlow()
 
     fun processCommand(command: ItemsCommand) {
-        val currentState = uiState.value
+        val currentState = itemsUiState.value
         if (currentState !is ItemsUiState.Success) return
 
         when (command) {
@@ -127,7 +126,7 @@ class ItemsViewModel @Inject constructor(
     }
 
     private fun changeSelectedStatus(itemId: Int) {
-        val currentState = uiState.value as? ItemsUiState.Success ?: return
+        val currentState = itemsUiState.value as? ItemsUiState.Success ?: return
 
         if (itemId in currentState.selectedItemIds) {
             selectedItemIds.value -= itemId
@@ -165,7 +164,6 @@ sealed interface ItemsUiState {
         val items: List<ItemUiModel>,
         val filteredItemsByQuery: List<ItemUiModel>,
         val selectedItemIds: Set<Int>,
-        val searchQuery: String,
     ) : ItemsUiState
 }
 

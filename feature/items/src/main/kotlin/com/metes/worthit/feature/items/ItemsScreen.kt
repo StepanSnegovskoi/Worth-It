@@ -47,7 +47,8 @@ fun ItemsRoute(
     onNavigateToEditingItem: (Int) -> Unit,
     onNavigateToAddingItem: () -> Unit,
 ) {
-    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val uiState by viewModel.itemsUiState.collectAsStateWithLifecycle()
+    val searchQuery by viewModel.searchQuery.collectAsStateWithLifecycle()
     val focusManager = LocalFocusManager.current
 
     ObserveAsEvents(viewModel.events) { event ->
@@ -61,6 +62,7 @@ fun ItemsRoute(
 
         is ItemsUiState.Success -> ItemsScreen(
             uiState = currentState,
+            searchQuery = searchQuery,
             focusManager = focusManager,
             modifier = modifier,
             onItemDeleteClick = { itemId: Int, itemLocalImagePath: String? ->
@@ -92,6 +94,7 @@ fun ItemsRoute(
 @Composable
 internal fun ItemsScreen(
     uiState: ItemsUiState.Success,
+    searchQuery: String,
     focusManager: FocusManager,
     modifier: Modifier = Modifier,
     onItemDeleteClick: (Int, String?) -> Unit,
@@ -124,7 +127,7 @@ internal fun ItemsScreen(
                 .padding(horizontal = 8.dp)
         ) {
             SearchBar(
-                value = uiState.searchQuery,
+                value = searchQuery,
                 onValueChange = onQueryChanged,
                 onCleanClick = onCleanClickSearchQuery
             )
@@ -156,7 +159,6 @@ internal fun ItemsScreen(
                         .fillMaxSize(),
                     contentPadding = PaddingValues(
                         bottom = scrollableBottomButtonClearance,
-                        top = 8.dp,
                     ),
                     onClick = onItemClick,
                     onLongClick = onItemLongClick,
@@ -205,7 +207,6 @@ private fun ItemsScreenPreview(
                     }
                 },
                 selectedItemIds = setOf(2, 4),
-                searchQuery = "",
                 filteredItemsByQuery = buildList {
                     repeat(5) {
                         val item = ItemUiModel(
@@ -218,6 +219,7 @@ private fun ItemsScreenPreview(
                     }
                 }
             ),
+            searchQuery = "Car",
             focusManager = LocalFocusManager.current,
             modifier = modifier,
             onItemDeleteClick = { _, _ -> },
