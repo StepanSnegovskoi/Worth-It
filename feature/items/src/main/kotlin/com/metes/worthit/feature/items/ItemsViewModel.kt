@@ -22,7 +22,7 @@ import kotlinx.coroutines.launch
 import java.time.LocalDate
 import javax.inject.Inject
 
-private const val KEY_SEARCH_QUERY = "seach_query"
+private const val KEY_SEARCH_QUERY = "search_query"
 
 @HiltViewModel
 class ItemsViewModel @Inject constructor(
