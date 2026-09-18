@@ -16,8 +16,10 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 import javax.inject.Inject
@@ -37,14 +39,14 @@ class ItemsViewModel @Inject constructor(
     val searchQuery = savedStateHandle.getStateFlow(KEY_SEARCH_QUERY, "")
 
     val itemsUiState = combine(
-        observeItemsUseCase(),
+        observeItemsUseCase().map { it.toUiModels() },
         selectedItemIds,
         searchQuery,
-    ) { items, selectedItemIds, searchQuery ->
-        val uiItems = items.toUiModels()
-
-        val filteredItems = uiItems.filter {
-            it.name.startsWith(searchQuery, ignoreCase = true)
+    ) { uiItems, selectedItemIds, searchQuery ->
+        val filteredItems = if (searchQuery.isBlank()) {
+            uiItems
+        } else {
+            uiItems.filter { it.name.startsWith(searchQuery, ignoreCase = true) }
         }
 
         val filteredIds = filteredItems.map { it.id }.toSet()
@@ -64,7 +66,7 @@ class ItemsViewModel @Inject constructor(
             initialValue = ItemsUiState.Loading
         )
 
-    private val _events = Channel<ItemsEvent>()
+    private val _events = Channel<ItemsEvent>(Channel.BUFFERED)
     val events = _events.receiveAsFlow()
 
     fun processCommand(command: ItemsCommand) {
@@ -96,18 +98,17 @@ class ItemsViewModel @Inject constructor(
             }
 
             is ItemsCommand.DeleteItems -> {
-                val selectedItemsLocalPaths = with(currentState) {
-                    items.filter { it.id in command.itemIds }
-                        .map { it.localImagePath }
-                        .toSet()
-                }
+                val selectedItemsLocalPaths = currentState.items
+                    .filter { it.id in command.itemIds }
+                    .map { it.localImagePath }
+                    .toSet()
 
                 viewModelScope.launch {
                     deleteItemsUseCase(
                         itemIds = command.itemIds.toList(),
                         itemLocalImagePaths = selectedItemsLocalPaths
                     )
-                    selectedItemIds.value -= command.itemIds
+                    selectedItemIds.update { it - command.itemIds }
                 }
             }
 
@@ -126,12 +127,8 @@ class ItemsViewModel @Inject constructor(
     }
 
     private fun changeSelectedStatus(itemId: Int) {
-        val currentState = itemsUiState.value as? ItemsUiState.Success ?: return
-
-        if (itemId in currentState.selectedItemIds) {
-            selectedItemIds.value -= itemId
-        } else {
-            selectedItemIds.value += itemId
+        selectedItemIds.update { currentSet ->
+            if (itemId in currentSet) currentSet - itemId else currentSet + itemId
         }
     }
 
