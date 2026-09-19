@@ -155,7 +155,7 @@ class SaveItemViewModel @AssistedInject constructor(
         initialValue = SaveItemUiState.Loading
     )
 
-    private val _events = Channel<SaveItemEvent>()
+    private val _events = Channel<SaveItemEvent>(Channel.BUFFERED)
     val events = _events.receiveAsFlow()
 
     init {
