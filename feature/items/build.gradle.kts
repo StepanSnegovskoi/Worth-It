@@ -9,4 +9,8 @@ android {
 
 dependencies {
     androidTestImplementation(libs.androidx.junit)
+    testImplementation(project(":core:testing"))
+    testImplementation(libs.mockk)
+    testImplementation(libs.turbine)
+
 }
