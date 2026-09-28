@@ -43,14 +43,8 @@ class ItemsViewModel @Inject constructor(
         selectedItemIds,
         searchQuery,
     ) { uiItems, selectedItemIds, searchQuery ->
-        val filteredItems = if (searchQuery.isBlank()) {
-            uiItems
-        } else {
-            uiItems.filter { it.name.startsWith(searchQuery, ignoreCase = true) }
-        }
-
+        val filteredItems = getFilteredItems(searchQuery = searchQuery, uiItems = uiItems)
         val filteredIds = filteredItems.map { it.id }.toSet()
-
         val realSelectedIds = selectedItemIds.intersect(filteredIds)
 
         ItemsUiState.Success(
@@ -136,6 +130,18 @@ class ItemsViewModel @Inject constructor(
         viewModelScope.launch {
             _events.send(ItemsEvent.NavigateToSaveItem(itemId))
         }
+    }
+
+    private fun getFilteredItems(
+        searchQuery: String,
+        uiItems: List<ItemUiModel>
+    ): List<ItemUiModel> {
+        val filteredItems = if (searchQuery.isBlank()) {
+            uiItems
+        } else {
+            uiItems.filter { it.name.startsWith(searchQuery, ignoreCase = true) }
+        }
+        return filteredItems
     }
 }
 
