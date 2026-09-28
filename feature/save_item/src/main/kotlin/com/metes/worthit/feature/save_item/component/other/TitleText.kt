@@ -1,4 +1,4 @@
-package com.metes.worthit.feature.settings.component.other
+package com.metes.worthit.feature.save_item.component.other
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier

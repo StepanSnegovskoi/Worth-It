@@ -1,6 +1,6 @@
 @file:OptIn(ExperimentalCoroutinesApi::class)
 
-package com.metes.worthit.feature.settings
+package com.metes.worthit.feature.save_item
 
 import android.net.Uri
 import androidx.compose.runtime.Immutable
@@ -26,7 +26,6 @@ import com.metes.worthit.core.domain.utils.onSuccess
 import com.metes.worthit.core.domain.validator.ItemValidator
 import com.metes.worthit.core.presentation.UiText
 import com.metes.worthit.core.presentation.toUiText
-import com.metes.worthit.feature.settings.SaveItemEvent.NavigateToPreviousScreen
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
@@ -176,10 +175,8 @@ class SaveItemViewModel @AssistedInject constructor(
                     savedStateHandle[KEY_DESCRIPTION] = item.description
                     savedStateHandle[KEY_PRICE] = item.price?.toString() ?: ""
                     savedStateHandle[KEY_IMAGE_PATH] = item.imageLocalPath?.toUri()
-                    savedStateHandle[KEY_BOUGHT_DATE_MILLIS] =
-                        item.dateOfPurchase.toUtcEpochMilli()
-                    savedStateHandle[KEY_CURRENCY] =
-                        item.currency.name
+                    savedStateHandle[KEY_BOUGHT_DATE_MILLIS] = item.dateOfPurchase.toUtcEpochMilli()
+                    savedStateHandle[KEY_CURRENCY] = item.currency.name
                 }
 
             } finally {
@@ -236,7 +233,7 @@ class SaveItemViewModel @AssistedInject constructor(
 
                 viewModelScope.launch {
                     deleteItemUseCase(itemId, imagePath)
-                    _events.send(NavigateToPreviousScreen)
+                    _events.send(SaveItemEvent.NavigateToPreviousScreen)
                 }
             }
 
@@ -278,7 +275,7 @@ class SaveItemViewModel @AssistedInject constructor(
                 _events.send(SaveItemEvent.ShowErrors(errors))
                 isSavingFlow.value = false
             }.onSuccess {
-                _events.send(NavigateToPreviousScreen)
+                _events.send(SaveItemEvent.NavigateToPreviousScreen)
             }
         }
     }

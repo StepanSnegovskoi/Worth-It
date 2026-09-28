@@ -1,4 +1,4 @@
-package com.metes.worthit.feature.settings.component.currency
+package com.metes.worthit.feature.save_item.component.currency
 
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize

@@ -5,6 +5,10 @@ plugins {
 
 android {
     namespace = "com.metes.worthit.feature.save_item"
+
+    testOptions {
+        unitTests.isReturnDefaultValues = true
+    }
 }
 
 dependencies {
@@ -12,4 +16,9 @@ dependencies {
 
     implementation(libs.androidx.activity.compose)
     androidTestImplementation(libs.androidx.junit)
+    testImplementation(libs.mockk)
+    testImplementation(libs.kotlinx.coroutines.test)
+    testImplementation(libs.turbine)
+    testImplementation(libs.robolectric)
+    testImplementation(project(":core:testing"))
 }

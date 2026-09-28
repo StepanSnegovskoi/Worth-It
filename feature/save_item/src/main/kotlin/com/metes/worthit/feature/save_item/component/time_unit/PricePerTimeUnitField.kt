@@ -1,4 +1,4 @@
-package com.metes.worthit.feature.settings.component.time_unit
+package com.metes.worthit.feature.save_item.component.time_unit
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
