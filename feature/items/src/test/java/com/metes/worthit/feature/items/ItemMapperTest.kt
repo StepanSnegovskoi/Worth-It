@@ -1,34 +1,18 @@
 package com.metes.worthit.feature.items
 
-import com.metes.worthit.core.domain.entity.Currency
 import com.metes.worthit.core.domain.entity.Item
+import com.metes.worthit.core.testing.testItem
 import com.metes.worthit.feature.items.mapper.toUiModel
 import com.metes.worthit.feature.items.mapper.toUiModels
 import org.junit.Assert.assertEquals
 import org.junit.Test
-import java.math.BigDecimal
-import java.time.Instant
 import java.time.LocalDate
 
 class ItemMapperTest {
 
-    private val itemDomain = Item(
-        id = 1,
-        name = "Bike",
-        price = BigDecimal.valueOf(1999L),
-        currency = Currency.CNY,
-        createdAt = Instant.parse("2026-09-05T10:00:00Z"),
-        dateOfPurchase = LocalDate.of(2026, 9, 5),
-        description = "This is my first bike",
-        imageLocalPath = null,
-    )
+    private val itemDomain = testItem
 
-    private val itemUiModel = ItemUiModel(
-        id = 1,
-        name = "Bike",
-        dateOfPurchase = LocalDate.of(2026, 9, 5),
-        localImagePath = null,
-    )
+    private val itemUiModel = itemDomain.toUiModel()
 
     @Test
     fun `toUiModel maps item correctly`() {

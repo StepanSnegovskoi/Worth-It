@@ -15,4 +15,5 @@ dependencies {
     testImplementation(libs.kotlinx.coroutines.test)
     testImplementation(libs.androidx.junit)
     testImplementation(libs.turbine)
+    testImplementation(project(":core:testing"))
 }

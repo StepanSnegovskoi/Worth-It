@@ -2,56 +2,23 @@ package com.metes.worthit.core.database.entity
 
 import com.metes.worthit.core.common.toLocalDateFromUtc
 import com.metes.worthit.core.domain.entity.Currency
-import com.metes.worthit.core.domain.entity.Item
+import com.metes.worthit.core.testing.testItem
 import org.junit.Assert
 import org.junit.Test
-import java.math.BigDecimal
 import java.time.Instant
 
 class ItemDbModelTest {
-    private val createdAt = Instant.parse("2024-01-01T12:00:00Z")
-    private val dateOfPurchase = Instant.parse("2023-12-28T12:00:00Z")
 
-    private val itemDbModel = ItemDbModel(
-        id = 1,
-        name = "Bike",
-        price = BigDecimal.valueOf(1999),
-        currencyName = Currency.EUR.name,
-        createdAt = createdAt,
-        dateOfPurchase = dateOfPurchase.toEpochMilli().toLocalDateFromUtc(),
-        description = "This is my first bike",
-        imageLocalPath = "images/bike",
-    )
+    private val itemDbModel = testItem.toDbModel()
 
-    private val item = Item(
-        id = 1,
-        name = "Bike",
-        price = BigDecimal.valueOf(1999),
-        currency = Currency.EUR,
-        createdAt = createdAt,
-        dateOfPurchase = dateOfPurchase.toEpochMilli().toLocalDateFromUtc(),
-        description = "This is my first bike",
-        imageLocalPath = "images/bike",
-    )
-
-    private val itemDbModelWithNulls = ItemDbModel(
-        id = 2,
-        name = "Helmet",
+    private val itemDbModelWithNulls = testItem(
         price = null,
-        currencyName = Currency.USD.name,
-        createdAt = createdAt,
-        dateOfPurchase = dateOfPurchase.toEpochMilli().toLocalDateFromUtc(),
         description = null,
         imageLocalPath = null,
-    )
+    ).toDbModel()
 
-    private val itemWithNulls = Item(
-        id = 2,
-        name = "Helmet",
+    private val itemWithNulls = testItem(
         price = null,
-        currency = Currency.USD,
-        createdAt = createdAt,
-        dateOfPurchase = dateOfPurchase.toEpochMilli().toLocalDateFromUtc(),
         description = null,
         imageLocalPath = null,
     )
@@ -61,32 +28,24 @@ class ItemDbModelTest {
         name = "Helmet",
         price = null,
         currencyName = null,
-        createdAt = createdAt,
-        dateOfPurchase = dateOfPurchase.toEpochMilli().toLocalDateFromUtc(),
+        createdAt = Instant.parse("2024-01-01T12:00:00Z"),
+        dateOfPurchase = Instant.parse("2023-12-28T12:00:00Z").toEpochMilli().toLocalDateFromUtc(),
         description = null,
         imageLocalPath = null,
     )
 
-    private val itemWithDefaultCurrency = Item(
-        id = 2,
-        name = "Helmet",
-        price = null,
-        // Currency.EUR - default value
-        currency = Currency.EUR,
-        createdAt = createdAt,
-        dateOfPurchase = dateOfPurchase.toEpochMilli().toLocalDateFromUtc(),
-        description = null,
-        imageLocalPath = null,
-    )
+    private val itemWithDefaultCurrency = itemDbModelWithNullableCurrencyName
+        .copy(currencyName = Currency.EUR.name)
+        .toEntity()
 
     @Test
     fun `ItemDbModel toEntity returns the same item as Item`() {
-        Assert.assertEquals(item, itemDbModel.toEntity())
+        Assert.assertEquals(testItem, itemDbModel.toEntity())
     }
 
     @Test
     fun `Item toDbModel returns the same item as ItemDbModel`() {
-        Assert.assertEquals(itemDbModel, item.toDbModel())
+        Assert.assertEquals(itemDbModel, testItem.toDbModel())
     }
 
     @Test

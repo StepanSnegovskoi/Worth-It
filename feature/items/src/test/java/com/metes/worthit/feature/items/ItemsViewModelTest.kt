@@ -7,13 +7,11 @@ import com.metes.worthit.core.domain.usecase.DeleteItemsUseCase
 import com.metes.worthit.core.domain.usecase.ObserveItemsUseCase
 import com.metes.worthit.core.testing.MainDispatcherRule
 import com.metes.worthit.core.testing.testItem
-import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.unmockkAll
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.runTest

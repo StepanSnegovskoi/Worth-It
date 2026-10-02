@@ -12,5 +12,4 @@ dependencies {
     testImplementation(project(":core:testing"))
     testImplementation(libs.mockk)
     testImplementation(libs.turbine)
-
 }

@@ -3,12 +3,14 @@ package com.metes.worthit.core.data.repository
 import app.cash.turbine.test
 import com.metes.worthit.core.database.db.ItemsDao
 import com.metes.worthit.core.database.entity.ItemDbModel
+import com.metes.worthit.core.database.entity.toDbModel
 import com.metes.worthit.core.database.entity.toEntities
 import com.metes.worthit.core.database.entity.toEntity
 import com.metes.worthit.core.domain.entity.Currency
 import io.mockk.mockk
 
 import com.metes.worthit.core.domain.repository.ItemsRepository
+import com.metes.worthit.core.testing.testItem
 import io.mockk.awaits
 import io.mockk.clearMocks
 import io.mockk.coEvery
@@ -42,16 +44,7 @@ class ItemsRepositoryImplTest {
     private val scheduler = TestCoroutineScheduler()
     private val dispatcher = StandardTestDispatcher(scheduler)
 
-    private val testItemDb = ItemDbModel(
-        id = 1,
-        name = "Bike",
-        price = BigDecimal.valueOf(1999L),
-        currencyName = Currency.EUR.name,
-        createdAt = Instant.now(),
-        dateOfPurchase = LocalDate.now(),
-        description = "This is my first bike",
-        imageLocalPath = null
-    )
+    private val testItemDb = testItem.toDbModel()
 
     @Before
     fun setup() {

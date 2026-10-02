@@ -7,7 +7,9 @@ import androidx.test.core.app.ApplicationProvider
 import app.cash.turbine.test
 import com.metes.worthit.core.common.toLocalDateFromUtc
 import com.metes.worthit.core.database.entity.ItemDbModel
+import com.metes.worthit.core.database.entity.toDbModel
 import com.metes.worthit.core.domain.entity.Currency
+import com.metes.worthit.core.testing.testItem
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.After
@@ -26,16 +28,7 @@ class ItemsDaoTest {
 
     private lateinit var dao: ItemsDao
     private lateinit var db: WorthItDatabase
-    private val itemDbModel = ItemDbModel(
-        id = 1,
-        name = "Bike",
-        price = BigDecimal.valueOf(1999),
-        currencyName = Currency.EUR.name,
-        createdAt = Instant.parse("2024-01-01T12:00:00Z"),
-        dateOfPurchase = Instant.parse("2023-12-28T12:00:00Z").toEpochMilli().toLocalDateFromUtc(),
-        description = "This is my first bike",
-        imageLocalPath = "images/bike",
-    )
+    private val itemDbModel = testItem.toDbModel()
 
     private val testItems = buildList {
         repeat(5) {

@@ -25,4 +25,5 @@ dependencies {
     testImplementation(libs.turbine)
     testImplementation(libs.robolectric)
     testImplementation(libs.androidx.junit)
+    testImplementation(project(":core:testing"))
 }

@@ -30,4 +30,4 @@ fun testItem(
 
 val testItem = testItem()
 
-val testClock = Clock.fixed(Instant.parse("2026-09-24T10:00:00Z"), ZoneId.of("UTC"))
+val testClock: Clock = Clock.fixed(Instant.parse("2026-09-24T10:00:00Z"), ZoneId.of("UTC"))
