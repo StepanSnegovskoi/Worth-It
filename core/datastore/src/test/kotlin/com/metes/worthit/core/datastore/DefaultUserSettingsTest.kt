@@ -1,9 +1,6 @@
 package com.metes.worthit.core.datastore
 
-import android.content.Context
-import androidx.datastore.preferences.core.PreferenceDataStoreFactory
-import androidx.datastore.preferences.preferencesDataStoreFile
-import androidx.test.core.app.ApplicationProvider
+import androidx.datastore.preferences.core.emptyPreferences
 import app.cash.turbine.test
 import com.metes.worthit.core.domain.entity.Currency
 import com.metes.worthit.core.domain.entity.ThemeColor
@@ -17,10 +14,7 @@ import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
-import org.junit.runner.RunWith
-import org.robolectric.RobolectricTestRunner
 
-@RunWith(RobolectricTestRunner::class)
 class DefaultUserSettingsTest {
     private lateinit var userSettings: UserSettings
     private var dispatcher: CoroutineDispatcher = StandardTestDispatcher(TestCoroutineScheduler())
@@ -32,11 +26,8 @@ class DefaultUserSettingsTest {
 
     @Before
     fun setup() {
-        val context = ApplicationProvider.getApplicationContext<Context>()
         userSettings = DefaultUserSettings(
-            dataStore = PreferenceDataStoreFactory.create {
-                context.preferencesDataStoreFile("test_user_settings")
-            },
+            dataStore = InMemoryDataStore(emptyPreferences()),
             ioDispatcher = dispatcher,
         )
     }
