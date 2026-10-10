@@ -27,7 +27,7 @@ data class ItemDbModel(
     @ColumnInfo(name = "description")
     val description: String?,
     @ColumnInfo(name = "image_local_path")
-    val imageLocalPath: String?
+    val imageLocalPath: String?,
 )
 
 fun Item.toDbModel() = ItemDbModel(
@@ -38,7 +38,7 @@ fun Item.toDbModel() = ItemDbModel(
     createdAt = createdAt,
     dateOfPurchase = dateOfPurchase,
     description = description,
-    imageLocalPath = imageLocalPath
+    imageLocalPath = imageLocalPath,
 )
 
 fun ItemDbModel.toEntity() = Item(
@@ -49,7 +49,7 @@ fun ItemDbModel.toEntity() = Item(
     createdAt = createdAt,
     dateOfPurchase = dateOfPurchase,
     description = description,
-    imageLocalPath = imageLocalPath
+    imageLocalPath = imageLocalPath,
 )
 
 fun List<ItemDbModel>.toEntities() = map { it.toEntity() }

@@ -6,6 +6,9 @@ import android.graphics.BitmapFactory
 import android.net.Uri
 import androidx.test.core.app.ApplicationProvider
 import com.metes.worthit.core.domain.utils.Result
+import java.io.File
+import kotlin.test.assertEquals
+import kotlin.test.assertTrue
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.runTest
@@ -15,9 +18,6 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
-import java.io.File
-import kotlin.test.assertEquals
-import kotlin.test.assertTrue
 
 @OptIn(ExperimentalCoroutinesApi::class)
 @RunWith(RobolectricTestRunner::class)
@@ -54,7 +54,7 @@ class ImageCompressorTest {
             reqWidth = 500,
             reqHeight = 500,
             quality = 75,
-            compressFormat = ImageFormatCompat.webpLossy
+            compressFormat = ImageFormatCompat.webpLossy,
         )
 
         assertTrue(result is Result.Success)
@@ -81,7 +81,7 @@ class ImageCompressorTest {
             reqWidth = 4080,
             reqHeight = 3072,
             quality = 75,
-            compressFormat = ImageFormatCompat.webpLossy
+            compressFormat = ImageFormatCompat.webpLossy,
         )
 
         assertTrue(result is Result.Success)

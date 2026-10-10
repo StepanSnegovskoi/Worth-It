@@ -27,15 +27,14 @@ import com.metes.worthit.core.navigation.Screen
 import com.metes.worthit.core.navigation.rememberMyAppNavBackStack
 import com.metes.worthit.intent.IntentParser
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
-
     @Inject
     lateinit var navigationManager: NavigationManager
 
@@ -46,13 +45,13 @@ class MainActivity : ComponentActivity() {
     private val isSystemInDarkThemeStateFlow by lazy {
         combine(
             mainViewModel.uiState,
-            isSystemInDarkTheme()
+            isSystemInDarkTheme(),
         ) { uiState, isSystemDarkTheme ->
             uiState.shouldUseDarkTheme(isSystemDarkTheme)
         }.stateIn(
             scope = lifecycleScope,
             started = SharingStarted.WhileSubscribed(5_000),
-            initialValue = resources.configuration.isSystemInDarkTheme
+            initialValue = resources.configuration.isSystemInDarkTheme,
         )
     }
 
@@ -76,8 +75,8 @@ class MainActivity : ComponentActivity() {
                         ) { isDarkTheme },
                         navigationBarStyle = SystemBarStyle.auto(
                             lightScrim = Color.TRANSPARENT,
-                            darkScrim = Color.TRANSPARENT
-                        ) { isDarkTheme }
+                            darkScrim = Color.TRANSPARENT,
+                        ) { isDarkTheme },
                     )
 
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
@@ -95,13 +94,13 @@ class MainActivity : ComponentActivity() {
             }
 
             val isDarkTheme by isSystemInDarkThemeStateFlow.collectAsStateWithLifecycle(
-                initialValue = resources.configuration.isSystemInDarkTheme
+                initialValue = resources.configuration.isSystemInDarkTheme,
             )
             val backStack = rememberMyAppNavBackStack(Screen.Items)
 
             GlobalNavigationEffect(
                 backStack = backStack,
-                navigationManager = navigationManager
+                navigationManager = navigationManager,
             )
 
             AppTheme(

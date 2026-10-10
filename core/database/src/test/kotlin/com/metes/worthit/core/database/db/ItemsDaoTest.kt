@@ -5,11 +5,11 @@ import androidx.room3.Room
 import androidx.room3.withWriteTransaction
 import androidx.test.core.app.ApplicationProvider
 import app.cash.turbine.test
-import com.metes.worthit.core.common.toLocalDateFromUtc
 import com.metes.worthit.core.database.entity.ItemDbModel
 import com.metes.worthit.core.database.entity.toDbModel
-import com.metes.worthit.core.domain.entity.Currency
 import com.metes.worthit.core.testing.testItem
+import kotlin.test.assertEquals
+import kotlin.test.assertTrue
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.After
@@ -17,10 +17,6 @@ import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
-import java.math.BigDecimal
-import java.time.Instant
-import kotlin.test.assertEquals
-import kotlin.test.assertTrue
 
 @OptIn(ExperimentalCoroutinesApi::class)
 @RunWith(RobolectricTestRunner::class)
@@ -91,7 +87,9 @@ class ItemsDaoTest {
         }
     }
 
-    private suspend fun insertItemsTransaction(items: List<ItemDbModel> = testItems): List<ItemDbModel> {
+    private suspend fun insertItemsTransaction(
+        items: List<ItemDbModel> = testItems,
+    ): List<ItemDbModel> {
         db.withWriteTransaction {
             items.forEach {
                 dao.saveItem(it)

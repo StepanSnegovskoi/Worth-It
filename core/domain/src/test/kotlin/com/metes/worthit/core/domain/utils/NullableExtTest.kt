@@ -7,6 +7,7 @@ import kotlin.test.assertTrue
 class NullableExtTest {
 
     private val exception = IllegalArgumentException("Test exception")
+
     @Test
     fun `throwIfNull should throw provided exception when receiver is null`() {
         val nullableNumber: Int? = null

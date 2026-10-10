@@ -13,11 +13,11 @@ import com.metes.worthit.core.domain.utils.Result
 import com.metes.worthit.core.domain.utils.throwIfNull
 import dagger.Reusable
 import dagger.hilt.android.qualifiers.ApplicationContext
+import java.io.File
+import javax.inject.Inject
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
-import java.io.File
-import javax.inject.Inject
 
 @Reusable
 internal class ImageCompressor @Inject constructor(
@@ -30,7 +30,7 @@ internal class ImageCompressor @Inject constructor(
         reqWidth: Int = 512,
         reqHeight: Int = 512,
         quality: Int = DEFAULT_QUALITY,
-        compressFormat: Bitmap.CompressFormat = ImageFormatCompat.webpLossy
+        compressFormat: Bitmap.CompressFormat = ImageFormatCompat.webpLossy,
     ): Result<Unit, Error> = withContext(ioDispatcher) {
         var sampleBitmap: Bitmap? = null
         var finalBitmap: Bitmap? = null
@@ -62,11 +62,7 @@ internal class ImageCompressor @Inject constructor(
         }
     }
 
-    private fun decodeSampleBitmap(
-        uri: Uri,
-        reqWidth: Int,
-        reqHeight: Int
-    ): Bitmap {
+    private fun decodeSampleBitmap(uri: Uri, reqWidth: Int, reqHeight: Int): Bitmap {
         val options = BitmapFactory.Options().apply {
             inJustDecodeBounds = true
         }
@@ -89,11 +85,10 @@ internal class ImageCompressor @Inject constructor(
         }
     }
 
-
     private fun calculateInSampleSize(
         options: BitmapFactory.Options,
         reqWidth: Int,
-        reqHeight: Int
+        reqHeight: Int,
     ): Int {
         val height = options.outHeight
         val width = options.outWidth
@@ -103,16 +98,16 @@ internal class ImageCompressor @Inject constructor(
             val halfHeight: Int = height / 2
             val halfWidth: Int = width / 2
 
-            while ((halfHeight / inSampleSize) >= reqHeight && (halfWidth / inSampleSize) >= reqWidth) {
+            while ((halfHeight / inSampleSize) >= reqHeight &&
+                (halfWidth / inSampleSize) >= reqWidth
+            ) {
                 inSampleSize *= 2
             }
         }
         return inSampleSize
     }
 
-    private fun Bitmap.rotated(
-        orientation: Int
-    ): Bitmap {
+    private fun Bitmap.rotated(orientation: Int): Bitmap {
         val matrix = Matrix()
         when (orientation) {
             ExifInterface.ORIENTATION_UNDEFINED, ExifInterface.ORIENTATION_NORMAL -> return this
@@ -144,21 +139,20 @@ internal class ImageCompressor @Inject constructor(
             width,
             height,
             matrix,
-            true
+            true,
         )
 
         return rotatedBitmap
     }
 
-    private fun getOrientationFromUri(uri: Uri): Int {
-        return context.contentResolver.openInputStream(uri)?.use { input ->
+    private fun getOrientationFromUri(uri: Uri): Int =
+        context.contentResolver.openInputStream(uri)?.use { input ->
             val exifInterface = ExifInterface(input)
             exifInterface.getAttributeInt(
                 ExifInterface.TAG_ORIENTATION,
-                ExifInterface.ORIENTATION_NORMAL
+                ExifInterface.ORIENTATION_NORMAL,
             )
         } ?: ExifInterface.ORIENTATION_NORMAL
-    }
 
     companion object {
         private const val DEFAULT_QUALITY = 75

@@ -34,7 +34,7 @@ fun WorthItTextButton(
 @Preview
 @Composable
 fun WorthItTextButtonPreview(
-    @PreviewParameter(ThemePreviewParameter::class) theme: ThemePreviewConfig
+    @PreviewParameter(ThemePreviewParameter::class) theme: ThemePreviewConfig,
 ) {
     AppTheme(
         isDarkTheme = theme.isDark,

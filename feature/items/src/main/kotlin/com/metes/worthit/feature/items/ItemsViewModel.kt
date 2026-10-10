@@ -10,6 +10,8 @@ import com.metes.worthit.core.domain.usecase.DeleteItemsUseCase
 import com.metes.worthit.core.domain.usecase.ObserveItemsUseCase
 import com.metes.worthit.feature.items.mapper.toUiModels
 import dagger.hilt.android.lifecycle.HiltViewModel
+import java.time.LocalDate
+import javax.inject.Inject
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -21,8 +23,6 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import java.time.LocalDate
-import javax.inject.Inject
 
 private const val KEY_SEARCH_QUERY = "search_query"
 
@@ -57,7 +57,7 @@ class ItemsViewModel @Inject constructor(
         .stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(stopTimeoutMillis = 5_000),
-            initialValue = ItemsUiState.Loading
+            initialValue = ItemsUiState.Loading,
         )
 
     private val _events = Channel<ItemsEvent>(Channel.BUFFERED)
@@ -100,7 +100,7 @@ class ItemsViewModel @Inject constructor(
                 viewModelScope.launch {
                     deleteItemsUseCase(
                         itemIds = command.itemIds.toList(),
-                        itemLocalImagePaths = selectedItemsLocalPaths
+                        itemLocalImagePaths = selectedItemsLocalPaths,
                     )
                     selectedItemIds.update { it - command.itemIds }
                 }
@@ -134,7 +134,7 @@ class ItemsViewModel @Inject constructor(
 
     private fun getFilteredItems(
         searchQuery: String,
-        uiItems: List<ItemUiModel>
+        uiItems: List<ItemUiModel>,
     ): List<ItemUiModel> {
         val filteredItems = if (searchQuery.isBlank()) {
             uiItems

@@ -48,7 +48,7 @@ internal fun ThemeColors(
         color = AppTheme.colorScheme.surface,
         alpha = 1f,
     ) {
-        Column(verticalArrangement = verticalArrangement){
+        Column(verticalArrangement = verticalArrangement) {
             themeColors.fastForEach { themeColor ->
                 val primaryLightColor = themeColor.toPrimaryThemeColor().primaryColor(false)
                 val primaryDarkColor = themeColor.toPrimaryThemeColor().primaryColor(true)
@@ -78,7 +78,7 @@ internal fun ThemeColors(
 @Preview
 @Composable
 private fun ThemeColorsPreview(
-    @PreviewParameter(ThemePreviewParameter::class) theme: ThemePreviewConfig
+    @PreviewParameter(ThemePreviewParameter::class) theme: ThemePreviewConfig,
 ) {
     AppTheme(
         isDarkTheme = theme.isDark,

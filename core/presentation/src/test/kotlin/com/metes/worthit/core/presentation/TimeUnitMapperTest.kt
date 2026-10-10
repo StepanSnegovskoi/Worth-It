@@ -1,8 +1,8 @@
 package com.metes.worthit.core.presentation
 
 import com.metes.worthit.core.domain.entity.TimeUnit
-import org.junit.Test
 import kotlin.test.assertEquals
+import org.junit.Test
 
 class TimeUnitMapperTest {
 

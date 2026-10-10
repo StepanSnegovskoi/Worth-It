@@ -38,7 +38,7 @@ fun ContentWrapper(
 @Preview
 @Composable
 fun ContentWrapperPreview(
-    @PreviewParameter(ThemePreviewParameter::class) theme: ThemePreviewConfig
+    @PreviewParameter(ThemePreviewParameter::class) theme: ThemePreviewConfig,
 ) {
     AppTheme(
         isDarkTheme = theme.isDark,

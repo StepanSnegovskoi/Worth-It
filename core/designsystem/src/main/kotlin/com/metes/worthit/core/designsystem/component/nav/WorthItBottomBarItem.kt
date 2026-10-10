@@ -45,7 +45,7 @@ fun RowScope.WorthItBottomBarItem(
 @Preview
 @Composable
 fun WorthItBottomBarItemPreview(
-    @PreviewParameter(ThemePreviewParameter::class) theme: ThemePreviewConfig
+    @PreviewParameter(ThemePreviewParameter::class) theme: ThemePreviewConfig,
 ) {
     AppTheme(
         isDarkTheme = theme.isDark,
@@ -57,19 +57,19 @@ fun WorthItBottomBarItemPreview(
                     selected = true,
                     onClick = {},
                     title = "Items",
-                    iconRes = R.drawable.items_24dp
+                    iconRes = R.drawable.items_24dp,
                 )
                 WorthItBottomBarItem(
                     selected = true,
                     onClick = {},
                     title = "Process Item",
-                    iconRes = R.drawable.edit_24dp
+                    iconRes = R.drawable.edit_24dp,
                 )
                 WorthItBottomBarItem(
                     selected = true,
                     onClick = {},
                     title = "Settings",
-                    iconRes = R.drawable.settings_24dp
+                    iconRes = R.drawable.settings_24dp,
                 )
             }
         }

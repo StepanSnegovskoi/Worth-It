@@ -2,8 +2,8 @@ package com.metes.worthit.core.presentation
 
 import com.metes.worthit.core.designsystem.theme.PrimaryThemeColor
 import com.metes.worthit.core.domain.entity.ThemeColor
-import org.junit.Test
 import kotlin.test.assertEquals
+import org.junit.Test
 
 class PrimaryThemeColorMapperTest {
 

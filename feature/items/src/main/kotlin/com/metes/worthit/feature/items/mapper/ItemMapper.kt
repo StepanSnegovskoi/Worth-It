@@ -3,16 +3,11 @@ package com.metes.worthit.feature.items.mapper
 import com.metes.worthit.core.domain.entity.Item
 import com.metes.worthit.feature.items.ItemUiModel
 
-internal fun Item.toUiModel(): ItemUiModel {
+internal fun Item.toUiModel(): ItemUiModel = ItemUiModel(
+    id = id,
+    name = name,
+    localImagePath = imageLocalPath,
+    dateOfPurchase = dateOfPurchase,
+)
 
-    return ItemUiModel(
-        id = id,
-        name = name,
-        localImagePath = imageLocalPath,
-        dateOfPurchase = dateOfPurchase,
-    )
-}
-
-internal fun List<Item>.toUiModels(): List<ItemUiModel> {
-    return map { it.toUiModel() }
-}
+internal fun List<Item>.toUiModels(): List<ItemUiModel> = map { it.toUiModel() }

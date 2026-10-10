@@ -25,11 +25,10 @@ sealed interface Screen : NavKey {
 }
 
 @Composable
-fun rememberMyAppNavBackStack(vararg elements: Screen): NavBackStack<Screen> {
-    return rememberSerializable(serializer = serializer()) {
+fun rememberMyAppNavBackStack(vararg elements: Screen): NavBackStack<Screen> =
+    rememberSerializable(serializer = serializer()) {
         NavBackStack(*elements)
     }
-}
 
 fun NavBackStack<Screen>.safeNavigateBack() {
     if (this.size > 1) {

@@ -6,7 +6,8 @@ enum class Currency {
     GBP,
     JPY,
     INR,
-    CNY;
+    CNY,
+    ;
 
     companion object {
         fun fromNameOrDefault(name: String?): Currency {

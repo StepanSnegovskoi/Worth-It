@@ -37,7 +37,7 @@ fun WorthItIconButton(
 @Preview
 @Composable
 fun WorthItIconButtonPreview(
-    @PreviewParameter(ThemePreviewParameter::class) theme: ThemePreviewConfig
+    @PreviewParameter(ThemePreviewParameter::class) theme: ThemePreviewConfig,
 ) {
     AppTheme(
         isDarkTheme = theme.isDark,
@@ -47,9 +47,9 @@ fun WorthItIconButtonPreview(
             onClick = {},
             content = {
                 WorthItIcon(
-                    drawableRes = R.drawable.edit_24dp
+                    drawableRes = R.drawable.edit_24dp,
                 )
-            }
+            },
         )
     }
 }

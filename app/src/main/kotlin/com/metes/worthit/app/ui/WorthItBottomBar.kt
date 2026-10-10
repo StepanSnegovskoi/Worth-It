@@ -21,7 +21,7 @@ internal fun WorthItBottomBar(
 ) {
     NavigationBar(
         modifier = modifier,
-        containerColor = AppTheme.colorScheme.background
+        containerColor = AppTheme.colorScheme.background,
     ) {
         items.forEach { navItem ->
             val isSelected = when (navItem.tab) {
@@ -38,7 +38,7 @@ internal fun WorthItBottomBar(
                     if (!isSelected) {
                         onNavigate(navItem.tab)
                     }
-                }
+                },
             )
         }
     }
@@ -47,7 +47,7 @@ internal fun WorthItBottomBar(
 @Preview
 @Composable
 fun WorthItBottomBarPreview(
-    @PreviewParameter(ThemePreviewParameter::class) theme: ThemePreviewConfig
+    @PreviewParameter(ThemePreviewParameter::class) theme: ThemePreviewConfig,
 ) {
     AppTheme(
         isDarkTheme = theme.isDark,

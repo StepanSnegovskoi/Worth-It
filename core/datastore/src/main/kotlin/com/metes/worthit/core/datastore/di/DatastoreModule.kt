@@ -21,19 +21,14 @@ internal abstract class DatastoreModule {
 
     @Singleton
     @Binds
-    abstract fun bindUserSettings(
-        currentDateProvider: DefaultUserSettings
-    ): UserSettings
+    abstract fun bindUserSettings(currentDateProvider: DefaultUserSettings): UserSettings
 
     companion object {
         @Singleton
         @Provides
-        fun provideDatastore(
-            @ApplicationContext context: Context
-        ): DataStore<Preferences> {
-            return PreferenceDataStoreFactory.create {
+        fun provideDatastore(@ApplicationContext context: Context): DataStore<Preferences> =
+            PreferenceDataStoreFactory.create {
                 context.preferencesDataStoreFile("user_settings")
             }
-        }
     }
 }

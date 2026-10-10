@@ -97,7 +97,7 @@ class LocalDateExtensionTest {
         val restoredMillis = Instant.ofEpochMilli(
             date.atStartOfDay(ZoneOffset.UTC)
                 .toInstant()
-                .toEpochMilli()
+                .toEpochMilli(),
         ).toEpochMilli()
 
         assertEquals(millis, restoredMillis)

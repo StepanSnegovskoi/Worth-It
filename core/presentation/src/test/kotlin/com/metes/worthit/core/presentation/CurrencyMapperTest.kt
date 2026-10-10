@@ -19,7 +19,7 @@ class CurrencyMapperTest {
 
         assertEquals(
             expectedMappings.size,
-            Currency.entries.size
+            Currency.entries.size,
         )
 
         Currency.entries.forEach { currency ->
@@ -41,7 +41,7 @@ class CurrencyMapperTest {
 
         assertEquals(
             expectedMappings.size,
-            Currency.entries.size
+            Currency.entries.size,
         )
 
         Currency.entries.forEach { currency ->

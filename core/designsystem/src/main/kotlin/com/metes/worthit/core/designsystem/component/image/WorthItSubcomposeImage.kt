@@ -92,7 +92,7 @@ fun WorthItSubcomposeImage(
 @Preview(name = "Default image", widthDp = 48, heightDp = 48)
 @Composable
 fun WorthItSubcomposeImagePreviewDefault(
-    @PreviewParameter(ThemePreviewParameter::class) theme: ThemePreviewConfig
+    @PreviewParameter(ThemePreviewParameter::class) theme: ThemePreviewConfig,
 ) {
     AppTheme(
         isDarkTheme = theme.isDark,

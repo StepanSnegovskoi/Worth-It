@@ -2,39 +2,25 @@ package com.metes.worthit.core.data.repository
 
 import app.cash.turbine.test
 import com.metes.worthit.core.database.db.ItemsDao
-import com.metes.worthit.core.database.entity.ItemDbModel
 import com.metes.worthit.core.database.entity.toDbModel
 import com.metes.worthit.core.database.entity.toEntities
 import com.metes.worthit.core.database.entity.toEntity
-import com.metes.worthit.core.domain.entity.Currency
-import io.mockk.mockk
-
 import com.metes.worthit.core.domain.repository.ItemsRepository
 import com.metes.worthit.core.testing.testItem
-import io.mockk.awaits
 import io.mockk.clearMocks
 import io.mockk.coEvery
 import io.mockk.coVerify
-import io.mockk.every
-import io.mockk.verify
-import kotlinx.coroutines.awaitAll
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.flowOf
-import kotlinx.coroutines.flow.stateIn
-import kotlinx.coroutines.test.StandardTestDispatcher
-import kotlinx.coroutines.test.TestCoroutineScheduler
-import kotlinx.coroutines.test.runTest
-import org.bouncycastle.crypto.generators.SCrypt
-import org.junit.After
-import org.junit.Before
-import org.junit.Test
-import java.math.BigDecimal
-import java.time.Instant
-import java.time.LocalDate
+import io.mockk.mockk
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.test.StandardTestDispatcher
+import kotlinx.coroutines.test.TestCoroutineScheduler
+import kotlinx.coroutines.test.runTest
+import org.junit.After
+import org.junit.Before
+import org.junit.Test
 
 class ItemsRepositoryImplTest {
 
@@ -94,13 +80,13 @@ class ItemsRepositoryImplTest {
 
     @Test
     fun `deleteItems invokes dao deleteItems once`() = runTest(dispatcher) {
-            val targetIds = listOf(1, 2, 3)
-            coEvery { dao.deleteItems(targetIds) } returns targetIds.size
+        val targetIds = listOf(1, 2, 3)
+        coEvery { dao.deleteItems(targetIds) } returns targetIds.size
 
-            itemsRepository.deleteItems(targetIds)
+        itemsRepository.deleteItems(targetIds)
 
-            coVerify(exactly = 1) { dao.deleteItems(targetIds) }
-        }
+        coVerify(exactly = 1) { dao.deleteItems(targetIds) }
+    }
 
     @Test
     fun `deleteItem returns true when row count is greater than zero`() = runTest(dispatcher) {

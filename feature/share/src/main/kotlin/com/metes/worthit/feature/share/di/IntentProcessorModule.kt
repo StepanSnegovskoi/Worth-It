@@ -16,7 +16,5 @@ interface IntentProcessorModule {
     @Binds
     @IntoMap
     @ActionKey(Intent.ACTION_SEND)
-    fun bindSendIntentProcessor(
-        processor: SendImageIntentProcessor
-    ): IntentProcessor
+    fun bindSendIntentProcessor(processor: SendImageIntentProcessor): IntentProcessor
 }

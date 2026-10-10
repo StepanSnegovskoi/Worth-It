@@ -54,5 +54,6 @@ internal val CorrectDark = Color(0xFF2FEC36)
 internal val CorrectLight = Color(0xFF16981B)
 
 enum class PrimaryThemeColor {
-    BLUE, PINK
+    BLUE,
+    PINK,
 }

@@ -13,6 +13,7 @@ class AndroidApplicationConventionPlugin : Plugin<Project> {
         with(target) {
             apply(plugin = "com.android.application")
             apply(plugin = "worthit.count.code.lines")
+            apply(plugin = "org.jlleitschuh.gradle.ktlint")
 
             extensions.configure<ApplicationExtension> {
                 configureKotlinAndroid(this)

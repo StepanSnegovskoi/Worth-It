@@ -8,23 +8,23 @@ import androidx.core.content.ContextCompat
 import com.metes.worthit.core.common.ApplicationScope
 import com.metes.worthit.core.domain.utils.DateProvider
 import dagger.hilt.android.qualifiers.ApplicationContext
+import java.time.Clock
+import java.time.LocalDate
+import javax.inject.Inject
+import javax.inject.Singleton
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.stateIn
-import java.time.Clock
-import java.time.LocalDate
-import javax.inject.Inject
-import javax.inject.Singleton
 
 @Singleton
 internal class CurrentDateProvider @Inject constructor(
     @param:ApplicationContext private val context: Context,
     @param:ApplicationScope private val applicationScope: CoroutineScope,
     private val clock: Clock,
-): DateProvider {
+) : DateProvider {
     override val currentDateFlow: Flow<LocalDate> = callbackFlow {
         trySend(LocalDate.now(clock))
 
@@ -44,7 +44,7 @@ internal class CurrentDateProvider @Inject constructor(
             context,
             receiver,
             intentFilter,
-            ContextCompat.RECEIVER_NOT_EXPORTED
+            ContextCompat.RECEIVER_NOT_EXPORTED,
         )
 
         awaitClose {
@@ -53,6 +53,6 @@ internal class CurrentDateProvider @Inject constructor(
     }.stateIn(
         scope = applicationScope,
         started = SharingStarted.WhileSubscribed(5_000),
-        initialValue = LocalDate.now(clock)
+        initialValue = LocalDate.now(clock),
     )
 }

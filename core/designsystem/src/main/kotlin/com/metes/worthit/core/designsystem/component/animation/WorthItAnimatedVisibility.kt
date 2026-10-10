@@ -39,7 +39,7 @@ fun WorthItAnimatedVisibility(
 @Preview
 @Composable
 fun WorthItAnimatedVisibilityPreview(
-    @PreviewParameter(ThemePreviewParameter::class) theme: ThemePreviewConfig
+    @PreviewParameter(ThemePreviewParameter::class) theme: ThemePreviewConfig,
 ) {
     AppTheme(
         isDarkTheme = theme.isDark,

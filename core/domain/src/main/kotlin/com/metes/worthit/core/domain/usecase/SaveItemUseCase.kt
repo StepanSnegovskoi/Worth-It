@@ -7,13 +7,11 @@ import com.metes.worthit.core.domain.error.Error
 import com.metes.worthit.core.domain.repository.ItemsRepository
 import com.metes.worthit.core.domain.repository.StorageRepository
 import com.metes.worthit.core.domain.utils.Result
-import com.metes.worthit.core.domain.utils.onError
-import com.metes.worthit.core.domain.utils.onSuccess
 import com.metes.worthit.core.domain.validator.ItemValidator
-import kotlinx.coroutines.CancellationException
 import java.time.Instant
 import java.time.LocalDate
 import javax.inject.Inject
+import kotlinx.coroutines.CancellationException
 
 class SaveItemUseCase @Inject constructor(
     private val itemsRepository: ItemsRepository,
@@ -58,7 +56,7 @@ class SaveItemUseCase @Inject constructor(
                 createdAt = createdAt,
                 dateOfPurchase = validatedFields.dateOfPurchase,
                 description = validatedFields.description,
-                imageLocalPath = finalImagePath
+                imageLocalPath = finalImagePath,
             )
 
             val isSaved = itemsRepository.saveItem(item)

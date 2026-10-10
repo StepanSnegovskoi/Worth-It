@@ -4,6 +4,7 @@ plugins {
     alias(libs.plugins.worthit.android.application)
     alias(libs.plugins.worthit.android.application.compose)
     alias(libs.plugins.worthit.hilt)
+    alias(libs.plugins.ktlint)
 }
 
 android {
@@ -23,7 +24,7 @@ android {
             isShrinkResources = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
+                "proguard-rules.pro",
             )
             signingConfig = signingConfigs.getByName("debug")
         }
@@ -43,7 +44,7 @@ dependencies {
     implementation(project(":core:common"))
     implementation(project(":core:intent"))
     implementation(project(":feature:items"))
-    implementation(project(":feature:save_item"))
+    implementation(project(":feature:save-item"))
     implementation(project(":feature:settings"))
     implementation(project(":feature:share"))
 

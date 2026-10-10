@@ -44,8 +44,8 @@ internal fun SearchField(
                 colors = colors,
                 placeholder = {
                     WorthItText(text = stringResource(R.string.search))
-                }
+                },
             )
-        }
+        },
     )
 }

@@ -28,6 +28,7 @@ hiltNavigationCompose = "1.4.0"
 mockk = "1.14.11"
 turbine = "1.2.1"
 robolectric = "4.16.1"
+ktlint = "14.2.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -90,6 +91,7 @@ serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref 
 jetbrains-kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "jetbrainsKotlinJvm" }
 android-library = { id = "com.android.library", version.ref = "agp" }
 androidx-room3 = { id = "androidx.room3", version.ref = "room3" }
+ktlint = { id = "org.jlleitschuh.gradle.ktlint", version.ref = "ktlint" }
 
 worthit-android-library = { id = "worthit.android.library" }
 worthit-android-library-compose = { id = "worthit.android.library.compose" }

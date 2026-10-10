@@ -24,6 +24,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import com.metes.worthit.core.designsystem.R as DesignR
 import com.metes.worthit.core.designsystem.component.image.WorthItIcon
 import com.metes.worthit.core.designsystem.component.preview.ThemePreviewConfig
 import com.metes.worthit.core.designsystem.component.preview.ThemePreviewParameter
@@ -32,7 +33,6 @@ import com.metes.worthit.core.designsystem.extensions.primaryColor
 import com.metes.worthit.core.designsystem.theme.AppTheme
 import com.metes.worthit.core.domain.entity.ThemeMode
 import com.metes.worthit.core.presentation.nameStringRes
-import com.metes.worthit.core.designsystem.R as DesignR
 
 @Composable
 internal fun OneSettingItem(
@@ -75,7 +75,7 @@ internal fun OneSettingItem(
 @Preview
 @Composable
 private fun OneSettingItemPreviewThemeModes(
-    @PreviewParameter(ThemePreviewParameter::class) theme: ThemePreviewConfig
+    @PreviewParameter(ThemePreviewParameter::class) theme: ThemePreviewConfig,
 ) {
     AppTheme(
         isDarkTheme = theme.isDark,
@@ -106,7 +106,7 @@ private fun OneSettingItemPreviewThemeModes(
 @Preview
 @Composable
 private fun OneSettingItemPreviewThemeColors(
-    @PreviewParameter(ThemePreviewParameter::class) theme: ThemePreviewConfig
+    @PreviewParameter(ThemePreviewParameter::class) theme: ThemePreviewConfig,
 ) {
     val primaryColorLight = theme.color.primaryColor(!theme.isDark)
     val primaryColorDark = theme.color.primaryColor(theme.isDark)

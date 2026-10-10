@@ -19,6 +19,7 @@ import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.metes.worthit.core.designsystem.R as DesignR
 import com.metes.worthit.core.designsystem.component.button.WorthItIconButton
 import com.metes.worthit.core.designsystem.component.image.WorthItIcon
 import com.metes.worthit.core.designsystem.component.nav.WorthItTopAppBar
@@ -36,7 +37,6 @@ import com.metes.worthit.core.domain.entity.UserPreferences
 import com.metes.worthit.core.presentation.toThemeColor
 import com.metes.worthit.feature.settings.component.ThemeColors
 import com.metes.worthit.feature.settings.component.ThemeModes
-import com.metes.worthit.core.designsystem.R as DesignR
 
 @Composable
 fun SettingsRoute(
@@ -136,7 +136,7 @@ private fun SettingsTopBar(
 @Preview
 @Composable
 private fun SettingsScreenPreview(
-    @PreviewParameter(ThemePreviewParameter::class) theme: ThemePreviewConfig
+    @PreviewParameter(ThemePreviewParameter::class) theme: ThemePreviewConfig,
 ) {
     AppTheme(
         isDarkTheme = theme.isDark,
@@ -144,7 +144,7 @@ private fun SettingsScreenPreview(
     ) {
         WorthItScreenPreview(
             theme = theme,
-            selectedTab = PreviewBottomTab.Settings
+            selectedTab = PreviewBottomTab.Settings,
         ) { _, modifier ->
             SettingsScreen(
                 uiState = SettingsUiState.Success(
@@ -152,7 +152,7 @@ private fun SettingsScreenPreview(
                         currency = Currency.EUR,
                         themeColor = theme.color.toThemeColor,
                         themeMode = ThemeMode.DARK,
-                    )
+                    ),
                 ),
                 modifier = modifier,
                 onSaveThemeColorClick = { },

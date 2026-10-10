@@ -11,6 +11,7 @@ class AndroidRoom3ConventionPlugin : Plugin<Project> {
         with(target) {
             apply(plugin = "androidx.room3")
             apply(plugin = "com.google.devtools.ksp")
+            apply(plugin = "org.jlleitschuh.gradle.ktlint")
 
             extensions.configure<RoomExtension> {
                 schemaDirectory("$projectDir/schemas")

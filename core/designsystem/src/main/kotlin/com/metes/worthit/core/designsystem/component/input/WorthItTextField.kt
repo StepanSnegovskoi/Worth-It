@@ -58,7 +58,7 @@ fun WorthItTextField(
                     maxLines = Int.MAX_VALUE,
                 )
             }
-        }
+        },
     )
 }
 
@@ -66,7 +66,7 @@ fun WorthItTextField(
 @Preview(apiLevel = 36)
 @Composable
 fun WorthItTextFieldPreviewBase(
-    @PreviewParameter(ThemePreviewParameter::class) theme: ThemePreviewConfig
+    @PreviewParameter(ThemePreviewParameter::class) theme: ThemePreviewConfig,
 ) {
     AppTheme(
         isDarkTheme = theme.isDark,
@@ -85,7 +85,7 @@ fun WorthItTextFieldPreviewBase(
 @Preview(apiLevel = 36)
 @Composable
 fun WorthItTextFieldPreviewPlaceholder(
-    @PreviewParameter(ThemePreviewParameter::class) theme: ThemePreviewConfig
+    @PreviewParameter(ThemePreviewParameter::class) theme: ThemePreviewConfig,
 ) {
     AppTheme(
         isDarkTheme = theme.isDark,
@@ -107,7 +107,7 @@ fun WorthItTextFieldPreviewPlaceholder(
 @Preview(apiLevel = 36)
 @Composable
 fun WorthItTextFieldPreviewTrailingIcon(
-    @PreviewParameter(ThemePreviewParameter::class) theme: ThemePreviewConfig
+    @PreviewParameter(ThemePreviewParameter::class) theme: ThemePreviewConfig,
 ) {
     AppTheme(
         isDarkTheme = theme.isDark,
@@ -129,7 +129,7 @@ fun WorthItTextFieldPreviewTrailingIcon(
 @Preview(apiLevel = 36)
 @Composable
 fun WorthItTextFieldPreviewLabel(
-    @PreviewParameter(ThemePreviewParameter::class) theme: ThemePreviewConfig
+    @PreviewParameter(ThemePreviewParameter::class) theme: ThemePreviewConfig,
 ) {
     AppTheme(
         isDarkTheme = theme.isDark,
@@ -151,7 +151,7 @@ fun WorthItTextFieldPreviewLabel(
 @Preview(apiLevel = 36)
 @Composable
 fun WorthItTextFieldPreviewError(
-    @PreviewParameter(ThemePreviewParameter::class) theme: ThemePreviewConfig
+    @PreviewParameter(ThemePreviewParameter::class) theme: ThemePreviewConfig,
 ) {
     AppTheme(
         isDarkTheme = theme.isDark,
@@ -177,7 +177,7 @@ fun WorthItTextFieldPreviewError(
 @Preview(apiLevel = 36)
 @Composable
 fun WorthItTextFieldPreviewMultipleLines(
-    @PreviewParameter(ThemePreviewParameter::class) theme: ThemePreviewConfig
+    @PreviewParameter(ThemePreviewParameter::class) theme: ThemePreviewConfig,
 ) {
     AppTheme(
         isDarkTheme = theme.isDark,

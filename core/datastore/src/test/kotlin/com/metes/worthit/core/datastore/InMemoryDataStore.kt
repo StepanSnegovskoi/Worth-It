@@ -6,5 +6,6 @@ import kotlinx.coroutines.flow.updateAndGet
 
 class InMemoryDataStore<T>(initialValue: T) : DataStore<T> {
     override val data = MutableStateFlow(initialValue)
-    override suspend fun updateData(transform: suspend (it: T) -> T) = data.updateAndGet { transform(it) }
+    override suspend fun updateData(transform: suspend (it: T) -> T) =
+        data.updateAndGet { transform(it) }
 }

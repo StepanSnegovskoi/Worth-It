@@ -44,7 +44,7 @@ fun WorthItImage(
 @Preview(name = "Default image", widthDp = 48, heightDp = 48)
 @Composable
 fun WorthItImagePreviewDefault(
-    @PreviewParameter(ThemePreviewParameter::class) theme: ThemePreviewConfig
+    @PreviewParameter(ThemePreviewParameter::class) theme: ThemePreviewConfig,
 ) {
     AppTheme(
         isDarkTheme = theme.isDark,
@@ -53,7 +53,7 @@ fun WorthItImagePreviewDefault(
         WorthItImage(
             defaultImageDrawableRes = R.drawable.error_24dp,
             contentDescription = "",
-            contentScale = ContentScale.Crop
+            contentScale = ContentScale.Crop,
         )
     }
 }
@@ -61,7 +61,7 @@ fun WorthItImagePreviewDefault(
 @Preview(name = "Model image", widthDp = 48, heightDp = 48)
 @Composable
 fun WorthItImagePreviewModel(
-    @PreviewParameter(ThemePreviewParameter::class) theme: ThemePreviewConfig
+    @PreviewParameter(ThemePreviewParameter::class) theme: ThemePreviewConfig,
 ) {
     AppTheme(
         isDarkTheme = theme.isDark,

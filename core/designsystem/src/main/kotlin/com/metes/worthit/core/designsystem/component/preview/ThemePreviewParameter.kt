@@ -23,7 +23,4 @@ class ThemePreviewParameter : PreviewParameterProvider<ThemePreviewConfig> {
     }
 }
 
-data class ThemePreviewConfig(
-    val color: PrimaryThemeColor,
-    val isDark: Boolean,
-)
+data class ThemePreviewConfig(val color: PrimaryThemeColor, val isDark: Boolean)

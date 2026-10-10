@@ -2,8 +2,8 @@ package com.metes.worthit.core.presentation
 
 import com.metes.worthit.core.designsystem.theme.PrimaryThemeColor
 import com.metes.worthit.core.domain.entity.ThemeColor
-import org.junit.Test
 import kotlin.test.assertEquals
+import org.junit.Test
 
 class ThemeColorMapperTest {
 
@@ -26,7 +26,6 @@ class ThemeColorMapperTest {
             ThemeColor.BLUE to R.string.blue,
             ThemeColor.PINK to R.string.pink,
         )
-
 
         ThemeColor.entries.forEach { themeColor ->
             val expectedRes = expectedMappings[themeColor]

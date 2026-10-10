@@ -12,25 +12,25 @@ enum class TimeUnit {
     YEAR,
 }
 
-fun TimeUnit.between(from: LocalDate, to: LocalDate): Int {
-    return (when (this) {
+fun TimeUnit.between(from: LocalDate, to: LocalDate): Int = (
+    when (this) {
         TimeUnit.DAY -> ChronoUnit.DAYS.between(from, to)
         TimeUnit.WEEK -> ChronoUnit.WEEKS.between(from, to)
         TimeUnit.MONTH -> ChronoUnit.MONTHS.between(from, to)
         TimeUnit.YEAR -> ChronoUnit.YEARS.between(from, to)
-    }.coerceAtLeast(0) + 1).toInt()
-}
+    }.coerceAtLeast(0) + 1
+    ).toInt()
 
 fun TimeUnit.calculatePrice(
     price: BigDecimal,
     currentDate: LocalDate,
-    dateOfPurchase: LocalDate
+    dateOfPurchase: LocalDate,
 ): BigDecimal {
     val daysBetween = BigDecimal.valueOf(
         between(
             from = dateOfPurchase,
-            to = currentDate
-        ).toLong()
+            to = currentDate,
+        ).toLong(),
     )
 
     if (daysBetween.equals(BigDecimal.ZERO)) {

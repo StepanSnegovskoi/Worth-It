@@ -1,0 +1,68 @@
+package com.metes.worthit.feature.save.item.component.button
+
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewParameter
+import com.metes.worthit.core.designsystem.R as DesignR
+import com.metes.worthit.core.designsystem.component.button.WorthItFloatingActionButton
+import com.metes.worthit.core.designsystem.component.image.WorthItIcon
+import com.metes.worthit.core.designsystem.component.preview.ThemePreviewConfig
+import com.metes.worthit.core.designsystem.component.preview.ThemePreviewParameter
+import com.metes.worthit.core.designsystem.theme.AppTheme
+import com.metes.worthit.feature.save.item.R
+
+@Composable
+internal fun SaveItemFloatingActionButton(
+    isEditingMode: Boolean,
+    modifier: Modifier = Modifier,
+    onClick: () -> Unit,
+) {
+    WorthItFloatingActionButton(
+        modifier = modifier,
+        onClick = onClick,
+    ) {
+        val iconRes =
+            if (isEditingMode) DesignR.drawable.done_24dp else DesignR.drawable.add_24dp
+        val contentDescriptionRes =
+            if (isEditingMode) R.string.cd_save_changes else R.string.cd_add_item
+
+        WorthItIcon(
+            drawableRes = iconRes,
+            contentDescriptionRes = contentDescriptionRes,
+            tint = AppTheme.colorScheme.onPrimary,
+        )
+    }
+}
+
+@Preview
+@Composable
+private fun SaveItemFloatingActionButtonPreviewEditingMode(
+    @PreviewParameter(ThemePreviewParameter::class) theme: ThemePreviewConfig,
+) {
+    AppTheme(
+        isDarkTheme = theme.isDark,
+        primaryThemeColor = theme.color,
+    ) {
+        SaveItemFloatingActionButton(
+            isEditingMode = true,
+            onClick = { },
+        )
+    }
+}
+
+@Preview
+@Composable
+private fun SaveItemFloatingActionButtonPreviewAddingMode(
+    @PreviewParameter(ThemePreviewParameter::class) theme: ThemePreviewConfig,
+) {
+    AppTheme(
+        isDarkTheme = theme.isDark,
+        primaryThemeColor = theme.color,
+    ) {
+        SaveItemFloatingActionButton(
+            isEditingMode = false,
+            onClick = { },
+        )
+    }
+}

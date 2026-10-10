@@ -39,7 +39,6 @@ import com.metes.worthit.feature.items.component.bottomButtonSpaceAround
 import com.metes.worthit.feature.items.component.scrollableBottomButtonClearance
 import java.time.LocalDate
 
-
 @Composable
 fun ItemsRoute(
     modifier: Modifier = Modifier,
@@ -86,7 +85,7 @@ fun ItemsRoute(
             },
             onCleanClickSearchQuery = {
                 viewModel.processCommand(ItemsCommand.CleanSearchQueryClick)
-            }
+            },
         )
     }
 }
@@ -124,12 +123,12 @@ internal fun ItemsScreen(
         Column(
             modifier = Modifier
                 .imePadding()
-                .padding(horizontal = 8.dp)
+                .padding(horizontal = 8.dp),
         ) {
             SearchBar(
                 value = searchQuery,
                 onValueChange = onQueryChanged,
-                onCleanClick = onCleanClickSearchQuery
+                onCleanClick = onCleanClickSearchQuery,
             )
 
             if (uiState.filteredItemsByQuery.isEmpty()) {
@@ -187,11 +186,11 @@ internal fun ItemsScreen(
 @Preview
 @Composable
 private fun ItemsScreenPreview(
-    @PreviewParameter(ThemePreviewParameter::class) theme: ThemePreviewConfig
+    @PreviewParameter(ThemePreviewParameter::class) theme: ThemePreviewConfig,
 ) {
     WorthItScreenPreview(
         theme = theme,
-        selectedTab = PreviewBottomTab.Items
+        selectedTab = PreviewBottomTab.Items,
     ) { _, modifier ->
         ItemsScreen(
             uiState = ItemsUiState.Success(
@@ -217,7 +216,7 @@ private fun ItemsScreenPreview(
                         )
                         add(item)
                     }
-                }
+                },
             ),
             searchQuery = "Car",
             focusManager = LocalFocusManager.current,

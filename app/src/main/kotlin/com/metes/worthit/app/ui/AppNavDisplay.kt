@@ -14,8 +14,8 @@ import androidx.navigation3.ui.NavDisplay
 import com.metes.worthit.core.navigation.Screen
 import com.metes.worthit.core.navigation.safeNavigateBack
 import com.metes.worthit.feature.items.ItemsRoute
-import com.metes.worthit.feature.save_item.SaveItemRoute
-import com.metes.worthit.feature.save_item.SaveItemViewModel
+import com.metes.worthit.feature.save.item.SaveItemRoute
+import com.metes.worthit.feature.save.item.SaveItemViewModel
 import com.metes.worthit.feature.settings.SettingsRoute
 import kotlin.uuid.Uuid
 
@@ -30,28 +30,38 @@ internal fun AppNavDisplay(
         modifier = modifier,
         entryDecorators = listOf(
             rememberSaveableStateHolderNavEntryDecorator(),
-            rememberViewModelStoreNavEntryDecorator()
+            rememberViewModelStoreNavEntryDecorator(),
         ),
         onBack = { backStack.removeLastOrNull() },
         entryProvider = entryProvider {
             entry<Screen.Items> {
                 ItemsRoute(
-                    modifier = Modifier
+                    modifier =
+                    Modifier
                         .padding(bottom = scaffoldPadding.calculateBottomPadding())
-                        .consumeWindowInsets(PaddingValues(bottom = scaffoldPadding.calculateBottomPadding())),
+                        .consumeWindowInsets(
+                            PaddingValues(
+                                bottom = scaffoldPadding.calculateBottomPadding(),
+                            ),
+                        ),
                     onNavigateToEditingItem = { itemId ->
-                        backStack.add(Screen.SaveItem(itemId = itemId, sessionId = Uuid.random().toString()))
+                        backStack.add(
+                            Screen.SaveItem(
+                                itemId = itemId,
+                                sessionId = Uuid.random().toString(),
+                            ),
+                        )
                     },
                     onNavigateToAddingItem = {
                         backStack.add(Screen.SaveItem(sessionId = Uuid.random().toString()))
-                    }
+                    },
                 )
             }
             entry<Screen.SaveItem> { key ->
                 val viewModel = hiltViewModel<SaveItemViewModel, SaveItemViewModel.Factory>(
                     creationCallback = { factory ->
                         factory.create(itemId = key.itemId, imagePath = key.imagePath)
-                    }
+                    },
                 )
 
                 SaveItemRoute(
@@ -71,6 +81,6 @@ internal fun AppNavDisplay(
                     onBackClick = { backStack.safeNavigateBack() },
                 )
             }
-        }
+        },
     )
 }

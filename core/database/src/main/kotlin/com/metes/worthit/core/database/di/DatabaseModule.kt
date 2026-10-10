@@ -17,22 +17,15 @@ object DatabaseModule {
 
     @Singleton
     @Provides
-    internal fun provideItemsDatabase(
-        @ApplicationContext context: Context
-    ): WorthItDatabase {
-        return Room.databaseBuilder(
+    internal fun provideItemsDatabase(@ApplicationContext context: Context): WorthItDatabase =
+        Room.databaseBuilder(
             context = context,
             klass = WorthItDatabase::class.java,
-            name = WorthItDatabase.DATABASE_NAME
+            name = WorthItDatabase.DATABASE_NAME,
         ).fallbackToDestructiveMigration()
             .build()
-    }
 
     @Singleton
     @Provides
-    internal fun provideItemsDao(
-        worthItDatabase: WorthItDatabase
-    ): ItemsDao {
-        return worthItDatabase.dao()
-    }
+    internal fun provideItemsDao(worthItDatabase: WorthItDatabase): ItemsDao = worthItDatabase.dao()
 }

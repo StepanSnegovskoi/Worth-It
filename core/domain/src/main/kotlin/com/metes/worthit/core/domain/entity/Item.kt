@@ -12,7 +12,7 @@ data class Item(
     val createdAt: Instant,
     val dateOfPurchase: LocalDate,
     val description: String?,
-    val imageLocalPath: String?
+    val imageLocalPath: String?,
 ) {
     companion object {
         const val DEFAULT_ID = 0

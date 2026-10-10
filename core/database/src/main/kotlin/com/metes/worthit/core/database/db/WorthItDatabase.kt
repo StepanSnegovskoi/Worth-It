@@ -13,8 +13,8 @@ import com.metes.worthit.core.database.entity.ItemDbModel
     value = [
         LocalDateConverter::class,
         InstantConverter::class,
-        BigDecimalConverter::class
-    ]
+        BigDecimalConverter::class,
+    ],
 )
 internal abstract class WorthItDatabase : RoomDatabase() {
 

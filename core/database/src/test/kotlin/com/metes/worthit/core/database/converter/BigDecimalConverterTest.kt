@@ -1,9 +1,9 @@
 package com.metes.worthit.core.database.converter
 
-import org.junit.Before
-import org.junit.Test
 import java.math.BigDecimal
 import kotlin.test.assertEquals
+import org.junit.Before
+import org.junit.Test
 
 class BigDecimalConverterTest {
 

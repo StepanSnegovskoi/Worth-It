@@ -31,7 +31,7 @@ fun LoadingScreen(
 @Preview
 @Composable
 fun LoadingScreenPreview(
-    @PreviewParameter(ThemePreviewParameter::class) theme: ThemePreviewConfig
+    @PreviewParameter(ThemePreviewParameter::class) theme: ThemePreviewConfig,
 ) {
     AppTheme(
         isDarkTheme = theme.isDark,

@@ -23,13 +23,12 @@ class SettingsViewModelTest {
     }
 
     @Test
-    fun `initial state of uiState is Loading`() =
-        runTest {
-            viewModel.uiState.test {
-                assertEquals(SettingsUiState.Loading, awaitItem())
-                cancelAndIgnoreRemainingEvents()
-            }
+    fun `initial state of uiState is Loading`() = runTest {
+        viewModel.uiState.test {
+            assertEquals(SettingsUiState.Loading, awaitItem())
+            cancelAndIgnoreRemainingEvents()
         }
+    }
 
     @Test
     fun `when viewModel processed SelectThemeColor command uiState has correct ThemeColor`() =
@@ -42,8 +41,9 @@ class SettingsViewModelTest {
 
                 assertEquals(
                     SettingsUiState.Success(
-                        preferences = defaultUserPreferences.copy(themeColor = ThemeColor.PINK)
-                    ), awaitItem()
+                        preferences = defaultUserPreferences.copy(themeColor = ThemeColor.PINK),
+                    ),
+                    awaitItem(),
                 )
 
                 cancelAndIgnoreRemainingEvents()
@@ -61,8 +61,9 @@ class SettingsViewModelTest {
 
                 assertEquals(
                     SettingsUiState.Success(
-                        preferences = defaultUserPreferences.copy(themeMode = ThemeMode.DARK)
-                    ), awaitItem()
+                        preferences = defaultUserPreferences.copy(themeMode = ThemeMode.DARK),
+                    ),
+                    awaitItem(),
                 )
 
                 cancelAndIgnoreRemainingEvents()

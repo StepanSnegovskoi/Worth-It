@@ -4,9 +4,9 @@ import com.metes.worthit.core.domain.entity.Item
 import com.metes.worthit.core.testing.testItem
 import com.metes.worthit.feature.items.mapper.toUiModel
 import com.metes.worthit.feature.items.mapper.toUiModels
+import java.time.LocalDate
 import org.junit.Assert.assertEquals
 import org.junit.Test
-import java.time.LocalDate
 
 class ItemMapperTest {
 
@@ -33,16 +33,16 @@ class ItemMapperTest {
                     id = 1,
                     name = "name",
                     dateOfPurchase = LocalDate.of(2026, 10, 10),
-                    imageLocalPath = "path"
-                )
+                    imageLocalPath = "path",
+                ),
             )
             add(
                 itemDomain.copy(
                     id = 2,
                     name = "name2",
                     dateOfPurchase = LocalDate.of(2026, 10, 11),
-                    imageLocalPath = "path2"
-                )
+                    imageLocalPath = "path2",
+                ),
             )
         }
 

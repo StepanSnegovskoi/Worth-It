@@ -21,10 +21,7 @@ import com.metes.worthit.feature.items.ItemUiModel
 import java.time.LocalDate
 
 @Composable
-internal fun ItemBaseDetails(
-    item: ItemUiModel,
-    modifier: Modifier = Modifier,
-) {
+internal fun ItemBaseDetails(item: ItemUiModel, modifier: Modifier = Modifier) {
     val dateFormatter = rememberDateFormatter()
 
     val formattedDates = remember(item.dateOfPurchase) {
@@ -33,14 +30,14 @@ internal fun ItemBaseDetails(
 
     Column(
         modifier = modifier,
-        verticalArrangement = Arrangement.spacedBy(4.dp)
+        verticalArrangement = Arrangement.spacedBy(4.dp),
     ) {
         ContentWrapper {
             WorthItText(
                 modifier = Modifier
                     .padding(4.dp)
                     .basicMarquee(),
-                text = item.name
+                text = item.name,
             )
         }
         formattedDates?.let {
@@ -48,7 +45,7 @@ internal fun ItemBaseDetails(
                 WorthItText(
                     modifier = Modifier
                         .padding(4.dp),
-                    text = formattedDates
+                    text = formattedDates,
                 )
             }
         }
@@ -58,7 +55,7 @@ internal fun ItemBaseDetails(
 @Preview
 @Composable
 private fun ItemBaseDetailsPreview(
-    @PreviewParameter(ThemePreviewParameter::class) theme: ThemePreviewConfig
+    @PreviewParameter(ThemePreviewParameter::class) theme: ThemePreviewConfig,
 ) {
     AppTheme(
         isDarkTheme = theme.isDark,
@@ -74,7 +71,7 @@ private fun ItemBaseDetailsPreview(
                     localImagePath = null,
                     dateOfPurchase = LocalDate.now(),
                 ),
-                modifier = Modifier.padding(8.dp)
+                modifier = Modifier.padding(8.dp),
             )
         }
     }

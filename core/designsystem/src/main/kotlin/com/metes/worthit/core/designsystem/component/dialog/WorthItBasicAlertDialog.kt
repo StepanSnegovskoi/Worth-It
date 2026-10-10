@@ -48,7 +48,7 @@ fun WorthItBasicAlertDialog(
 @Preview
 @Composable
 fun WorthItBasicAlertDialogPreview(
-    @PreviewParameter(ThemePreviewParameter::class) theme: ThemePreviewConfig
+    @PreviewParameter(ThemePreviewParameter::class) theme: ThemePreviewConfig,
 ) {
     AppTheme(
         isDarkTheme = theme.isDark,
@@ -73,9 +73,10 @@ fun WorthItBasicAlertDialogPreview(
                         repeat(5) {
                             WorthItCard {
                                 WorthItText(
-                                    text = "Item $it", modifier = Modifier
+                                    text = "Item $it",
+                                    modifier = Modifier
                                         .fillMaxWidth()
-                                        .padding(16.dp)
+                                        .padding(16.dp),
                                 )
                             }
                         }

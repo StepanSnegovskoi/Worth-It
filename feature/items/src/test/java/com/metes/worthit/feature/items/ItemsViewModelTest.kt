@@ -11,6 +11,10 @@ import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.unmockkAll
+import kotlin.test.assertEquals
+import kotlin.test.assertIs
+import kotlin.test.assertTrue
+import kotlin.time.Duration.Companion.milliseconds
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
@@ -19,10 +23,6 @@ import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
-import kotlin.test.assertEquals
-import kotlin.test.assertIs
-import kotlin.test.assertTrue
-import kotlin.time.Duration.Companion.milliseconds
 
 class ItemsViewModelTest {
 
@@ -55,17 +55,14 @@ class ItemsViewModelTest {
         unmockkAll()
     }
 
-    private fun createViewModel(
-        handle: SavedStateHandle = savedStateHandle,
-    ): ItemsViewModel {
-        return ItemsViewModel(
+    private fun createViewModel(handle: SavedStateHandle = savedStateHandle): ItemsViewModel =
+        ItemsViewModel(
             deleteItemUseCase = deleteItemUseCase,
             deleteItemsUseCase = deleteItemsUseCase,
             savedStateHandle = handle,
             defaultDispatcher = rule.testDispatcher,
             observeItemsUseCase = observeItemsUseCase,
         )
-    }
 
     @Test
     fun `initial state is Loading before upstream emits`() = runTest {
@@ -239,7 +236,7 @@ class ItemsViewModelTest {
             awaitItem()
 
             viewModel.processCommand(
-                ItemsCommand.DeleteItem(itemId = 1, itemLocalImagePath = "/path/1")
+                ItemsCommand.DeleteItem(itemId = 1, itemLocalImagePath = "/path/1"),
             )
 
             coVerify(exactly = 1) { deleteItemUseCase(1, "/path/1") }
@@ -259,13 +256,13 @@ class ItemsViewModelTest {
             awaitItem()
 
             viewModel.processCommand(
-                ItemsCommand.DeleteItems(itemIds = setOf(1, 2))
+                ItemsCommand.DeleteItems(itemIds = setOf(1, 2)),
             )
 
             coVerify(exactly = 1) {
                 deleteItemsUseCase(
                     itemIds = match { it.containsAll(listOf(1, 2)) },
-                    itemLocalImagePaths = setOf("/path/1", "/path/2")
+                    itemLocalImagePaths = setOf("/path/1", "/path/2"),
                 )
             }
 

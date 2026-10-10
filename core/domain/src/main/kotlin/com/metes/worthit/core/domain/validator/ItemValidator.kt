@@ -7,9 +7,7 @@ import java.time.Clock
 import java.time.LocalDate
 import javax.inject.Inject
 
-class ItemValidator @Inject constructor(
-    private val clock: Clock,
-) {
+class ItemValidator @Inject constructor(private val clock: Clock) {
     fun validateName(name: String?): Result<String, List<BusinessError>> {
         val trimmedName = name?.trim()
         return if (trimmedName.isNullOrBlank()) {
@@ -19,17 +17,15 @@ class ItemValidator @Inject constructor(
         }
     }
 
-    fun validateDescription(description: String?): Result<String?, List<BusinessError>> {
-        return Result.Success(description?.trim())
-    }
+    fun validateDescription(description: String?): Result<String?, List<BusinessError>> =
+        Result.Success(description?.trim())
 
-    fun validatePurchaseDate(date: LocalDate): Result<LocalDate, List<BusinessError>> {
-        return if (date.isAfter(LocalDate.now(clock))) {
+    fun validatePurchaseDate(date: LocalDate): Result<LocalDate, List<BusinessError>> =
+        if (date.isAfter(LocalDate.now(clock))) {
             Result.Error(listOf(BusinessError.ItemPurchaseDateInTheFuture))
         } else {
             Result.Success(date)
         }
-    }
 
     fun validatePrice(priceInput: String): Result<BigDecimal?, List<BusinessError>> {
         val trimmedPriceInput = priceInput.trim()
@@ -48,7 +44,12 @@ class ItemValidator @Inject constructor(
                 errors.add(BusinessError.ItemPriceCantBeNegative)
             }
             if (priceBigDecimal > MAX_PRICE) {
-                errors.add(BusinessError.ItemPriceCantBeMoreThan(MAX_PRICE.toString(), MAX_COUNT_OF_DIGITS_IN_INTEGER_PART_OF_PRICE))
+                errors.add(
+                    BusinessError.ItemPriceCantBeMoreThan(
+                        MAX_PRICE.toString(),
+                        MAX_COUNT_OF_DIGITS_IN_INTEGER_PART_OF_PRICE,
+                    ),
+                )
             }
         }
 
@@ -63,7 +64,7 @@ class ItemValidator @Inject constructor(
         name: String?,
         description: String?,
         dateOfPurchase: LocalDate,
-        priceInput: String
+        priceInput: String,
     ): Result<ValidatedFields, List<BusinessError>> {
         val nameResult = validateName(name)
         val descriptionResult = validateDescription(description)
@@ -86,8 +87,8 @@ class ItemValidator @Inject constructor(
                 name = (nameResult as Result.Success).data,
                 description = (descriptionResult as Result.Success).data,
                 dateOfPurchase = (dateResult as Result.Success).data,
-                price = (priceResult as Result.Success).data
-            )
+                price = (priceResult as Result.Success).data,
+            ),
         )
     }
 
@@ -111,5 +112,5 @@ data class ValidatedFields(
     val name: String,
     val description: String?,
     val dateOfPurchase: LocalDate,
-    val price: BigDecimal?
+    val price: BigDecimal?,
 )

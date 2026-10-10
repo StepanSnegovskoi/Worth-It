@@ -7,19 +7,14 @@ import com.metes.worthit.core.domain.repository.ItemsRepository
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.unmockkAll
-import io.mockk.unmockkConstructor
-import io.mockk.unmockkObject
-import kotlinx.coroutines.flow.Flow
+import java.time.Instant
+import java.time.LocalDate
+import kotlin.test.Test
+import kotlin.test.assertEquals
 import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.runTest
 import org.junit.After
 import org.junit.Before
-import java.time.Instant
-import java.time.LocalDate
-import javax.inject.Inject
-import kotlin.test.Test
-import kotlin.test.assertEquals
 
 class ObserveItemsUseCaseTest {
 
@@ -39,16 +34,18 @@ class ObserveItemsUseCaseTest {
 
     @Test
     fun `should return correct list of item`() = runTest {
-        val itemsList = listOf(Item(
-            id = 1,
-            name = "name",
-            price = null,
-            currency = Currency.EUR,
-            createdAt = Instant.now(),
-            dateOfPurchase = LocalDate.of(2026, 1, 1),
-            description = "description",
-            imageLocalPath = null,
-        ))
+        val itemsList = listOf(
+            Item(
+                id = 1,
+                name = "name",
+                price = null,
+                currency = Currency.EUR,
+                createdAt = Instant.now(),
+                dateOfPurchase = LocalDate.of(2026, 1, 1),
+                description = "description",
+                imageLocalPath = null,
+            ),
+        )
 
         every { repository.observeItems() } returns flow {
             emit(emptyList())

@@ -2,7 +2,9 @@ package com.metes.worthit.core.domain.entity
 
 enum class ThemeColor {
     BLUE,
-    PINK;
+    PINK,
+    ;
+
     companion object {
         fun fromNameOrDefault(name: String?): ThemeColor {
             if (name.isNullOrBlank()) return BLUE

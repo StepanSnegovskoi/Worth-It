@@ -26,7 +26,7 @@ class NavigationManagerTest {
             navigationManager.navigateTo(Screen.SaveItem(sessionId = "sessionIdTest"))
             assertEquals(
                 NavigationEvent.NavigateTo(Screen.SaveItem(sessionId = "sessionIdTest")),
-                awaitItem()
+                awaitItem(),
             )
 
             navigationManager.navigateTo(Screen.Settings)

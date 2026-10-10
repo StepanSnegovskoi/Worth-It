@@ -22,7 +22,7 @@ object WorthItOutlinedTextFieldDefaults {
         errorCursorColor: Color = AppTheme.colorScheme.error,
         selectionColors: TextSelectionColors = TextSelectionColors(
             handleColor = AppTheme.colorScheme.primary,
-            backgroundColor = AppTheme.colorScheme.primary.copy(alpha = 0.4f)
+            backgroundColor = AppTheme.colorScheme.primary.copy(alpha = 0.4f),
         ),
         focusedBorderColor: Color = Color.Transparent,
         unfocusedBorderColor: Color = Color.Transparent,

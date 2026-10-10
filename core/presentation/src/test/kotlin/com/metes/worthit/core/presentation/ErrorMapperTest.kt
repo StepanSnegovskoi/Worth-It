@@ -4,9 +4,9 @@ import com.metes.worthit.core.domain.error.BusinessError
 import com.metes.worthit.core.domain.error.Error
 import com.metes.worthit.core.domain.error.FileError
 import com.metes.worthit.core.domain.error.UnexpectedError
+import kotlin.test.assertIs
 import org.junit.Assert.assertEquals
 import org.junit.Test
-import kotlin.test.assertIs
 
 class ErrorMapperTest {
 
@@ -20,7 +20,8 @@ class ErrorMapperTest {
             BusinessError.ItemImageFailedToSave to R.string.failed_to_save_image,
             BusinessError.ItemFailedToDelete to R.string.item_failed_to_delete,
             BusinessError.ItemsFailedToDelete to R.string.an_error_occurred_while_deleting_items,
-            BusinessError.ItemPriceCanContainOnlyNumbers to R.string.item_price_can_contain_only_numbers,
+            BusinessError.ItemPriceCanContainOnlyNumbers to
+                R.string.item_price_can_contain_only_numbers,
             BusinessError.ItemPriceCantBeNegative to R.string.item_price_cant_be_negative,
             FileError.CompressionFailed to R.string.failed_to_save_item,
             FileError.FailedToDeleteFile to R.string.failed_to_save_item,

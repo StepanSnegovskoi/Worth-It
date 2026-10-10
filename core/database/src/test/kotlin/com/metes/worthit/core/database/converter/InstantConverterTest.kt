@@ -1,10 +1,9 @@
 package com.metes.worthit.core.database.converter
 
-import org.junit.Before
-import org.junit.Test
-import java.math.BigDecimal
 import java.time.Instant
 import kotlin.test.assertEquals
+import org.junit.Before
+import org.junit.Test
 
 class InstantConverterTest {
 
@@ -20,7 +19,6 @@ class InstantConverterTest {
         val millis = 1_000_000_000L
         assertEquals(millis, converter.instantToEpochMilli(Instant.ofEpochMilli(millis)))
     }
-
 
     @Test
     fun `instantToEpochMilli calculates negative millis correctly`() {
@@ -39,7 +37,6 @@ class InstantConverterTest {
         val millis = 1_000_000_000L
         assertEquals(Instant.ofEpochMilli(millis), converter.epochMilliToInstant(millis))
     }
-
 
     @Test
     fun `epochMilliToInstant calculates correctly for negative millis`() {

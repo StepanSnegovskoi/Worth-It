@@ -42,7 +42,7 @@ fun WorthItTopAppBar(
 @Preview
 @Composable
 fun WorthItTopAppBarPreview(
-    @PreviewParameter(ThemePreviewParameter::class) theme: ThemePreviewConfig
+    @PreviewParameter(ThemePreviewParameter::class) theme: ThemePreviewConfig,
 ) {
     AppTheme(
         isDarkTheme = theme.isDark,
@@ -54,18 +54,21 @@ fun WorthItTopAppBarPreview(
             },
             navigationIcon = {
                 WorthItIconButton(
-                    onClick = {}) {
+                    onClick = {},
+                ) {
                     WorthItIcon(drawableRes = R.drawable.back_24dp)
                 }
             },
             actions = {
                 Row {
                     WorthItIconButton(
-                        onClick = {}) {
+                        onClick = {},
+                    ) {
                         WorthItIcon(drawableRes = R.drawable.close_24dp)
                     }
                     WorthItIconButton(
-                        onClick = {}) {
+                        onClick = {},
+                    ) {
                         WorthItIcon(drawableRes = R.drawable.add_24dp)
                     }
                 }

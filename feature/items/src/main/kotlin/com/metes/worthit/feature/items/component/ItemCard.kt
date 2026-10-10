@@ -21,14 +21,14 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import com.metes.worthit.core.designsystem.component.defaults.WorthItCardDefaults
-import com.metes.worthit.core.designsystem.component.image.WorthItImage
-import com.metes.worthit.core.designsystem.component.surface.WorthItCard
 import com.metes.worthit.core.designsystem.component.image.WorthItIcon
+import com.metes.worthit.core.designsystem.component.image.WorthItImage
 import com.metes.worthit.core.designsystem.component.preview.ThemePreviewConfig
 import com.metes.worthit.core.designsystem.component.preview.ThemePreviewParameter
+import com.metes.worthit.core.designsystem.component.surface.WorthItCard
 import com.metes.worthit.core.designsystem.theme.AppTheme
-import com.metes.worthit.feature.items.R
 import com.metes.worthit.feature.items.ItemUiModel
+import com.metes.worthit.feature.items.R
 import java.time.LocalDate
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -53,7 +53,7 @@ internal fun ItemCard(
     val iconAlpha by animateFloatAsState(
         targetValue = if (isSelected) 1f else 0f,
         animationSpec = tween(200),
-        label = "ItemCardIconAlpha"
+        label = "ItemCardIconAlpha",
     )
 
     WorthItCard(
@@ -105,7 +105,7 @@ internal fun ItemCard(
 @Preview
 @Composable
 private fun ItemCardPreviewSelected(
-    @PreviewParameter(ThemePreviewParameter::class) theme: ThemePreviewConfig
+    @PreviewParameter(ThemePreviewParameter::class) theme: ThemePreviewConfig,
 ) {
     AppTheme(
         isDarkTheme = theme.isDark,
@@ -128,7 +128,7 @@ private fun ItemCardPreviewSelected(
 @Preview
 @Composable
 private fun ItemCardPreviewNotSelected(
-    @PreviewParameter(ThemePreviewParameter::class) theme: ThemePreviewConfig
+    @PreviewParameter(ThemePreviewParameter::class) theme: ThemePreviewConfig,
 ) {
     AppTheme(
         isDarkTheme = theme.isDark,

@@ -11,12 +11,12 @@ import com.metes.worthit.core.domain.repository.StorageRepository
 import com.metes.worthit.core.domain.utils.Result
 import com.metes.worthit.core.domain.utils.onSuccess
 import dagger.hilt.android.qualifiers.ApplicationContext
-import kotlinx.coroutines.CancellationException
-import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.withContext
 import java.io.File
 import javax.inject.Inject
 import javax.inject.Singleton
+import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.withContext
 
 @Singleton
 internal class InternalStorageImpl @Inject constructor(
@@ -25,48 +25,46 @@ internal class InternalStorageImpl @Inject constructor(
     private val imageCompressor: ImageCompressor,
 ) : StorageRepository {
 
-    override suspend fun saveImage(
-        imagePath: String,
-        fileName: String
-    ): Result<String, Error> = withContext(ioDispatcher) {
-        val uri = imagePath.toUri()
-        var imageFile: File? = null
+    override suspend fun saveImage(imagePath: String, fileName: String): Result<String, Error> =
+        withContext(ioDispatcher) {
+            val uri = imagePath.toUri()
+            var imageFile: File? = null
 
-        try {
-            when (uri.scheme) {
-                "file", null -> {
-                    val file = File(imagePath)
-                    if (file.exists()) {
-                        Result.Success(imagePath)
-                    } else {
-                        Result.Error(FileError.FileNotFound)
-                    }
-                }
-
-                "content" -> {
-                    val fullFileName = "$fileName.webp"
-                    imageFile = File(internalStorageImagesDir, fullFileName)
-
-                    val result = imageCompressor.compress(uri, imageFile)
-
-                    result.onSuccess {
-                        return@withContext Result.Success(imageFile.path)
+            try {
+                when (uri.scheme) {
+                    "file", null -> {
+                        val file = File(imagePath)
+                        if (file.exists()) {
+                            Result.Success(imagePath)
+                        } else {
+                            Result.Error(FileError.FileNotFound)
+                        }
                     }
 
-                    imageFile.delete()
-                    Result.Error(FileError.CompressionFailed)
-                }
+                    "content" -> {
+                        val fullFileName = "$fileName.webp"
+                        imageFile = File(internalStorageImagesDir, fullFileName)
 
-                else -> Result.Error(FileError.UnsupportedUriScheme)
+                        val result = imageCompressor.compress(uri, imageFile)
+
+                        result.onSuccess {
+                            return@withContext Result.Success(imageFile.path)
+                        }
+
+                        imageFile.delete()
+                        Result.Error(FileError.CompressionFailed)
+                    }
+
+                    else -> Result.Error(FileError.UnsupportedUriScheme)
+                }
+            } catch (c: CancellationException) {
+                imageFile?.delete()
+                throw c
+            } catch (_: Exception) {
+                imageFile?.delete()
+                Result.Error(BusinessError.ItemImageFailedToSave)
             }
-        } catch (c: CancellationException) {
-            imageFile?.delete()
-            throw c
-        } catch (_: Exception) {
-            imageFile?.delete()
-            Result.Error(BusinessError.ItemImageFailedToSave)
         }
-    }
 
     override suspend fun deleteFile(path: String): Result<Unit, Error> = withContext(ioDispatcher) {
         try {

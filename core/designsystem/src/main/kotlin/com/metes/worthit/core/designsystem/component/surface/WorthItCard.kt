@@ -43,7 +43,7 @@ fun WorthItCard(
                 elevation = elevation,
                 shape = shape,
                 ambientColor = ambientShadowColor,
-                spotColor = spotShadowColor
+                spotColor = spotShadowColor,
             )
             .clip(shape)
             .drawBehind {
@@ -52,7 +52,7 @@ fun WorthItCard(
     ) {
         CompositionLocalProvider(
             value = LocalContentColor provides colors.contentColor,
-            content = content
+            content = content,
         )
     }
 }
@@ -76,7 +76,7 @@ fun WorthItCard(
                 elevation = elevation,
                 shape = shape,
                 ambientColor = ambientShadowColor,
-                spotColor = spotShadowColor
+                spotColor = spotShadowColor,
             )
             .clip(shape)
             .drawBehind {
@@ -86,12 +86,12 @@ fun WorthItCard(
                 onClick = onClick,
                 onLongClick = {
                     onLongClick?.invoke()
-                }
+                },
             ),
     ) {
         CompositionLocalProvider(
             value = LocalContentColor provides colors.contentColor,
-            content = content
+            content = content,
         )
     }
 }
@@ -99,7 +99,7 @@ fun WorthItCard(
 @Preview
 @Composable
 fun WorthItCardPreviewClickable(
-    @PreviewParameter(ThemePreviewParameter::class) theme: ThemePreviewConfig
+    @PreviewParameter(ThemePreviewParameter::class) theme: ThemePreviewConfig,
 ) {
     AppTheme(
         isDarkTheme = theme.isDark,
@@ -112,9 +112,9 @@ fun WorthItCardPreviewClickable(
                     content = {
                         WorthItText(
                             text = "Hello World",
-                            modifier = Modifier.padding(16.dp)
+                            modifier = Modifier.padding(16.dp),
                         )
-                    }
+                    },
                 )
             }
         }
@@ -124,7 +124,7 @@ fun WorthItCardPreviewClickable(
 @Preview
 @Composable
 fun WorthItCardPreviewNotClickable(
-    @PreviewParameter(ThemePreviewParameter::class) theme: ThemePreviewConfig
+    @PreviewParameter(ThemePreviewParameter::class) theme: ThemePreviewConfig,
 ) {
     AppTheme(
         isDarkTheme = theme.isDark,
@@ -136,9 +136,9 @@ fun WorthItCardPreviewNotClickable(
                     content = {
                         WorthItText(
                             text = "Hello World",
-                            modifier = Modifier.padding(16.dp)
+                            modifier = Modifier.padding(16.dp),
                         )
-                    }
+                    },
                 )
             }
         }

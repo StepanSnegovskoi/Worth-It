@@ -34,15 +34,13 @@ fun WorthItIcon(
         painter = painterResource(drawableRes),
         contentDescription = contentDescriptionRes?.let {
             stringResource(contentDescriptionRes)
-        }
+        },
     )
 }
 
 @Preview
 @Composable
-fun WorthItIconPreview(
-    @PreviewParameter(ThemePreviewParameter::class) theme: ThemePreviewConfig
-) {
+fun WorthItIconPreview(@PreviewParameter(ThemePreviewParameter::class) theme: ThemePreviewConfig) {
     AppTheme(
         isDarkTheme = theme.isDark,
         primaryThemeColor = theme.color,
@@ -53,7 +51,7 @@ fun WorthItIconPreview(
                 horizontalArrangement = Arrangement.spacedBy(16.dp),
             ) {
                 WorthItIcon(
-                    drawableRes = R.drawable.edit_24dp
+                    drawableRes = R.drawable.edit_24dp,
                 )
                 WorthItIcon(
                     drawableRes = R.drawable.edit_24dp,

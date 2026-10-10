@@ -10,6 +10,6 @@ object WorthItButtonDefaults {
         containerColor = AppTheme.colorScheme.primaryContainer,
         contentColor = AppTheme.colorScheme.onBackground,
         disabledContainerColor = AppTheme.colorScheme.surface,
-        disabledContentColor = AppTheme.colorScheme.secondary
+        disabledContentColor = AppTheme.colorScheme.secondary,
     )
 }

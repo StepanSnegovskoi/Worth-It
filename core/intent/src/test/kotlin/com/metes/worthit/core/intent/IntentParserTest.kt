@@ -12,9 +12,7 @@ class IntentParserTest {
 
     private val processors: Map<String, IntentProcessor> = hashMapOf(
         Intent.ACTION_SEND to object : IntentProcessor {
-            override fun extractEvent(intent: Intent): AppIntentEvent {
-                return AppIntentEvent.Ignored
-            }
+            override fun extractEvent(intent: Intent): AppIntentEvent = AppIntentEvent.Ignored
         },
     )
     private lateinit var intentParser: IntentParser

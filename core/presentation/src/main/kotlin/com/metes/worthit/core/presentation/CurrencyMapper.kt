@@ -6,7 +6,7 @@ import com.metes.worthit.core.domain.entity.Currency
 
 val Currency.iconResId: Int
     @DrawableRes get() = when (this) {
-        Currency.EUR ->  R.drawable.euro_24dp
+        Currency.EUR -> R.drawable.euro_24dp
         Currency.USD -> R.drawable.usd_24dp
         Currency.GBP -> R.drawable.gbp_24dp
         Currency.JPY -> R.drawable.jpy_24dp

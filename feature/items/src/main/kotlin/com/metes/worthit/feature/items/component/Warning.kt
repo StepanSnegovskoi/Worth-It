@@ -65,7 +65,7 @@ internal fun Warning(
 @Preview
 @Composable
 private fun WarningPreviewAll(
-    @PreviewParameter(ThemePreviewParameter::class) theme: ThemePreviewConfig
+    @PreviewParameter(ThemePreviewParameter::class) theme: ThemePreviewConfig,
 ) {
     AppTheme(
         isDarkTheme = theme.isDark,
@@ -76,7 +76,7 @@ private fun WarningPreviewAll(
                 .background(AppTheme.colorScheme.background)
                 .width(240.dp)
                 .height(320.dp),
-            contentAlignment = Alignment.Center
+            contentAlignment = Alignment.Center,
         ) {
             Warning(
                 text = stringResource(R.string.the_list_of_items_is_empty),
@@ -85,7 +85,7 @@ private fun WarningPreviewAll(
                     .fillMaxWidth()
                     .padding(16.dp),
                 iconRes = R.drawable.wind_40dp,
-                onClick = { }
+                onClick = { },
             )
         }
     }
@@ -94,7 +94,7 @@ private fun WarningPreviewAll(
 @Preview
 @Composable
 private fun WarningPreviewText(
-    @PreviewParameter(ThemePreviewParameter::class) theme: ThemePreviewConfig
+    @PreviewParameter(ThemePreviewParameter::class) theme: ThemePreviewConfig,
 ) {
     AppTheme(
         isDarkTheme = theme.isDark,
@@ -105,14 +105,14 @@ private fun WarningPreviewText(
                 .background(AppTheme.colorScheme.background)
                 .width(240.dp)
                 .height(320.dp),
-            contentAlignment = Alignment.Center
+            contentAlignment = Alignment.Center,
         ) {
             Warning(
                 text = stringResource(R.string.the_list_of_items_is_empty),
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(16.dp),
-                onClick = { }
+                onClick = { },
             )
         }
     }

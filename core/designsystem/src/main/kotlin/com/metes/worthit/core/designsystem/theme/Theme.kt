@@ -15,7 +15,7 @@ import com.metes.worthit.core.designsystem.extensions.colorScheme
 fun AppTheme(
     isDarkTheme: Boolean,
     primaryThemeColor: PrimaryThemeColor,
-    content: @Composable () -> Unit
+    content: @Composable () -> Unit,
 ) {
     val theme = primaryThemeColor.colorScheme(isDarkTheme)
 
@@ -32,7 +32,7 @@ fun AppTheme(
         LocalIndication provides indication,
         LocalIsDarkTheme provides isDarkTheme,
         LocalContentColor provides theme.onBackground,
-        content = content
+        content = content,
     )
 }
 

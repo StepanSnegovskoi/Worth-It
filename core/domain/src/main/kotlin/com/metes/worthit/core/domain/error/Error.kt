@@ -13,7 +13,8 @@ sealed interface BusinessError : Error {
     data object ItemImageFailedToSave : BusinessError
     data object ItemPurchaseDateInTheFuture : BusinessError
     data object ItemPriceCanContainOnlyNumbers : BusinessError
-    data class ItemPriceCantBeMoreThan(val price: String, val maxCountOfDigitsInIntegerPrice: Int) : BusinessError
+    data class ItemPriceCantBeMoreThan(val price: String, val maxCountOfDigitsInIntegerPrice: Int) :
+        BusinessError
     data object ItemPriceCantBeNegative : BusinessError
 }
 

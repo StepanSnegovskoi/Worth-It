@@ -8,6 +8,10 @@ import com.metes.worthit.core.domain.utils.Result
 import io.mockk.clearMocks
 import io.mockk.coEvery
 import io.mockk.mockk
+import java.io.File
+import kotlin.test.assertEquals
+import kotlin.test.assertTrue
+import kotlin.uuid.Uuid
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.TestCoroutineScheduler
 import kotlinx.coroutines.test.runTest
@@ -17,10 +21,6 @@ import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
-import java.io.File
-import kotlin.test.assertEquals
-import kotlin.test.assertTrue
-import kotlin.uuid.Uuid
 
 @RunWith(RobolectricTestRunner::class)
 class InternalStorageImplTest {
@@ -49,34 +49,35 @@ class InternalStorageImplTest {
     }
 
     @Test
-    fun `saveImage with content scheme calls compressor and returns path on success`() = runTest(dispatcher) {
-        val dummyUriString = "content://media/external/images/media/1"
-        val fileName = "test_image"
-        val expectedFile = File(context.filesDir, "images/$fileName.webp")
+    fun `saveImage with content scheme calls compressor and returns path on success`() =
+        runTest(dispatcher) {
+            val dummyUriString = "content://media/external/images/media/1"
+            val fileName = "test_image"
+            val expectedFile = File(context.filesDir, "images/$fileName.webp")
 
-        coEvery {
-            imageCompressor.compress(
-                any(),
-                any(),
-                any(),
-                any(),
-                any(),
-                any()
+            coEvery {
+                imageCompressor.compress(
+                    any(),
+                    any(),
+                    any(),
+                    any(),
+                    any(),
+                    any(),
+                )
+            } answers {
+                expectedFile.parentFile?.mkdirs()
+                expectedFile.createNewFile()
+                Result.Success(Unit)
+            }
+
+            val saveResult = internalStorage.saveImage(
+                imagePath = dummyUriString,
+                fileName = fileName,
             )
-        } answers {
-            expectedFile.parentFile?.mkdirs()
-            expectedFile.createNewFile()
-            Result.Success(Unit)
+
+            assertTrue(saveResult is Result.Success)
+            assertEquals(expectedFile.absolutePath, saveResult.data)
         }
-
-        val saveResult = internalStorage.saveImage(
-            imagePath = dummyUriString,
-            fileName = fileName,
-        )
-
-        assertTrue(saveResult is Result.Success)
-        assertEquals(expectedFile.absolutePath, saveResult.data)
-    }
 
     @Test
     fun `deleteFile deletes file correctly`() = runTest(dispatcher) {

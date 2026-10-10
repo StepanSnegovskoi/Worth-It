@@ -32,7 +32,7 @@ internal fun AppNavigation(
                     navigateBottomBar(backStack, tab)
                 },
             )
-        }
+        },
     ) { contentPadding ->
         AppNavDisplay(
             backStack = backStack,
@@ -44,7 +44,7 @@ internal fun AppNavigation(
 }
 
 private fun navigateBottomBar(backStack: NavBackStack<Screen>, tab: BottomTab) {
-    when(tab) {
+    when (tab) {
         BottomTab.Items -> {
             backStack.removeAll { it != Screen.Items }
         }
@@ -52,7 +52,6 @@ private fun navigateBottomBar(backStack: NavBackStack<Screen>, tab: BottomTab) {
         BottomTab.SaveItem -> {
             backStack.removeAll { it is Screen.SaveItem }
             backStack.add(Screen.SaveItem(sessionId = Uuid.random().toString()))
-
         }
 
         BottomTab.Settings -> {

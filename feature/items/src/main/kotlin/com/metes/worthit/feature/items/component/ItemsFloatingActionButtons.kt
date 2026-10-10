@@ -9,12 +9,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.metes.worthit.feature.items.R
 import com.metes.worthit.core.designsystem.R as DesignR
 import com.metes.worthit.core.designsystem.component.animation.WorthItAnimatedVisibility
 import com.metes.worthit.core.designsystem.component.button.WorthItIconButton
 import com.metes.worthit.core.designsystem.component.image.WorthItIcon
 import com.metes.worthit.core.designsystem.theme.AppTheme
+import com.metes.worthit.feature.items.R
 
 internal val bottomButtonSize = 48.dp
 internal val bottomButtonSpaceAround = 16.dp
@@ -31,14 +31,14 @@ internal fun ItemsFloatingActionButtons(
     Row(
         modifier = modifier,
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.End
+        horizontalArrangement = Arrangement.End,
     ) {
         WorthItAnimatedVisibility(visible = visible) {
             WorthItIconButton(
                 modifier = Modifier.size(bottomButtonSize),
                 onClick = {
                     onItemsDeleteClick(selectedItemIds)
-                }
+                },
             ) {
                 WorthItIcon(
                     drawableRes = DesignR.drawable.delete_48dp,

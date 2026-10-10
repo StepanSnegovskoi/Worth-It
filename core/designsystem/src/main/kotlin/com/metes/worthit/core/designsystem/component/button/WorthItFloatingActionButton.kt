@@ -18,7 +18,7 @@ fun WorthItFloatingActionButton(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
     containerColor: Color = AppTheme.colorScheme.primary,
-    content: @Composable () -> Unit
+    content: @Composable () -> Unit,
 ) {
     FloatingActionButton(
         modifier = modifier,
@@ -31,7 +31,7 @@ fun WorthItFloatingActionButton(
 @Preview
 @Composable
 fun WorthItFloatingActionButtonPreview(
-    @PreviewParameter(ThemePreviewParameter::class) theme: ThemePreviewConfig
+    @PreviewParameter(ThemePreviewParameter::class) theme: ThemePreviewConfig,
 ) {
     AppTheme(
         isDarkTheme = theme.isDark,
@@ -42,9 +42,9 @@ fun WorthItFloatingActionButtonPreview(
             content = {
                 WorthItIcon(
                     drawableRes = R.drawable.add_24dp,
-                    tint = LocalAppTheme.current.onPrimary
+                    tint = LocalAppTheme.current.onPrimary,
                 )
-            }
+            },
         )
     }
 }

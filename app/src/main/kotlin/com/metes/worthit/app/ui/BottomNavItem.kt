@@ -1,6 +1,6 @@
 package com.metes.worthit.app.ui
 
-import  androidx.annotation.DrawableRes
+import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import com.metes.worthit.R
 import com.metes.worthit.core.designsystem.R as DesignR

@@ -70,7 +70,7 @@ internal fun ThemeModes(
 @Preview
 @Composable
 private fun ThemeModesPreview(
-    @PreviewParameter(ThemePreviewParameter::class) theme: ThemePreviewConfig
+    @PreviewParameter(ThemePreviewParameter::class) theme: ThemePreviewConfig,
 ) {
     AppTheme(
         isDarkTheme = theme.isDark,

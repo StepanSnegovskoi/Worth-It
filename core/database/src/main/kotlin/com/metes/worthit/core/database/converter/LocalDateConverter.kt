@@ -6,12 +6,8 @@ import java.time.LocalDate
 class LocalDateConverter {
 
     @ColumnTypeConverter
-    fun localDateToEpochDay(date: LocalDate): Long {
-        return date.toEpochDay()
-    }
+    fun localDateToEpochDay(date: LocalDate): Long = date.toEpochDay()
 
     @ColumnTypeConverter
-    fun epochDayToLocalDate(epochDay: Long): LocalDate {
-        return LocalDate.ofEpochDay(epochDay)
-    }
+    fun epochDayToLocalDate(epochDay: Long): LocalDate = LocalDate.ofEpochDay(epochDay)
 }

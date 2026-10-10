@@ -7,12 +7,12 @@ import com.metes.worthit.core.database.entity.toEntities
 import com.metes.worthit.core.database.entity.toEntity
 import com.metes.worthit.core.domain.entity.Item
 import com.metes.worthit.core.domain.repository.ItemsRepository
+import javax.inject.Inject
+import javax.inject.Singleton
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
-import javax.inject.Inject
-import javax.inject.Singleton
 
 @Singleton
 internal class ItemsRepositoryImpl @Inject constructor(
@@ -26,10 +26,8 @@ internal class ItemsRepositoryImpl @Inject constructor(
         return@withContext true
     }
 
-    override fun observeItems(): Flow<List<Item>> {
-        return dao.observeItems().map {
-            it.toEntities()
-        }
+    override fun observeItems(): Flow<List<Item>> = dao.observeItems().map {
+        it.toEntities()
     }
 
     override suspend fun deleteItem(itemId: Int): Boolean = withContext(ioDispatcher) {
@@ -37,7 +35,7 @@ internal class ItemsRepositoryImpl @Inject constructor(
         return@withContext id > 0
     }
 
-    override suspend fun deleteItems(itemIds: List<Int>)= withContext<Unit>(ioDispatcher) {
+    override suspend fun deleteItems(itemIds: List<Int>) = withContext<Unit>(ioDispatcher) {
         dao.deleteItems(itemIds)
     }
 

@@ -18,17 +18,17 @@ enum class PreviewBottomTab {
 }
 
 val PreviewBottomTab.iconRes: Int
-   @DrawableRes get() = when(this) {
-       PreviewBottomTab.Items -> R.drawable.items_24dp
-       PreviewBottomTab.SaveItem -> R.drawable.edit_24dp
-       PreviewBottomTab.Settings -> R.drawable.settings_24dp
-   }
+    @DrawableRes get() = when (this) {
+        PreviewBottomTab.Items -> R.drawable.items_24dp
+        PreviewBottomTab.SaveItem -> R.drawable.edit_24dp
+        PreviewBottomTab.Settings -> R.drawable.settings_24dp
+    }
 
 @Composable
 fun WorthItScreenPreview(
     theme: ThemePreviewConfig,
     selectedTab: PreviewBottomTab,
-    content: @Composable (scaffoldPadding: PaddingValues, modifier: Modifier) -> Unit
+    content: @Composable (scaffoldPadding: PaddingValues, modifier: Modifier) -> Unit,
 ) {
     AppTheme(
         isDarkTheme = theme.isDark,
@@ -43,11 +43,11 @@ fun WorthItScreenPreview(
                             selected = selectedTab == tab,
                             title = tab.name,
                             iconRes = tab.iconRes,
-                            onClick = {}
+                            onClick = {},
                         )
                     }
                 }
-            }
+            },
         ) { paddingValues ->
             val screenModifier = Modifier.padding(bottom = paddingValues.calculateBottomPadding())
 

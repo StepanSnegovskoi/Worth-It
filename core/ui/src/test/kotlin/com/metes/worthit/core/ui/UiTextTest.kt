@@ -1,12 +1,12 @@
 package com.metes.worthit.core.ui
 
-import org.junit.Assert.assertEquals
-import org.junit.Test
 import android.content.Context
 import com.metes.worthit.core.presentation.UiText
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
+import org.junit.Assert.assertEquals
+import org.junit.Test
 
 class UiTextTest {
 

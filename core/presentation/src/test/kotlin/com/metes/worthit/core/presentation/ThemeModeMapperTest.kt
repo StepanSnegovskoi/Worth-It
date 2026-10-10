@@ -3,8 +3,8 @@ package com.metes.worthit.core.presentation
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import com.metes.worthit.core.domain.entity.ThemeMode
-import org.junit.Test
 import kotlin.test.assertEquals
+import org.junit.Test
 
 class ThemeModeMapperTest {
 

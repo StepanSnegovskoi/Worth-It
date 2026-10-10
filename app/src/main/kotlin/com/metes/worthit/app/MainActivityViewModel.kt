@@ -12,11 +12,11 @@ import com.metes.worthit.core.navigation.NavigationManager
 import com.metes.worthit.core.navigation.Screen
 import com.metes.worthit.intent.AppIntentEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
+import kotlin.uuid.Uuid
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
-import javax.inject.Inject
-import kotlin.uuid.Uuid
 
 @HiltViewModel
 internal class MainActivityViewModel @Inject constructor(
@@ -30,7 +30,7 @@ internal class MainActivityViewModel @Inject constructor(
         }.stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(5_000),
-            initialValue = MainUiState.Loading
+            initialValue = MainUiState.Loading,
         )
 
     fun processEvent(event: AppIntentEvent) {
@@ -38,30 +38,31 @@ internal class MainActivityViewModel @Inject constructor(
             AppIntentEvent.Ignored -> return
 
             is AppIntentEvent.Image -> {
-                navigationManager.navigateTo(Screen.SaveItem(imagePath = event.imageUri, sessionId = Uuid.random().toString()))
+                navigationManager.navigateTo(
+                    Screen.SaveItem(
+                        imagePath = event.imageUri,
+                        sessionId = Uuid.random().toString(),
+                    ),
+                )
             }
         }
     }
 }
 
 sealed interface MainUiState {
-    data object Loading: MainUiState
+    data object Loading : MainUiState
 
-    data class Loaded(
-        val userPreferences: UserPreferences,
-    ): MainUiState {
+    data class Loaded(val userPreferences: UserPreferences) : MainUiState {
 
-        override fun shouldUseDarkTheme(isSystemInDarkTheme: Boolean): Boolean {
-            return when(userPreferences.themeMode) {
+        override fun shouldUseDarkTheme(isSystemInDarkTheme: Boolean): Boolean =
+            when (userPreferences.themeMode) {
                 ThemeMode.DARK -> true
                 ThemeMode.LIGHT -> false
                 ThemeMode.SYSTEM -> isSystemInDarkTheme
             }
-        }
 
-        override fun primaryThemeColor(): PrimaryThemeColor {
-            return userPreferences.themeColor.toPrimaryThemeColor()
-        }
+        override fun primaryThemeColor(): PrimaryThemeColor =
+            userPreferences.themeColor.toPrimaryThemeColor()
     }
 
     fun shouldKeepSplashScreen() = this is Loading

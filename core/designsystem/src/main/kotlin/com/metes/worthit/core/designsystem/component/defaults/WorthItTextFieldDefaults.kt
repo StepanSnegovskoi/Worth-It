@@ -21,7 +21,7 @@ object WorthItTextFieldDefaults {
         errorCursorColor: Color = AppTheme.colorScheme.error,
         textSelectionColors: TextSelectionColors = TextSelectionColors(
             handleColor = AppTheme.colorScheme.primary,
-            backgroundColor = AppTheme.colorScheme.primary.copy(alpha = 0.3f)
+            backgroundColor = AppTheme.colorScheme.primary.copy(alpha = 0.3f),
         ),
         focusedIndicatorColor: Color = AppTheme.colorScheme.primary,
         unfocusedIndicatorColor: Color = AppTheme.colorScheme.secondary,

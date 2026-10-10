@@ -9,24 +9,18 @@ import androidx.compose.ui.res.stringResource
 sealed interface UiText {
     data class DynamicString(val value: String) : UiText
 
-    data class StringResource(
-        @param:StringRes val resId: Int,
-        val args: List<Any> = emptyList(),
-    ) : UiText
+    data class StringResource(@param:StringRes val resId: Int, val args: List<Any> = emptyList()) :
+        UiText
 
     @Composable
     @ReadOnlyComposable
-    fun asString(): String {
-        return when(this) {
-            is DynamicString -> value
-            is StringResource -> stringResource(resId, *args.toTypedArray())
-        }
+    fun asString(): String = when (this) {
+        is DynamicString -> value
+        is StringResource -> stringResource(resId, *args.toTypedArray())
     }
 
-    fun asString(context: Context): String {
-        return when (this) {
-            is DynamicString -> value
-            is StringResource -> context.getString(resId, *args.toTypedArray())
-        }
+    fun asString(context: Context): String = when (this) {
+        is DynamicString -> value
+        is StringResource -> context.getString(resId, *args.toTypedArray())
     }
 }

@@ -10,18 +10,18 @@ import com.metes.worthit.core.domain.entity.ThemeColor
 import com.metes.worthit.core.domain.entity.ThemeMode
 import com.metes.worthit.core.domain.entity.UserPreferences
 import com.metes.worthit.core.domain.utils.UserSettings
+import javax.inject.Inject
+import javax.inject.Singleton
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
-import javax.inject.Inject
-import javax.inject.Singleton
 
 @Singleton
 internal class DefaultUserSettings @Inject constructor(
     private val dataStore: DataStore<Preferences>,
     @IoDispatcher private val ioDispatcher: CoroutineDispatcher,
-): UserSettings {
+) : UserSettings {
 
     override suspend fun saveCurrency(currency: Currency) = withContext<Unit>(ioDispatcher) {
         dataStore.edit { preferences ->

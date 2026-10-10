@@ -1,11 +1,11 @@
 package com.metes.worthit.core.data.utils
 
 import android.graphics.Bitmap
+import kotlin.test.assertEquals
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
-import kotlin.test.assertEquals
 
 @RunWith(RobolectricTestRunner::class)
 class ImageFormatCompatTest {

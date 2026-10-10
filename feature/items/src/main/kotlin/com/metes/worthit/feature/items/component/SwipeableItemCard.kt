@@ -18,19 +18,20 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
-import com.metes.worthit.core.designsystem.component.image.WorthItIcon
+import com.metes.worthit.core.designsystem.R as DesignR
 import com.metes.worthit.core.designsystem.component.button.WorthItIconButton
+import com.metes.worthit.core.designsystem.component.image.WorthItIcon
 import com.metes.worthit.core.designsystem.component.preview.ThemePreviewConfig
 import com.metes.worthit.core.designsystem.component.preview.ThemePreviewParameter
 import com.metes.worthit.core.designsystem.theme.AppTheme
-import com.metes.worthit.core.designsystem.R as DesignR
-import com.metes.worthit.feature.items.R
 import com.metes.worthit.feature.items.ItemUiModel
+import com.metes.worthit.feature.items.R
 import java.time.LocalDate
 import kotlin.math.roundToInt
 
 internal enum class State {
-    CLOSED, OPEN
+    CLOSED,
+    OPEN,
 }
 
 @Composable
@@ -67,12 +68,12 @@ internal fun SwipeableItemCard(
                 .offset {
                     IntOffset(
                         x = state.requireOffset().roundToInt(),
-                        y = 0
+                        y = 0,
                     )
                 }
                 .anchoredDraggable(
                     state = state,
-                    orientation = Orientation.Horizontal
+                    orientation = Orientation.Horizontal,
                 ),
             onClick = onClick,
             onLongClick = onLongClick,
@@ -83,7 +84,7 @@ internal fun SwipeableItemCard(
 @Preview
 @Composable
 private fun SwipeableItemCardPreviewClosed(
-    @PreviewParameter(ThemePreviewParameter::class) theme: ThemePreviewConfig
+    @PreviewParameter(ThemePreviewParameter::class) theme: ThemePreviewConfig,
 ) {
     val density = LocalDensity.current
     val state = remember(density) {
@@ -92,7 +93,7 @@ private fun SwipeableItemCardPreviewClosed(
             anchors = DraggableAnchors {
                 State.CLOSED at 0f
                 State.OPEN at with(density) { 96.dp.toPx() }
-            }
+            },
         )
     }
 
@@ -106,14 +107,14 @@ private fun SwipeableItemCardPreviewClosed(
                     id = 0,
                     name = "Car",
                     localImagePath = null,
-                    dateOfPurchase = LocalDate.now()
+                    dateOfPurchase = LocalDate.now(),
                 ),
                 isSelected = false,
                 modifier = Modifier.padding(8.dp),
                 state = state,
                 onClick = { },
                 onLongClick = { },
-                onDeleteClick = { _, _ -> }
+                onDeleteClick = { _, _ -> },
             )
         }
     }
@@ -122,7 +123,7 @@ private fun SwipeableItemCardPreviewClosed(
 @Preview
 @Composable
 private fun SwipeableItemCardPreviewOpen(
-    @PreviewParameter(ThemePreviewParameter::class) theme: ThemePreviewConfig
+    @PreviewParameter(ThemePreviewParameter::class) theme: ThemePreviewConfig,
 ) {
     val density = LocalDensity.current
     val state = remember(density) {
@@ -131,7 +132,7 @@ private fun SwipeableItemCardPreviewOpen(
             anchors = DraggableAnchors {
                 State.CLOSED at 0f
                 State.OPEN at with(density) { 96.dp.toPx() }
-            }
+            },
         )
     }
 
@@ -145,14 +146,14 @@ private fun SwipeableItemCardPreviewOpen(
                     id = 0,
                     name = "Car",
                     localImagePath = null,
-                    dateOfPurchase = LocalDate.now()
+                    dateOfPurchase = LocalDate.now(),
                 ),
                 isSelected = false,
                 modifier = Modifier.padding(8.dp),
                 state = state,
                 onClick = { },
                 onLongClick = { },
-                onDeleteClick = { _, _ -> }
+                onDeleteClick = { _, _ -> },
             )
         }
     }

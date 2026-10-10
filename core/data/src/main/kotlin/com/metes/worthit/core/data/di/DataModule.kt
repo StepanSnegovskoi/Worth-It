@@ -18,19 +18,13 @@ internal abstract class DataModule {
 
     @Singleton
     @Binds
-    abstract fun bindItemsRepository(
-        itemsRepository: ItemsRepositoryImpl
-    ): ItemsRepository
+    abstract fun bindItemsRepository(itemsRepository: ItemsRepositoryImpl): ItemsRepository
 
     @Singleton
     @Binds
-    abstract fun bindInternalRepository(
-        internalRepository: InternalStorageImpl
-    ): StorageRepository
+    abstract fun bindInternalRepository(internalRepository: InternalStorageImpl): StorageRepository
 
     @Singleton
     @Binds
-    abstract fun bindDateProvider(
-        currentDateProvider: CurrentDateProvider
-    ): DateProvider
+    abstract fun bindDateProvider(currentDateProvider: CurrentDateProvider): DateProvider
 }

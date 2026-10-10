@@ -5,8 +5,8 @@ import com.metes.worthit.core.domain.error.Error
 import com.metes.worthit.core.domain.repository.ItemsRepository
 import com.metes.worthit.core.domain.repository.StorageRepository
 import com.metes.worthit.core.domain.utils.Result
-import kotlinx.coroutines.CancellationException
 import javax.inject.Inject
+import kotlinx.coroutines.CancellationException
 
 class DeleteItemUseCase @Inject constructor(
     private val itemsRepository: ItemsRepository,

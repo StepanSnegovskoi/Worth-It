@@ -13,7 +13,7 @@ import com.metes.worthit.core.designsystem.theme.AppTheme
 @Preview
 @Composable
 fun WorthItBackgroundPreview(
-    @PreviewParameter(ThemePreviewParameter::class) theme: ThemePreviewConfig
+    @PreviewParameter(ThemePreviewParameter::class) theme: ThemePreviewConfig,
 ) {
     AppTheme(
         isDarkTheme = theme.isDark,
@@ -22,7 +22,7 @@ fun WorthItBackgroundPreview(
         Box(
             modifier = Modifier
                 .size(128.dp)
-                .background(AppTheme.colorScheme.background)
+                .background(AppTheme.colorScheme.background),
         )
     }
 }

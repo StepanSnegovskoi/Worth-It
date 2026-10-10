@@ -127,7 +127,7 @@ class ItemValidatorTest {
                 price = maxPrice,
                 maxCountOfDigitsInIntegerPrice = maxCountOfDigitsInIntegerPartOfPrice,
             ),
-            actual = result.data.filterIsInstance<BusinessError.ItemPriceCantBeMoreThan>().first()
+            actual = result.data.filterIsInstance<BusinessError.ItemPriceCantBeMoreThan>().first(),
         )
     }
 
