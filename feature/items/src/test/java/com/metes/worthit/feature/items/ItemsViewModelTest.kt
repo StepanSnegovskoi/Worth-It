@@ -14,9 +14,6 @@ import io.mockk.unmockkAll
 import kotlin.test.assertEquals
 import kotlin.test.assertIs
 import kotlin.test.assertTrue
-import kotlin.time.Duration.Companion.milliseconds
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.runTest
 import org.junit.After
@@ -66,16 +63,8 @@ class ItemsViewModelTest {
 
     @Test
     fun `initial state is Loading before upstream emits`() = runTest {
-        every { observeItemsUseCase() } returns flow {
-            delay(100.milliseconds)
-            emit(sampleItems)
-        }
         val viewModel = createViewModel()
-
-        viewModel.itemsUiState.test {
-            assertIs<ItemsUiState.Loading>(awaitItem())
-            cancelAndIgnoreRemainingEvents()
-        }
+        assertEquals(ItemsUiState.Loading, viewModel.itemsUiState.value)
     }
 
     @Test
