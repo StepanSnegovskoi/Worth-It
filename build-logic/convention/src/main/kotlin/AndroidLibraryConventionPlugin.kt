@@ -11,7 +11,7 @@ class AndroidLibraryConventionPlugin : Plugin<Project> {
     override fun apply(target: Project) {
         with(target) {
             apply(plugin = "com.android.library")
-            apply(plugin = "org.jlleitschuh.gradle.ktlint")
+            apply(plugin = "worthit.ktlint")
 
             extensions.configure<LibraryExtension> {
                 configureKotlinAndroid(this)

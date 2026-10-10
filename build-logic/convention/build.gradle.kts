@@ -62,5 +62,9 @@ gradlePlugin {
             id = libs.plugins.worthit.count.code.lines.get().pluginId
             implementationClass = "CountCodeLinesPlugin"
         }
+        register("ktlint") {
+            id = libs.plugins.worthit.ktlint.get().pluginId
+            implementationClass = "KtlintConventionPlugin"
+        }
     }
 }

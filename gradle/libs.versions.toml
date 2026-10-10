@@ -102,3 +102,4 @@ worthit-android-feature = { id = "worthit.android.feature" }
 worthit-hilt = { id = "worthit.hilt" }
 worthit-jvm-library = { id = "worthit.jvm.library" }
 worthit-count-code-lines = { id = "worthit.count.code.lines" }
+worthit-ktlint = { id = "worthit.ktlint" }
